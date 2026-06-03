@@ -1,9 +1,6 @@
 import pygame
 import math
 
-from numpy.ma.core import size
-
-
 class MenuBackground():
     def __init__(self, screen_w, screen_h):
         self.screen_w = screen_w
