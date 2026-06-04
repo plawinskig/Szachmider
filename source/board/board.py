@@ -8,7 +8,7 @@ class Board:
         self.reset_board()
         
     def get_square(self, x: int, y: int) -> Square:
-        if 0 <= x < self.width and 0 <= y < self.height:
+        if self.is_valid_position(x, y):
             return self.board[y][x]
         else:
             raise IndexError("Square coordinates out of bounds")
@@ -18,7 +18,7 @@ class Board:
         return square.piece if square else None
         
     def set_square(self, x: int, y: int, piece: Square):
-        if 0 <= x < self.width and 0 <= y < self.height:
+        if self.is_valid_position(x, y):
             self.board[y][x] = piece
         else:
             raise IndexError("Square coordinates out of bounds")
