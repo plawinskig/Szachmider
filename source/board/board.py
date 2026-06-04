@@ -1,7 +1,7 @@
 from typing import Optional
 
 from piece import Piece
-from square import Square
+from square import *
 
 
 class Board:
@@ -65,6 +65,27 @@ class Board:
             print(" ".join(str(square) for square in row))
     
     def reset_board(self):
-        self.board = [[Square() for _ in range(self.width)] for _ in range(self.height)]
+        self.board = [[BasicSquare() for _ in range(self.width)] for _ in range(self.height)]
         
 
+if __name__ == "__main__":
+    board = Board(8, 8)
+    board.set_square(0, 0, BasicSquare())
+    board.set_square(1, 0, TeleportSquare())
+    board.set_square(2, 0, TrapSquare())
+    board.set_square(3, 0, HeartSquare())
+    board.set_square(4, 0, ShieldSquare())
+    board.set_square(5, 0, GrassSquare())
+    board.set_piece(0, 0, Piece("Rook"))
+    board.set_piece(1, 0, Piece("Knight"))
+    board.set_piece(2, 0, Piece("Bishop"))
+    board.set_piece(3, 0, Piece("Queen"))
+    board.set_piece(4, 0, Piece("King"))
+    board.set_piece(5, 0, Piece("Bishop"))
+    board.set_piece(6, 0, Piece("Knight"))
+    board.set_piece(7, 0, Piece("Rook"))
+    
+    for i in range(8):
+        board.set_piece(i, 1, Piece("Pawn"))
+    
+    board.display()
