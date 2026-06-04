@@ -86,11 +86,13 @@ class Logo():
                                   img_normal=pygame.image.load("assets/logo/LTR_front_r.png").convert_alpha(),
                                   img_hover=pygame.image.load("assets/logo/LTR_front_r.png").convert_alpha(), r=10)
 
-    def update(self, screen, time):
+    def update(self, screen, time, position):
         for bg in [self.letter_bg_s, self.letter_bg_z, self.letter_bg_a, self.letter_bg_c, self.letter_bg_h,
                     self.letter_bg_m, self.letter_bg_i, self.letter_bg_d, self.letter_bg_e, self.letter_bg_r]:
+            bg.hover(position)
             bg.update(screen, time)
 
         for front in [self.letter_front_s, self.letter_front_z, self.letter_front_a, self.letter_front_c, self.letter_front_h,
                     self.letter_front_m, self.letter_front_i, self.letter_front_d, self.letter_front_e, self.letter_front_r]:
+            front.hover(position)
             front.update(screen, time)
