@@ -11,3 +11,33 @@ class Square:
     def __str__(self):
         return str(self.piece) if self.piece else "."
 
+
+class BasicSquare(Square):
+    def __init__(self, piece: Piece = Piece()):
+        super().__init__(piece)
+
+
+class TeleportSquare(Square):
+    def __init__(self, piece: Piece = Piece()):
+        super().__init__(piece)
+        
+
+class TrapSquare(Square):
+    def __init__(self, piece: Piece = Piece()):
+        super().__init__(piece)
+
+
+class HeartSquare(Square):
+    def __init__(self, piece: Piece = Piece()):
+        super().__init__(piece)
+
+
+class ShieldSquare(Square):
+    def __init__(self, piece: Piece = Piece()):
+        super().__init__(piece)
+
+
+class GrassSquare(Square):
+    def __init__(self, piece: Piece = Piece()):
+        super().__init__(piece)
+
