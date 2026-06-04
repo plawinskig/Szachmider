@@ -6,6 +6,10 @@ from square import Square
 
 class Board:
     def __init__(self, width: int, height: int):
+        if width < 4 or height < 4:
+            raise ValueError("Board dimensions must be at least 4x4")
+        if width > 10 or height > 10:
+            raise ValueError("Board dimensions must not exceed 10x10")
         self.width = width
         self.height = height
         self.reset_board()
