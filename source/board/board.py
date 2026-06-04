@@ -69,7 +69,10 @@ class Board:
             "width": self.width,
             "height": self.height,
             "squares": [
-                [(square.get_code(), str(square.piece)) for square in row] for row in self.board
+                [square.get_code() for square in row] for row in self.board
+            ],
+            "pieces": [ 
+                [str(square.piece) for square in row] for row in self.board
             ]
         }
     

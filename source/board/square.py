@@ -14,6 +14,10 @@ class Square(ABC):
         return self.__class__.__name__
     
     @abstractmethod
+    def get_code(self):
+        pass
+    
+    @abstractmethod
     def get_functionality(self):
         pass
 
