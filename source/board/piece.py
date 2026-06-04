@@ -10,24 +10,24 @@ class Piece:
 
 class Rook(Piece):
     def get_code(self):
-        return "R"
+        return "Roo"
     
 class Knight(Piece):
     def get_code(self):
-        return "N"
+        return "Kni"
 
 class Bishop(Piece):
     def get_code(self):
-        return "B"
+        return "Bis"
 
 class Queen(Piece):
     def get_code(self):
-        return "Q"
+        return "Que"
 
 class King(Piece):
     def get_code(self):
-        return "K"
+        return "Kin"
 
 class Pawn(Piece):
     def get_code(self):
-        return "P"
+        return "Paw"
