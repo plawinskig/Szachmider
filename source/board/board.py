@@ -20,9 +20,9 @@ class Board:
         square = self.get_square(x, y)
         return square.piece if square else None
         
-    def set_square(self, x: int, y: int, piece: Square):
+    def set_square(self, x: int, y: int, square: Square):
         if self.is_valid_position(x, y):
-            self.board[y][x] = piece
+            self.board[y][x] = square
         else:
             raise IndexError("Square coordinates out of bounds")
     
