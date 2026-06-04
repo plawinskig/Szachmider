@@ -1,7 +1,8 @@
+from source.pieces.piece import Piece
 
 
 class Square:
-    def __init__(self, piece=None):
+    def __init__(self, piece: Piece = Piece()):
         self.piece = piece
         
     def is_empty(self):

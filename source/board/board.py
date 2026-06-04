@@ -12,10 +12,21 @@ class Board:
             return self.board[y][x]
         else:
             raise IndexError("Square coordinates out of bounds")
+    
+    def get_piece(self, x: int, y: int):
+        square = self.get_square(x, y)
+        return square.piece if square else None
         
     def set_square(self, x: int, y: int, piece: Square):
         if 0 <= x < self.width and 0 <= y < self.height:
             self.board[y][x] = piece
+        else:
+            raise IndexError("Square coordinates out of bounds")
+    
+    def set_piece(self, x: int, y: int, piece):
+        square = self.get_square(x, y)
+        if square:
+            square.piece = piece
         else:
             raise IndexError("Square coordinates out of bounds")
     
