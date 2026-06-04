@@ -24,5 +24,12 @@ class Board:
             self.board[from_y][from_x] = Square()
         else:
             raise IndexError("Square coordinates out of bounds")
+    
+    def display(self):
+        for row in self.board:
+            print(" ".join(str(square) for square in row))
+    
+    def reset_board(self):
+        self.board = [[Square() for _ in range(self.width)] for _ in range(self.height)]
         
 
