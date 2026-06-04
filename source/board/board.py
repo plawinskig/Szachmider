@@ -20,16 +20,9 @@ class Board:
             raise IndexError("Square coordinates out of bounds")
     
     def move_piece(self, from_x, from_y, to_x, to_y):
-        if (0 <= from_x < self.width and 
-            0 <= from_y < self.height and 
-            0 <= to_x < self.width and 
-            0 <= to_y < self.height
-            ):
-            piece = self.board[from_y][from_x]
-            self.board[to_y][to_x] = piece
-            self.board[from_y][from_x] = Square()
-        else:
-            raise IndexError("Square coordinates out of bounds")
+        piece = self.get_square(from_x, from_y)
+        self.set_square(to_x, to_y, piece)
+        self.set_square(from_x, from_y, Square())
     
     def display(self):
         for row in self.board:
