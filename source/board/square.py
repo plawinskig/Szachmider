@@ -4,14 +4,14 @@ from piece import Piece
 
 
 class Square(ABC):
-    def __init__(self, piece: Piece = Piece()):
+    def __init__(self, piece: Piece = None):
         self.piece = piece
         
     def is_empty(self):
         return self.piece is None
     
     def __str__(self):
-        return "[" + self.__class__.__name__ + " " + str(self.piece) + "]" if self.piece else "[Empty]"
+        return self.__class__.__name__
     
     @abstractmethod
     def get_functionality(self):
@@ -19,14 +19,14 @@ class Square(ABC):
 
 
 class BasicSquare(Square):
-    def __init__(self, piece: Piece = Piece()):
+    def __init__(self, piece: Piece = None):
         super().__init__(piece)
         
     def get_functionality(self):
         return "Basic functionality"
 
 class TeleportSquare(Square):
-    def __init__(self, piece: Piece = Piece()):
+    def __init__(self, piece: Piece = None):
         super().__init__(piece)
         
     def get_functionality(self):
@@ -34,7 +34,7 @@ class TeleportSquare(Square):
         
 
 class TrapSquare(Square):
-    def __init__(self, piece: Piece = Piece()):
+    def __init__(self, piece: Piece = None):
         super().__init__(piece)
         
     def get_functionality(self):
@@ -42,7 +42,7 @@ class TrapSquare(Square):
 
 
 class HeartSquare(Square):
-    def __init__(self, piece: Piece = Piece()):
+    def __init__(self, piece: Piece = None):
         super().__init__(piece)
         
     def get_functionality(self):
@@ -50,7 +50,7 @@ class HeartSquare(Square):
 
 
 class ShieldSquare(Square):
-    def __init__(self, piece: Piece = Piece()):
+    def __init__(self, piece: Piece = None):
         super().__init__(piece)
         
     def get_functionality(self):
@@ -58,7 +58,7 @@ class ShieldSquare(Square):
 
 
 class GrassSquare(Square):
-    def __init__(self, piece: Piece = Piece()):
+    def __init__(self, piece: Piece = None):
         super().__init__(piece)
     
     def get_functionality(self):

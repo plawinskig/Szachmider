@@ -69,7 +69,7 @@ class Board:
             "width": self.width,
             "height": self.height,
             "squares": [
-                [str(square) for square in row] for row in self.board
+                [(str(square), str(square.piece)) for square in row] for row in self.board
             ]
         }
     
