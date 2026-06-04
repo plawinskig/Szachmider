@@ -35,6 +35,16 @@ class Board:
         self.set_piece(to_x, to_y, piece)
         self.set_square(from_x, from_y, Square())
     
+    def is_empty_square(self, x: int, y: int) -> bool:
+        square = self.get_square(x, y)
+        return square.is_empty() if square else False
+    
+    def is_valid_position(self, x: int, y: int) -> bool:
+        return 0 <= x < self.width and 0 <= y < self.height
+    
+    def is_valid_move(self, from_x: int, from_y: int, to_x: int, to_y: int) -> bool:
+        return True # TODO
+    
     def display(self):
         for row in self.board:
             print(" ".join(str(square) for square in row))
