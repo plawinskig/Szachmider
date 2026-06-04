@@ -61,7 +61,7 @@ def mainMenu():
                     if menu_button == 1:
                         move_buttons = True
                         buttons_dest = -200
-                        print("Sans granie")
+                        print("Grzes granie")
                     elif menu_button == 2:
                         print("Statystyki")
                     elif menu_button == 3:
