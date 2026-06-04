@@ -1,8 +1,9 @@
+import os
 from typing import Optional
 
 from piece import *
 from square import *
-
+from board_json import save_to_json
 
 class Board:
     def __init__(self, width: int, height: int):
@@ -103,7 +104,7 @@ if __name__ == "__main__":
     board.display()
     print()
     saved_state = board.export_to_json()
-    print(saved_state)
+    save_to_json(saved_state, "boards" + os.sep + "board_state.json")
     # print()
     # board.reset_board()
     # board.display()
