@@ -28,6 +28,7 @@ class Board:
     
     def set_piece(self, x: int, y: int, piece: Piece):
         square = self.get_square(x, y)
+        
         if square:
             square.piece = piece
         else:
@@ -35,10 +36,13 @@ class Board:
     
     def move_piece(self, from_x: int, from_y: int, to_x: int, to_y: int):
         piece = self.get_piece(from_x, from_y)
+        
         if piece is None:
             raise ValueError("No piece at the source square")
+        
         if not self.is_valid_move(from_x, from_y, to_x, to_y):
             raise ValueError("Invalid move")
+        
         self.set_piece(to_x, to_y, piece)
         self.set_square(from_x, from_y, Square())
     
