@@ -22,12 +22,18 @@ class BasicSquare(Square):
     def __init__(self, piece: Piece = None):
         super().__init__(piece)
         
+    def get_code(self):
+        return "Bsc"
+        
     def get_functionality(self):
         return "Basic functionality"
 
 class TeleportSquare(Square):
     def __init__(self, piece: Piece = None):
         super().__init__(piece)
+        
+    def get_code(self):
+        return "Tel"
         
     def get_functionality(self):
         return "Teleport functionality"
@@ -37,6 +43,9 @@ class TrapSquare(Square):
     def __init__(self, piece: Piece = None):
         super().__init__(piece)
         
+    def get_code(self):
+        return "Tra"
+        
     def get_functionality(self):
         return "Trap functionality"
 
@@ -44,6 +53,9 @@ class TrapSquare(Square):
 class HeartSquare(Square):
     def __init__(self, piece: Piece = None):
         super().__init__(piece)
+        
+    def get_code(self):
+        return "Hrt"
         
     def get_functionality(self):
         return "Heart functionality"
@@ -53,6 +65,9 @@ class ShieldSquare(Square):
     def __init__(self, piece: Piece = None):
         super().__init__(piece)
         
+    def get_code(self):
+        return "Shl"
+        
     def get_functionality(self):
         return "Shield functionality"
 
@@ -61,6 +76,9 @@ class GrassSquare(Square):
     def __init__(self, piece: Piece = None):
         super().__init__(piece)
     
+    def get_code(self):
+        return "Grs"
+        
     def get_functionality(self):
         return "Grass functionality"
 
