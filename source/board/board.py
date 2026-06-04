@@ -1,6 +1,6 @@
 from typing import Optional
 
-from piece import Piece
+from piece import *
 from square import *
 
 
@@ -72,7 +72,7 @@ class Board:
                 [square.get_code() for square in row] for row in self.board
             ],
             "pieces": [ 
-                [str(square.piece) for square in row] for row in self.board
+                [square.piece.get_code() if square.piece else None for square in row] for row in self.board
             ]
         }
     
@@ -88,17 +88,17 @@ if __name__ == "__main__":
     board.set_square(3, 0, HeartSquare())
     board.set_square(4, 0, ShieldSquare())
     board.set_square(5, 0, GrassSquare())
-    board.set_piece(0, 0, Piece("Rook"))
-    board.set_piece(1, 0, Piece("Knight"))
-    board.set_piece(2, 0, Piece("Bishop"))
-    board.set_piece(3, 0, Piece("Queen"))
-    board.set_piece(4, 0, Piece("King"))
-    board.set_piece(5, 0, Piece("Bishop"))
-    board.set_piece(6, 0, Piece("Knight"))
-    board.set_piece(7, 0, Piece("Rook"))
+    board.set_piece(0, 0, Rook())
+    board.set_piece(1, 0, Knight())
+    board.set_piece(2, 0, Bishop())
+    board.set_piece(3, 0, Queen())
+    board.set_piece(4, 0, King())
+    board.set_piece(5, 0, Bishop())
+    board.set_piece(6, 0, Knight())
+    board.set_piece(7, 0, Rook())
     
     for i in range(8):
-        board.set_piece(i, 1, Piece("Pawn"))
+        board.set_piece(i, 1, Pawn())
     
     board.display()
     print()
