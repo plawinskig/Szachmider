@@ -31,8 +31,8 @@ class Board:
             raise IndexError("Square coordinates out of bounds")
     
     def move_piece(self, from_x: int, from_y: int, to_x: int, to_y: int):
-        piece = self.get_square(from_x, from_y)
-        self.set_square(to_x, to_y, piece)
+        piece = self.get_piece(from_x, from_y)
+        self.set_piece(to_x, to_y, piece)
         self.set_square(from_x, from_y, Square())
     
     def display(self):
