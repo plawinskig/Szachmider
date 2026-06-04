@@ -1,4 +1,4 @@
-from source.pieces.piece import Piece
+from piece import Piece
 
 
 class Square:

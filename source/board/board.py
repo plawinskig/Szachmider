@@ -1,6 +1,6 @@
 from typing import Optional
 
-from source.pieces.piece import Piece
+from piece import Piece
 from square import Square
 
 
