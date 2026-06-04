@@ -2,24 +2,24 @@ from square import Square
 
 
 class Board:
-    def __init__(self, width, height):
+    def __init__(self, width: int, height: int):
         self.width = width
         self.height = height
         self.reset_board()
         
-    def get_square(self, x, y):
+    def get_square(self, x: int, y: int) -> Square:
         if 0 <= x < self.width and 0 <= y < self.height:
             return self.board[y][x]
         else:
             raise IndexError("Square coordinates out of bounds")
         
-    def set_square(self, x, y, piece):
+    def set_square(self, x: int, y: int, piece: Square):
         if 0 <= x < self.width and 0 <= y < self.height:
             self.board[y][x] = piece
         else:
             raise IndexError("Square coordinates out of bounds")
     
-    def move_piece(self, from_x, from_y, to_x, to_y):
+    def move_piece(self, from_x: int, from_y: int, to_x: int, to_y: int):
         piece = self.get_square(from_x, from_y)
         self.set_square(to_x, to_y, piece)
         self.set_square(from_x, from_y, Square())
