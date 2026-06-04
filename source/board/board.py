@@ -64,6 +64,15 @@ class Board:
         for row in self.board:
             print(" ".join(str(square) for square in row))
     
+    def export_to_json(self) -> dict:
+        return {
+            "width": self.width,
+            "height": self.height,
+            "squares": [
+                [str(square) for square in row] for row in self.board
+            ]
+        }
+    
     def reset_board(self):
         self.board = [[BasicSquare() for _ in range(self.width)] for _ in range(self.height)]
         
@@ -89,3 +98,11 @@ if __name__ == "__main__":
         board.set_piece(i, 1, Piece("Pawn"))
     
     board.display()
+    print()
+    saved_state = board.export_to_json()
+    print(saved_state)
+    # print()
+    # board.reset_board()
+    # board.display()
+    # board.import_from_json(board.export_to_json())
+    # board.display()
