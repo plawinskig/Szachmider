@@ -1,6 +1,5 @@
 from source.gui.button import Button
 import pygame
-import math
 
 class TextField(Button):
     def __init__(self, pos, text: str, img_normal, img_hover, r: int, 
@@ -28,4 +27,4 @@ class TextField(Button):
     
     def updateText(self):
         self.font_text = self.font.render(text=self.text, antialias=False, color=self.text_basic_color)
-        self.text_rect = self.font_text.get_rect(center=(self.x_pos, self.y_pos - 8))
+        self.text_rect = self.font_text.get_rect(center=(self.width / 2, self.height / 2 - 4))
