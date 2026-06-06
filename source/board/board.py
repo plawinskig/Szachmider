@@ -88,14 +88,37 @@ class Board:
             self.set_piece(to_x, from_y, None)
         
         # castleling
-        # if moving_piece.get_code() == "Kin" and abs(to_x - from_x) == 2:
-        #     self._handle_castling(move)
+        if moving_piece.get_code() == "Kin" and abs(to_x - from_x) == 2:
+            self._handle_castling(move)
         
         self.set_piece(to_x, to_y, moving_piece)
         self.set_piece(from_x, from_y, None)
         
         moving_piece.has_moved = True
         self.last_move = (moving_piece, move)
+    
+    def _handle_castling(self, move: Move):
+        if move.from_y != move.to_y:
+            raise ValueError("Invalid castling move: King must move horizontally")
+        
+        from_x, to_x, y = move.from_x, move.to_x, move.from_y
+        
+        # short castle
+        if to_x > from_x:
+            rook_from_x = self.width - 1
+            rook_to_x = to_x - 1
+        # long castle
+        else:
+            rook_from_x = 0
+            rook_to_x = to_x + 1
+            
+        rook = self.get_piece(rook_from_x, y)
+        if rook:
+            self.set_piece(rook_to_x, y, rook)
+            self.set_piece(rook_from_x, y, None)
+            rook.has_moved = True
+        else:
+            raise ValueError("Invalid castling move: Rook not found")
     
     def is_square_attacked(self, x: int, y: int, enemy_color: str) -> bool:
         for row_y in range(self.height):
