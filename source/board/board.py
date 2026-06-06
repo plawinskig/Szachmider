@@ -76,6 +76,10 @@ class Board:
         if not self.is_valid_move(from_x, from_y, to_x, to_y):
             raise ValueError("Invalid move")
         
+        # roszada
+        # if moving_piece.get_code() == "Kin" and abs(to_x - from_x) == 2:
+        #   self._handle_castling(from_x, from_y, to_x, to_y)
+        
         self.set_piece(to_x, to_y, moving_piece)
         self.set_piece(from_x, from_y, None)
     
