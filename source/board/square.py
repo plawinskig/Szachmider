@@ -1,10 +1,11 @@
 from abc import ABC, abstractmethod
 
 from piece import Piece
+from typing import Optional
 
 
 class Square(ABC):
-    def __init__(self, piece: Piece = None):
+    def __init__(self, piece: Optional[Piece] = None):
         self.piece = piece
         
     def is_empty(self):
@@ -23,7 +24,7 @@ class Square(ABC):
 
 
 class BasicSquare(Square):
-    def __init__(self, piece: Piece = None):
+    def __init__(self, piece: Optional[Piece] = None):
         super().__init__(piece)
         
     def get_code(self):
@@ -33,7 +34,7 @@ class BasicSquare(Square):
         return "Basic functionality"
 
 class TeleportSquare(Square):
-    def __init__(self, piece: Piece = None):
+    def __init__(self, piece: Optional[Piece] = None):
         super().__init__(piece)
         
     def get_code(self):
@@ -44,7 +45,7 @@ class TeleportSquare(Square):
         
 
 class TrapSquare(Square):
-    def __init__(self, piece: Piece = None):
+    def __init__(self, piece: Optional[Piece] = None):
         super().__init__(piece)
         
     def get_code(self):
@@ -55,7 +56,7 @@ class TrapSquare(Square):
 
 
 class HeartSquare(Square):
-    def __init__(self, piece: Piece = None):
+    def __init__(self, piece: Optional[Piece] = None):
         super().__init__(piece)
         
     def get_code(self):
@@ -66,7 +67,7 @@ class HeartSquare(Square):
 
 
 class ShieldSquare(Square):
-    def __init__(self, piece: Piece = None):
+    def __init__(self, piece: Optional[Piece] = None):
         super().__init__(piece)
         
     def get_code(self):
@@ -77,7 +78,7 @@ class ShieldSquare(Square):
 
 
 class GrassSquare(Square):
-    def __init__(self, piece: Piece = None):
+    def __init__(self, piece: Optional[Piece] = None):
         super().__init__(piece)
     
     def get_code(self):

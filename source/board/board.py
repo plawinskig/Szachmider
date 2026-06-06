@@ -49,7 +49,7 @@ class Board:
             raise ValueError("Invalid move")
         
         self.set_piece(to_x, to_y, piece)
-        self.set_square(from_x, from_y, Square())
+        self.set_square(from_x, from_y, BasicSquare())
     
     def is_empty_square(self, x: int, y: int) -> bool:
         square = self.get_square(x, y)
