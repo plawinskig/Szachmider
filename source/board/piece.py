@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 class Piece(ABC):
-    def __init__(self, posX: int, posY: int):
+    def __init__(self):
         self._sprite: str
 
     def __str__(self):
