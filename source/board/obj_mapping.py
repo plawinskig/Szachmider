@@ -1,5 +1,5 @@
-from square import *
-from piece import *
+from square import BasicSquare, TeleportSquare, TrapSquare, HeartSquare, ShieldSquare, GrassSquare
+from piece import Rook, Knight, Bishop, Queen, King, Pawn
 
 
 square_mapping: dict[str, type] = {
