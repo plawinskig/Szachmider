@@ -90,6 +90,16 @@ class Board:
         moving_piece.has_moved = True
         self.last_move = (moving_piece, from_x, from_y, to_x, to_y)
     
+    def is_square_attacked(self, x: int, y: int, enemy_color: str) -> bool:
+        for row_y in range(self.height):
+            for col_x in range(self.width):
+                enemy_piece = self.get_piece(col_x, row_y)
+                
+                if enemy_piece and enemy_piece.color == enemy_color:
+                    if enemy_piece.can_move(col_x, row_y, x, y):
+                        return True
+        return False
+    
     def display(self):
         for row in self.board:
             print(" ".join(str(square) for square in row))
