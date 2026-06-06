@@ -60,7 +60,24 @@ class Board:
         return 0 <= x < self.width and 0 <= y < self.height
     
     def is_valid_move(self, from_x: int, from_y: int, to_x: int, to_y: int) -> bool:
-        return True # TODO
+        if not (self.is_valid_position(from_x, from_y) and self.is_valid_position(to_x, to_y)):
+            return False
+            
+        if from_x == to_x and from_y == to_y:
+            return False
+
+        piece = self.get_piece(from_x, from_y)
+        if piece is None:
+            return False
+
+        target_piece = self.get_piece(to_x, to_y)
+        if target_piece is not None and target_piece.color == piece.color:
+            return False
+
+        if not piece.can_move(from_x, from_y, to_x, to_y):
+            return False
+            
+        return True
     
     def display(self):
         for row in self.board:
