@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 class Piece(ABC):
     def __init__(self):
         self.color = "White"
+        self.has_moved = False
     
     def __str__(self):
         return self.__class__.__name__

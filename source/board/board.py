@@ -13,6 +13,10 @@ class Board:
             raise ValueError("Board dimensions must not exceed 10x10")
         self.width = width
         self.height = height
+        
+        # (piece, from_x, from_y, to_x, to_y)
+        self.last_move: Optional[tuple[Piece, int, int, int, int]] = None
+        
         self.board: list[list[Square]] = []
         self.reset_board()
         
@@ -82,6 +86,9 @@ class Board:
         
         self.set_piece(to_x, to_y, moving_piece)
         self.set_piece(from_x, from_y, None)
+        
+        moving_piece.has_moved = True
+        self.last_move = (moving_piece, from_x, from_y, to_x, to_y)
     
     def display(self):
         for row in self.board:
