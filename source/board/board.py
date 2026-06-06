@@ -68,7 +68,7 @@ class Board:
         if target_piece is not None and target_piece.color == moving_piece.color:
             return False
         
-        if not moving_piece.can_move(from_x, from_y, to_x, to_y):
+        if not moving_piece.can_move(move):
             return False
         
         return True
@@ -126,7 +126,7 @@ class Board:
                 enemy_piece = self.get_piece(col_x, row_y)
                 
                 if enemy_piece and enemy_piece.color == enemy_color:
-                    if enemy_piece.can_move(col_x, row_y, x, y):
+                    if enemy_piece.can_move(Move(col_x, row_y, x, y)):
                         return True
         return False
     
