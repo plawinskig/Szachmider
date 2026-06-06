@@ -1,5 +1,5 @@
 import os
-from typing import Optional
+from typing import Optional, Any
 
 from piece import *
 from square import *
@@ -13,6 +13,7 @@ class Board:
             raise ValueError("Board dimensions must not exceed 10x10")
         self.width = width
         self.height = height
+        self.board: list[list[Square]] = []
         self.reset_board()
         
     def get_square(self, x: int, y: int) -> Square:
@@ -65,7 +66,7 @@ class Board:
         for row in self.board:
             print(" ".join(str(square) for square in row))
     
-    def export_to_json(self) -> dict:
+    def export_to_json(self) -> dict[str, Any]:
         return {
             "width": self.width,
             "height": self.height,
