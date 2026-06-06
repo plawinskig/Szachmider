@@ -157,7 +157,13 @@ class Board:
                 [square.get_code() for square in row] for row in self.board
             ],
             "pieces": [ 
-                [square.piece.get_code() if square.piece else None for square in row] for row in self.board
+                [
+                    {
+                        "code" : square.piece.get_code(),
+                        "color": square.piece.color,
+                        "has_moved": square.piece.has_moved
+                    } if square.piece else None for square in row
+                ] for row in self.board
             ]
         }
         
