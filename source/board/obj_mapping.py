@@ -1,21 +1,21 @@
-from square import BasicSquare, TeleportSquare, TrapSquare, HeartSquare, ShieldSquare, GrassSquare
-from piece import Rook, Knight, Bishop, Queen, King, Pawn
+import square
+import piece
 
 
 square_mapping: dict[str, type] = {
-    "Bsc": BasicSquare,
-    "Tel": TeleportSquare,
-    "Tra": TrapSquare,
-    "Hrt": HeartSquare,
-    "Shl": ShieldSquare,
-    "Grs": GrassSquare
+    "Bsc": square.BasicSquare,
+    "Tel": square.TeleportSquare,
+    "Tra": square.TrapSquare,
+    "Hrt": square.HeartSquare,
+    "Shl": square.ShieldSquare,
+    "Grs": square.GrassSquare
 }
 
 piece_mapping: dict[str, type] = {
-    "Roo": Rook,
-    "Kni": Knight,
-    "Bis": Bishop,
-    "Que": Queen,
-    "Kin": King,
-    "Paw": Pawn
+    "Roo": piece.Rook,
+    "Kni": piece.Knight,
+    "Bis": piece.Bishop,
+    "Que": piece.Queen,
+    "Kin": piece.King,
+    "Paw": piece.Pawn
 }
