@@ -4,6 +4,7 @@ from typing import Optional, Any
 from piece import *
 from square import *
 from board_json import save_to_json
+from move import Move
 
 class Board:
     def __init__(self, width: int, height: int):
@@ -14,8 +15,7 @@ class Board:
         self.width = width
         self.height = height
         
-        # (piece, from_x, from_y, to_x, to_y)
-        self.last_move: Optional[tuple[Piece, int, int, int, int]] = None
+        self.last_move: Optional[tuple[Piece, Move]] = None
         
         self.board: list[list[Square]] = []
         self.reset_board()
@@ -51,7 +51,8 @@ class Board:
     def is_valid_position(self, x: int, y: int) -> bool:
         return 0 <= x < self.width and 0 <= y < self.height
     
-    def is_valid_move(self, from_x: int, from_y: int, to_x: int, to_y: int) -> bool:
+    def is_valid_move(self, move: Move) -> bool:
+        from_x, from_y, to_x, to_y = move.from_x, move.from_y, move.to_x, move.to_y
         if not (self.is_valid_position(from_x, from_y) and self.is_valid_position(to_x, to_y)):
             return False
 
@@ -71,24 +72,25 @@ class Board:
         
         return True
     
-    def move_piece(self, from_x: int, from_y: int, to_x: int, to_y: int):
+    def move_piece(self, move: Move):
+        from_x, from_y, to_x, to_y = move.from_x, move.from_y, move.to_x, move.to_y
         moving_piece = self.get_piece(from_x, from_y)
         
         if moving_piece is None:
             raise ValueError("No piece at the source square")
         
-        if not self.is_valid_move(from_x, from_y, to_x, to_y):
+        if not self.is_valid_move(move):
             raise ValueError("Invalid move")
         
         # roszada
         # if moving_piece.get_code() == "Kin" and abs(to_x - from_x) == 2:
-        #   self._handle_castling(from_x, from_y, to_x, to_y)
+        #   self._handle_castling(move)
         
         self.set_piece(to_x, to_y, moving_piece)
         self.set_piece(from_x, from_y, None)
         
         moving_piece.has_moved = True
-        self.last_move = (moving_piece, from_x, from_y, to_x, to_y)
+        self.last_move = (moving_piece, move)
     
     def is_square_attacked(self, x: int, y: int, enemy_color: str) -> bool:
         for row_y in range(self.height):
@@ -100,7 +102,8 @@ class Board:
                         return True
         return False
     
-    def is_path_clear(self, from_x: int, from_y: int, to_x: int, to_y: int) -> bool:
+    def is_path_clear(self, move: Move) -> bool:
+        from_x, from_y, to_x, to_y = move.from_x, move.from_y, move.to_x, move.to_y
         step_x = 0 if from_x == to_x else (1 if to_x > from_x else -1)
         step_y = 0 if from_y == to_y else (1 if to_y > from_y else -1)
         
