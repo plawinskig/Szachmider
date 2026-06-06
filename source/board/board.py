@@ -176,13 +176,17 @@ class Board:
         for y in range(self.height):
             row: list[Square] = []
             for x in range(self.width):
-                sq_code = data["squares"][y][x]
-                square_class = square_mapping.get(sq_code, BasicSquare)
+                square_code = data["squares"][y][x]
+                square_class = square_mapping.get(square_code, BasicSquare)
                 square = square_class()
                 
-                p_code = data["pieces"][y][x]
-                if p_code and piece_mapping.get(p_code):
-                    square.piece = piece_mapping[p_code]()
+                piece_data = data["pieces"][y][x]
+                if piece_data and piece_mapping.get(piece_data["code"]):
+                    piece_instance = piece_mapping[piece_data["code"]]()
+                    piece_instance.color = piece_data["color"]
+                    piece_instance.has_moved = piece_data["has_moved"]
+                    
+                    square.piece = piece_instance
                     
                 row.append(square)
             self.board.append(row)
