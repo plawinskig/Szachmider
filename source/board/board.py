@@ -100,6 +100,20 @@ class Board:
                         return True
         return False
     
+    def is_path_clear(self, from_x: int, from_y: int, to_x: int, to_y: int) -> bool:
+        step_x = 0 if from_x == to_x else (1 if to_x > from_x else -1)
+        step_y = 0 if from_y == to_y else (1 if to_y > from_y else -1)
+        
+        curr_x = from_x + step_x
+        curr_y = from_y + step_y
+        while curr_x != to_x or curr_y != to_y:
+            if not self.is_empty_square(curr_x, curr_y):
+                return False
+            curr_x += step_x
+            curr_y += step_y
+        
+        return True
+    
     def display(self):
         for row in self.board:
             print(" ".join(str(square) for square in row))
