@@ -32,7 +32,7 @@ class Board:
         else:
             raise IndexError("Square coordinates out of bounds")
     
-    def set_piece(self, x: int, y: int, piece: Piece):
+    def set_piece(self, x: int, y: int, piece: Optional[Piece]):
         square = self.get_square(x, y)
         
         if square:
@@ -68,16 +68,16 @@ class Board:
         return True
     
     def move_piece(self, from_x: int, from_y: int, to_x: int, to_y: int):
-        piece = self.get_piece(from_x, from_y)
+        moving_piece = self.get_piece(from_x, from_y)
         
-        if piece is None:
+        if moving_piece is None:
             raise ValueError("No piece at the source square")
         
         if not self.is_valid_move(from_x, from_y, to_x, to_y):
             raise ValueError("Invalid move")
         
-        self.set_piece(to_x, to_y, piece)
-        self.set_square(from_x, from_y, BasicSquare())
+        self.set_piece(to_x, to_y, moving_piece)
+        self.set_piece(from_x, from_y, None)
     
     def display(self):
         for row in self.board:
