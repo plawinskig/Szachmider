@@ -132,6 +132,53 @@ class Board:
                 [square.piece.get_code() if square.piece else None for square in row] for row in self.board
             ]
         }
+        
+    def import_from_json(self, data: dict[str, Any]):
+        self.width = data["width"]
+        self.height = data["height"]
+        self.board = []
+        
+        for y in range(self.height):
+            row: list[Square] = []
+            for x in range(self.width):
+                square_code = data["squares"][y][x]
+                piece_code = data["pieces"][y][x]
+                
+                if square_code == "Bsc":
+                    square = BasicSquare()
+                elif square_code == "Tel":
+                    square = TeleportSquare()
+                elif square_code == "Tra":
+                    square = TrapSquare()
+                elif square_code == "Hea":
+                    square = HeartSquare()
+                elif square_code == "Shi":
+                    square = ShieldSquare()
+                elif square_code == "Gra":
+                    square = GrassSquare()
+                else:
+                    raise ValueError(f"Unknown square code: {square_code}")
+                
+                if piece_code == "Roo":
+                    piece = Rook()
+                elif piece_code == "Kni":
+                    piece = Knight()
+                elif piece_code == "Bis":
+                    piece = Bishop()
+                elif piece_code == "Que":
+                    piece = Queen()
+                elif piece_code == "Kin":
+                    piece = King()
+                elif piece_code == "Paw":
+                    piece = Pawn()
+                elif piece_code is None:
+                    piece = None
+                else:
+                    raise ValueError(f"Unknown piece code: {piece_code}")
+                
+                square.piece = piece
+                row.append(square)
+            self.board.append(row)
     
     def reset_board(self):
         self.board = [[BasicSquare() for _ in range(self.width)] for _ in range(self.height)]
