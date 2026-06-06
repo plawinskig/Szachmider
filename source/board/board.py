@@ -5,6 +5,7 @@ from piece import *
 from square import *
 from board_json import save_to_json
 from move import Move
+from obj_mapping import square_mapping, piece_mapping
 
 class Board:
     def __init__(self, width: int, height: int):
@@ -136,47 +137,20 @@ class Board:
     def import_from_json(self, data: dict[str, Any]):
         self.width = data["width"]
         self.height = data["height"]
-        self.board = []
+        self.last_move = None 
         
+        self.board = []
         for y in range(self.height):
             row: list[Square] = []
             for x in range(self.width):
-                square_code = data["squares"][y][x]
-                piece_code = data["pieces"][y][x]
+                sq_code = data["squares"][y][x]
+                square_class = square_mapping.get(sq_code, BasicSquare)
+                square = square_class()
                 
-                if square_code == "Bsc":
-                    square = BasicSquare()
-                elif square_code == "Tel":
-                    square = TeleportSquare()
-                elif square_code == "Tra":
-                    square = TrapSquare()
-                elif square_code == "Hea":
-                    square = HeartSquare()
-                elif square_code == "Shi":
-                    square = ShieldSquare()
-                elif square_code == "Gra":
-                    square = GrassSquare()
-                else:
-                    raise ValueError(f"Unknown square code: {square_code}")
-                
-                if piece_code == "Roo":
-                    piece = Rook()
-                elif piece_code == "Kni":
-                    piece = Knight()
-                elif piece_code == "Bis":
-                    piece = Bishop()
-                elif piece_code == "Que":
-                    piece = Queen()
-                elif piece_code == "Kin":
-                    piece = King()
-                elif piece_code == "Paw":
-                    piece = Pawn()
-                elif piece_code is None:
-                    piece = None
-                else:
-                    raise ValueError(f"Unknown piece code: {piece_code}")
-                
-                square.piece = piece
+                p_code = data["pieces"][y][x]
+                if p_code and piece_mapping.get(p_code):
+                    square.piece = piece_mapping[p_code]()
+                    
                 row.append(square)
             self.board.append(row)
     
