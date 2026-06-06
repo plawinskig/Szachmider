@@ -1,6 +1,9 @@
 from abc import ABC, abstractmethod
 
-class Piece:
+class Piece(ABC):
+    def __init__(self, posX: int, posY: int):
+        self._sprite: str
+
     def __str__(self):
         return self.__class__.__name__
     
