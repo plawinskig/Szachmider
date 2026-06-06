@@ -1,8 +1,8 @@
 import os
 from typing import Optional, Any
 
-from piece import *
-from square import *
+from piece import Piece, Rook, Knight, Bishop, Queen, King, Pawn
+from square import Square, BasicSquare, TeleportSquare, TrapSquare, HeartSquare, ShieldSquare, GrassSquare
 from board_json import save_to_json
 from move import Move
 from obj_mapping import square_mapping, piece_mapping
@@ -68,7 +68,7 @@ class Board:
         if target_piece is not None and target_piece.color == moving_piece.color:
             return False
         
-        if not moving_piece.can_move(move):
+        if not moving_piece.can_move(self, move):
             return False
         
         return True
@@ -84,7 +84,7 @@ class Board:
             raise ValueError("Invalid move")
         
         # en passant
-        if moving_piece.get_code() == "Pwn" and from_x != to_x and self.is_empty_square(to_x, to_y):
+        if moving_piece.get_code() == "Paw" and from_x != to_x and self.is_empty_square(to_x, to_y):
             self.set_piece(to_x, from_y, None)
         
         # castleling
@@ -126,7 +126,8 @@ class Board:
                 enemy_piece = self.get_piece(col_x, row_y)
                 
                 if enemy_piece and enemy_piece.color == enemy_color:
-                    if enemy_piece.can_move(Move(col_x, row_y, x, y)):
+                    test_move = Move(col_x, row_y, x, y)
+                    if enemy_piece.can_move(self, test_move):
                         return True
         return False
     
