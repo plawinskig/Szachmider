@@ -83,9 +83,13 @@ class Board:
         if not self.is_valid_move(move):
             raise ValueError("Invalid move")
         
-        # roszada
+        # en passant
+        if moving_piece.get_code() == "Pwn" and from_x != to_x and self.is_empty_square(to_x, to_y):
+            self.set_piece(to_x, from_y, None)
+        
+        # castleling
         # if moving_piece.get_code() == "Kin" and abs(to_x - from_x) == 2:
-        #   self._handle_castling(move)
+        #     self._handle_castling(move)
         
         self.set_piece(to_x, to_y, moving_piece)
         self.set_piece(from_x, from_y, None)
