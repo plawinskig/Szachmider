@@ -4,13 +4,14 @@ import pygame
 class TextField(Button):
     def __init__(self, pos, text: str, img_normal, img_hover, r: int, 
                  text_hover_color = pygame.Color("#000000"), text_basic_color = pygame.Color("#000000"),
-                   max_str_length = 23):
-        super().__init__(pos, text, img_normal, img_hover, r, text_hover_color, text_basic_color)
+                   max_str_length = 20, right_detection_offset=45):
+        super().__init__(pos, text, img_normal, img_hover, r, text_hover_color, 
+                         text_basic_color, right_detection_offset=right_detection_offset)
         self.is_pressed = False
         self.max_str_length = max_str_length
 
     def checkForInput(self, position):
-        if (position[0] in range(self.img_rect.left, self.img_rect.right) 
+        if (position[0] in range(self.img_rect.left, self.img_rect.right - self.right_detection_offset) 
             and position[1] in range(self.img_rect.top, self.img_rect.bottom)):
             self.is_pressed = True
             return self.is_pressed

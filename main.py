@@ -5,6 +5,7 @@ from source.menu.play_submenu.player_selection import PlayerSelection
 from source.menu.logo import Logo
 from source.menu.menu_background import MenuBackground
 from source.menu.main_buttons import MainButtons
+from source.menu.play_submenu.players_startup import PlayersStartup
 
 pygame.init()
 SCREEN = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
@@ -33,15 +34,17 @@ def mainMenu():
     buttons_dest_offscreen = -200
 
     MAIN_BTNS = MainButtons(buttons_pos,SCREEN_WIDTH)
+    render_main_menu = True
 
     # Logic for sub-menus
     # Play sub-menu
     play_pos = int(SCREEN_WIDTH / 2)
-    play_destination_offscreen = SCREEN_WIDTH * 2
+    play_destination_offscreen = SCREEN_WIDTH * 1.5
 
     # TODO: normalne pobieranie listy graczy
-    player_list = ["Gracz 1", "Bardzo długi nick", "Limit znaków = 23", "Chyba działa", "Mam nadzieję"]
-    PLAY_MENU = PlayerSelection(play_destination_offscreen, player_list)
+    player_list = ["Gracz 1", "Bardzo długi nick", "Limit znaków = 20", "Chyba działa", "Mam nadzieję"]
+    PLAY_MENU = PlayersStartup((play_destination_offscreen, SCREEN_HEIGHT // 2), player_list, screen_width=SCREEN_WIDTH)
+    render_play_menu = False
 
     while is_running:
         SCREEN.blit(BG, (0, 0))
@@ -55,26 +58,39 @@ def mainMenu():
 
         MENU_BG.update(SCREEN)
         LOGO.update(SCREEN, time, MOUSE_POS)
-        MAIN_BTNS.update(SCREEN, time, TIME_DELTA, MOUSE_POS)
         PLAY_MENU.update(SCREEN, time, TIME_DELTA, MOUSE_POS)
+        MAIN_BTNS.update(SCREEN, time, TIME_DELTA, MOUSE_POS)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 is_running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
-                menu_button = MAIN_BTNS.checkForInput(MOUSE_POS)
-                if menu_button:
-                    if menu_button == 1:
-                        MAIN_BTNS.move(buttons_dest_offscreen)
-                        PLAY_MENU.move(play_pos)
-                        print("Grzes granie")
-                    elif menu_button == 2:
-                        print("Statystyki")
-                    elif menu_button == 3:
-                        print("Edit")
-                    elif menu_button == 4:
-                        is_running = False
-                play_menu_button = PLAY_MENU.checkForInput(MOUSE_POS)   
+                if render_main_menu:
+                    menu_button = MAIN_BTNS.checkForInput(MOUSE_POS)
+                    if menu_button:
+                        if (menu_button == 1 
+                            and not MAIN_BTNS.is_moving 
+                            and not PLAY_MENU.is_moving):
+                            MAIN_BTNS.move(buttons_dest_offscreen)
+                            render_main_menu = False
+                            render_play_menu = True
+                            PLAY_MENU.move(play_pos)
+                        elif menu_button == 2:
+                            print("Statystyki")
+                        elif menu_button == 3:
+                            print("Edit")
+                        elif menu_button == 4:
+                            is_running = False
+                if render_play_menu:
+                    play_menu_button = PLAY_MENU.checkForInput(MOUSE_POS)
+                    if play_menu_button:
+                        if (play_menu_button == 5 
+                            and not MAIN_BTNS.is_moving 
+                            and not PLAY_MENU.is_moving):
+                            PLAY_MENU.move(play_destination_offscreen)
+                            render_play_menu = False
+                            render_main_menu = True
+                            MAIN_BTNS.move(buttons_pos)
             if event.type == pygame.KEYDOWN:
                 PLAY_MENU.input(event)
             
