@@ -29,7 +29,7 @@ def mainMenu():
 
     LOGO = Logo(pos=(SCREEN_WIDTH/2, 100))
 
-    # Logic for moving buttons off-screen and back
+    # Logic for moving main menu buttons off-screen and back
     buttons_pos = SCREEN_WIDTH / 2
     buttons_dest_offscreen = -200
 
@@ -58,8 +58,11 @@ def mainMenu():
 
         MENU_BG.update(SCREEN)
         LOGO.update(SCREEN, time, MOUSE_POS)
-        PLAY_MENU.update(SCREEN, time, TIME_DELTA, MOUSE_POS)
-        MAIN_BTNS.update(SCREEN, time, TIME_DELTA, MOUSE_POS)
+
+        if render_play_menu or PLAY_MENU.is_moving:
+            PLAY_MENU.update(SCREEN, time, TIME_DELTA, MOUSE_POS)
+        if render_main_menu or MAIN_BTNS.is_moving:
+            MAIN_BTNS.update(SCREEN, time, TIME_DELTA, MOUSE_POS)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

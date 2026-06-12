@@ -37,15 +37,24 @@ class PlayersStartup:
             self.x_pos = buttons_pos
             row = 0
         i = 0
-        for btn in [self.BTN_BACK, self.fst_player, self.BTN_FST_COLOR, self.BTN_SCND_COLOR, self.scnd_player]:
+
+        # Buttons start moving from the side closer to the direction they are moving
+        # Looks more natural that way
+        real_buttons_index = [0, 2, 3]
+        buttons = [self.BTN_BACK, self.fst_player, self.BTN_FST_COLOR, self.BTN_SCND_COLOR, self.scnd_player]
+        if (self.x_dest > self.x_pos):
+            buttons = buttons[::-1]
+            real_buttons_index = [4, 2, 1]
+
+        for btn in buttons:
             # Logic for moving the buttons
             if self.is_moving:
                 if row == self.moving_row and not btn.is_moving:
-                    if i == 0:
+                    if i == real_buttons_index[0]:
                         btn.move(position=(self.x_dest - self.screen_width * 0.4, btn.y_dest))
-                    elif i == 2:
+                    elif i == real_buttons_index[1]:
                         btn.move(position=(self.x_dest - 100, btn.y_dest))
-                    elif i == 3:
+                    elif i == real_buttons_index[2]:
                         btn.move(position=(self.x_dest + 100, btn.y_dest))
                     else:
                         btn.move(self.x_dest)
@@ -55,7 +64,7 @@ class PlayersStartup:
                 self.row_delay += time_delta
                 row += 1
             
-            if i in [0, 2, 3]:
+            if i in real_buttons_index:
                 btn.hover(mouse_pos)
                 btn.update(screen, time, time_delta)
             else:
@@ -79,6 +88,8 @@ class PlayersStartup:
             return 1
         elif self.scnd_player.checkForInput(position):
             return 2
+        # Changing color of one player also changes the color of the other, 
+        # so that they are not the same
         elif self.BTN_FST_COLOR.checkForInput(position):
             if self.BTN_FST_COLOR.color == 1:
                 self.BTN_SCND_COLOR.color = 2
