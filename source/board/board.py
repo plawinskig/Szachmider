@@ -5,6 +5,8 @@ from piece import *
 from square import *
 from board_json import save_to_json
 
+
+
 class Board:
     def __init__(self, width: int, height: int):
         if width < 4 or height < 4:
@@ -14,6 +16,8 @@ class Board:
         self.width = width
         self.height = height
         self.reset_board()
+
+        self.__moveMatrix = [[[] for _ in range(self.width)] for _ in range(self.height)]
         
     def get_square(self, x: int, y: int) -> Square:
         if self.is_valid_position(x, y):
@@ -79,6 +83,43 @@ class Board:
     
     def reset_board(self):
         self.board = [[BasicSquare() for _ in range(self.width)] for _ in range(self.height)]
+
+
+    def iterate_board(self):
+        for boardY in range(self.height):
+            for boardX in range(self.width):
+                yield (boardX, boardY, self.get_square(boardX, boardY), self.get_piece(boardX, boardY))
+
+
+    # UNDER CONSTRUCTION
+    def make_moves_matrix(self):
+        self.__moveMatrix = [[[] for _ in range(self.width)] for _ in range(self.height)]
+
+
+        for place in self.iterate_board():
+            boardX, boardY, currentSquare, currentPiece = place
+            if  currentPiece == None:
+                continue
+
+            for moveIter in currentPiece.moveIterators:
+                moveInstance = iter(moveIter)(boardX, boardY)
+
+                endIterating = False
+                while not endIterating:
+                    proposedMove = next(moveInstance)
+
+                    proposedSquare = self.get_square(proposedMove[0], proposedMove[1])
+                    proposedSqrPiece = self.get_piece(proposedMove[0], proposedMove[1])
+
+                    if moveInstance.is_finite():
+
+
+
+
+
+
+                    else:
+
         
 
 if __name__ == "__main__":

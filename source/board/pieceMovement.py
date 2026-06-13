@@ -113,6 +113,12 @@ class MoveVectorSymmetrical(MovementIter):
         except StopIteration:
             raise StopIteration
 
+
+
+
+
+
+
 if __name__ == '__main__':
     horsie = MoveVectorSymmetrical((3, 1))
     it = iter(horsie)(4, 4)
