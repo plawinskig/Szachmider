@@ -7,13 +7,14 @@ class MovementIter(ABC):
 
     SQRT_OF_2 = sqrt(2)
 
-    def __init__(self):
+    def __init__(self, canTake: bool):
         self._location: tuple[int, int]
         self._finite: bool
+        self._canTake: bool = canTake
 
 
     def __iter__(self):
-        return copy.deepcopy(self)
+        return copy.copy(self)
 
     def __call__(self, startX: int, startY: int):
         self._location = (startX, startY)
@@ -30,6 +31,9 @@ class MovementIter(ABC):
     def jumps_over(self):
         return True
 
+    def can_take(self):
+        return self._canTake
+
     def _vector_dist(self, vec1: tuple[int, int], vec2: tuple[int, int]):
         return sqrt((vec1[0] - vec2[0]) ** 2 + (vec1[1] - vec2[1]) ** 2)
 
@@ -38,7 +42,8 @@ class MovementIter(ABC):
 
 # outputs consecutive moves in the direction of vector
 class MoveVectorDir(MovementIter):
-    def __init__(self, vector: tuple[int, int], jumps: bool = False):
+    def __init__(self, vector: tuple[int, int], canTake: bool, jumps: bool = False):
+        super().__init__(canTake)
         self.__vector = vector
         self.__jumps = jumps
 
@@ -58,7 +63,8 @@ class MoveVectorDir(MovementIter):
 
 # outputs moves in the direction of each vector in vectors
 class MoveVectorList(MovementIter):
-    def __init__(self, vectors: list[tuple[int, int]]):
+    def __init__(self, vectors: list[tuple[int, int]], canTake: bool):
+        super().__init__(canTake)
         self._finite = True
 
         self.__vectors = vectors
@@ -77,7 +83,9 @@ class MoveVectorList(MovementIter):
 # outputs moves in every transformation of  vector
 # just horsin' around
 class MoveVectorSymmetrical(MovementIter):
-    def __init__(self, vector: tuple[int, int]):
+    def __init__(self, vector: tuple[int, int], canTake: bool):
+        super().__init__(canTake)
+
         x = vector[0]
         y = vector[1]
 
@@ -93,7 +101,7 @@ class MoveVectorSymmetrical(MovementIter):
         ]
         moves = list(set(moves))
 
-        self.__insideIter = MoveVectorList(moves)
+        self.__insideIter = MoveVectorList(moves, canTake)
 
         self._finite = True
 

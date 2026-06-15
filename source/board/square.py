@@ -33,9 +33,15 @@ class BasicSquare(Square):
         return "Basic functionality"
 
 class TeleportSquare(Square):
-    def __init__(self, piece: Piece = None):
+    def __init__(self, tele: tuple[int, int], piece: Piece = None):
         super().__init__(piece)
-        
+        self.__teleLocation = tele
+
+
+    def get_tele_location(self):
+        return self.__teleLocation
+
+
     def get_code(self):
         return "Tel"
         
