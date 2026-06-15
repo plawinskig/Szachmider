@@ -198,12 +198,16 @@ class Board:
                 
                 piece_data = data["pieces"][y][x]
                 if piece_data is not None:
-                    pc_type = piece_data["type"]
-                    pc_is_black = piece_data["isBlack"]
-                    
-                    piece_class = PIECE_MAP.get(pc_type)
+                    piece_class = PIECE_MAP.get(piece_data["type"])
                     if piece_class:
-                        new_piece = piece_class(isBlack=pc_is_black)
+                        new_piece = piece_class(isBlack=piece_data["isBlack"])
+                        
+                        new_piece._pieceID = piece_data["id"] 
+                        if hasattr(new_piece, "_moved"):
+                            new_piece._moved = piece_data["moved"]
+                        if "justMovedTwo" in piece_data and hasattr(new_piece, "_justMovedTwo"):
+                            new_piece._justMovedTwo = piece_data["justMovedTwo"]
+                            
                         new_square.piece = new_piece
                 
                 self.board[y][x] = new_square
