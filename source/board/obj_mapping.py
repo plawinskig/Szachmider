@@ -1,5 +1,5 @@
-import square
-import piece
+from source.board import square
+from source.board import piece
 
 
 square_mapping: dict[str, type] = {

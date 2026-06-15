@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from piece import Piece
+from source.board.piece import Piece
 from typing import Optional
 
 
@@ -48,11 +48,11 @@ class BasicSquare(Square):
 class TeleportSquare(Square):
     def __init__(self, piece: Optional[Piece] = None):
         super().__init__(piece)
-        self.img_tile_light = "assets/squares/SQR_tile_teleport_light.png"
-        self.img_tile_dark = "assets/squares/SQR_tile_teleport_dark.png"
-        self.img_back_light = "assets/squares/SQR_tile_teleport_back.png"
+        self.img_tile_light = "assets/squares/SQR_tile_teleporter_light.png"
+        self.img_tile_dark = "assets/squares/SQR_tile_teleporter_dark.png"
+        self.img_back_light = "assets/squares/SQR_tile_teleporter_back.png"
         self.img_back_dark = self.img_back_light
-        self.img_front_light = "assets/squares/SQR_tile_teleport_front.png"
+        self.img_front_light = "assets/squares/SQR_tile_teleporter_front.png"
         self.img_front_dark = self.img_front_light
         
     def get_code(self) -> str:
@@ -82,11 +82,11 @@ class TrapSquare(Square):
 class HeartSquare(Square):
     def __init__(self, piece: Optional[Piece] = None):
         super().__init__(piece)
-        self.img_tile_light = "assets/squares/SQR_heart_light.png"
-        self.img_tile_dark = "assets/squares/SQR_heart_dark.png"
+        self.img_tile_light = "assets/squares/SQR_tile_heart_light.png"
+        self.img_tile_dark = "assets/squares/SQR_tile_heart_dark.png"
         self.img_back_light = None
         self.img_back_dark = None
-        self.img_front_light = "assets/squares/SQR_heart_front.png"
+        self.img_front_light = "assets/squares/SQR_tile_heart_front.png"
         self.img_front_dark = self.img_front_light
         
     def get_code(self) -> str:
@@ -99,13 +99,13 @@ class HeartSquare(Square):
 class ShieldSquare(Square):
     def __init__(self, piece: Optional[Piece] = None):
         super().__init__(piece)
-        self.img_tile_light = "assets/squares/SQR_metal_light.png"
-        self.img_tile_dark = "assets/squares/SQR_metal_dark.png"
+        self.img_tile_light = "assets/squares/SQR_tile_metal_light.png"
+        self.img_tile_dark = "assets/squares/SQR_tile_metal_dark.png"
         self.img_back_light = None
         self.img_back_dark = None
-        self.img_front_light = "assets/squares/SQR_metal_front.png"
+        self.img_front_light = "assets/squares/SQR_tile_metal_front.png"
         self.img_front_dark = self.img_front_light
-        
+
     def get_code(self) -> str:
         return "Shl"
         
@@ -116,12 +116,12 @@ class ShieldSquare(Square):
 class GrassSquare(Square):
     def __init__(self, piece: Optional[Piece] = None):
         super().__init__(piece)
-        self.img_tile_light = "assets/squares/SQR_grass_light.png"
-        self.img_tile_dark = "assets/squares/SQR_grass_dark.png"
-        self.img_back_light = "assets/squares/SQR_grass_light_back.png"
-        self.img_back_dark = "assets/squares/SQR_grass_dark_back.png"
-        self.img_front_light = "assets/squares/SQR_grass_light_front.png"
-        self.img_front_dark = "assets/squares/SQR_grass_dark_front.png"
+        self.img_tile_light = "assets/squares/SQR_tile_grass_light.png"
+        self.img_tile_dark = "assets/squares/SQR_tile_grass_dark.png"
+        self.img_back_light = "assets/squares/SQR_tile_grass_light_back.png"
+        self.img_back_dark = "assets/squares/SQR_tile_grass_dark_back.png"
+        self.img_front_light = "assets/squares/SQR_tile_grass_light_front.png"
+        self.img_front_dark = "assets/squares/SQR_tile_grass_dark_front.png"
     
     def get_code(self) -> str:
         return "Grs"

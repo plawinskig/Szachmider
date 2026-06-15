@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
-from move import Move
-from board import Board
+from source.board.move import Move
+# Gives error for circular imports
+#from source.board.board import Board
 
 class Piece(ABC):
     def __init__(self):

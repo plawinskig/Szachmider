@@ -7,6 +7,10 @@ from source.menu.menu_background import MenuBackground
 from source.menu.main_buttons import MainButtons
 from source.menu.play_submenu.players_startup import PlayersStartup
 
+from source.board.board import Board
+from source.board.board_view import BoardView
+from source.board.square import *
+
 pygame.init()
 SCREEN = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 
@@ -46,6 +50,17 @@ def mainMenu():
     PLAY_MENU = PlayersStartup((play_destination_offscreen, SCREEN_HEIGHT // 2), player_list, screen_width=SCREEN_WIDTH)
     render_play_menu = False
 
+    # TEST ONLY - Brudnopis że tak to nazwe
+    board = Board(8, 8)
+    board.set_square(0, 0, BasicSquare())
+    board.set_square(1, 0, TeleportSquare())
+    board.set_square(2, 0, TrapSquare())
+    board.set_square(3, 0, HeartSquare())
+    board.set_square(4, 0, ShieldSquare())
+    board.set_square(5, 0, GrassSquare())
+
+    boardView = BoardView(board, SCREEN_WIDTH, SCREEN_HEIGHT)
+
     while is_running:
         SCREEN.blit(BG, (0, 0))
 
@@ -63,6 +78,8 @@ def mainMenu():
             PLAY_MENU.update(SCREEN, time, TIME_DELTA, MOUSE_POS)
         if render_main_menu or MAIN_BTNS.is_moving:
             MAIN_BTNS.update(SCREEN, time, TIME_DELTA, MOUSE_POS)
+
+        boardView.display(SCREEN, False)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
