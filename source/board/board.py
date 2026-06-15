@@ -161,10 +161,16 @@ class Board:
                 row_sq.append(square.get_code())
                 
                 if square.piece:
-                    row_pc.append({
+                    piece_state: dict[str, Any] = {
                         "type": square.piece.get_code(),
-                        "isBlack": square.piece.is_black()
-                    })
+                        "isBlack": square.piece.is_black(),
+                        "id": square.piece.get_ID(),
+                        "moved": getattr(square.piece, "_moved", False)
+                    }
+                    if square.piece.get_code() == "Paw":
+                        piece_state["justMovedTwo"] = getattr(square.piece, "_justMovedTwo", False)
+                        
+                    row_pc.append(piece_state)
                 else:
                     row_pc.append(None)
                     

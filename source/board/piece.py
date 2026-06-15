@@ -13,6 +13,9 @@ class Piece(ABC):
     def is_black(self) -> bool:
         return self.color == "Black"
     
+    def get_ID(self) -> str:
+        return self.get_code() + ("B" if self.is_black() else "W")
+    
     @abstractmethod
     def get_code(self) -> str:
         pass
