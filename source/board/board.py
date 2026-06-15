@@ -181,26 +181,26 @@ class Board:
     def import_from_json(self, data: dict[str, Any]):
         self.width = data["width"]
         self.height = data["height"]
-        self.last_move = None 
         
-        self.board = []
+        self.reset_board() 
+        
         for y in range(self.height):
-            row: list[Square] = []
             for x in range(self.width):
-                square_code = data["squares"][y][x]
-                square_class = SQUARE_MAP.get(square_code, BasicSquare)
-                square = square_class()
+                sq_code = data["squares"][y][x]
+                square_class = SQUARE_MAP.get(sq_code, BasicSquare) 
+                new_square = square_class()
                 
                 piece_data = data["pieces"][y][x]
-                if piece_data and PIECE_MAP.get(piece_data["code"]):
-                    piece_instance = PIECE_MAP[piece_data["code"]]()
-                    piece_instance.color = piece_data["color"]
-                    piece_instance.has_moved = piece_data["has_moved"]
+                if piece_data is not None:
+                    pc_type = piece_data["type"]
+                    pc_is_black = piece_data["isBlack"]
                     
-                    square.piece = piece_instance
-                    
-                row.append(square)
-            self.board.append(row)
+                    piece_class = PIECE_MAP.get(pc_type)
+                    if piece_class:
+                        new_piece = piece_class(isBlack=pc_is_black)
+                        new_square.piece = new_piece
+                
+                self.board[y][x] = new_square
     
     def reset_board(self):
         self.board = [[BasicSquare() for _ in range(self.width)] for _ in range(self.height)]
