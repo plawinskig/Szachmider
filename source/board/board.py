@@ -155,10 +155,10 @@ class Board:
         pieces_data: list[list[dict[str, Any] | None]] = []
 
         for row in self.board:
-            row_sq: list[str] = []
-            row_pc: list[dict[str, Any] | None] = []
+            row_squares: list[str] = []
+            row_pieces: list[dict[str, Any] | None] = []
             for square in row:
-                row_sq.append(square.get_code())
+                row_squares.append(square.get_code())
                 
                 if square.piece:
                     piece_code = square.piece.get_code()
@@ -174,12 +174,12 @@ class Board:
                         piece_state["moved"] = getattr(square.piece, "_Pawn__moved", False)
                         piece_state["justMovedTwo"] = getattr(square.piece, "_Pawn__justMovedTwo", False)       
                         
-                    row_pc.append(piece_state)
+                    row_pieces.append(piece_state)
                 else:
-                    row_pc.append(None)
+                    row_pieces.append(None)
                     
-            squares_data.append(row_sq)
-            pieces_data.append(row_pc)
+            squares_data.append(row_squares)
+            pieces_data.append(row_pieces)
 
         return {
             "width": self.width,
