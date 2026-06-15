@@ -1,11 +1,11 @@
 import os
 from typing import Optional, Any
 
-from piece import Piece, Rook, Knight, Bishop, Queen, King, Pawn
-from square import Square, BasicSquare, TeleportSquare, TrapSquare, HeartSquare, ShieldSquare, GrassSquare
-from board_json import save_to_json
-from move import Move
-from obj_mapping import SQUARE_MAP, PIECE_MAP
+from source.board.piece import Piece, Rook, Knight, Bishop, Queen, King, Pawn
+from source.board.square import Square, BasicSquare, TeleportSquare, TrapSquare, HeartSquare, ShieldSquare, GrassSquare
+from source.board.board_json import save_to_json
+from source.board.move import Move
+from source.board.obj_mapping import SQUARE_MAP, PIECE_MAP
 
 class Board:
     def __init__(self, width: int, height: int):
