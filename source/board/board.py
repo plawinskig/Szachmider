@@ -201,6 +201,11 @@ class Board:
                         new_square.piece = new_piece
                 
                 self.board[y][x] = new_square
+                
+        self.make_movent_matrix()
+        
+    def make_movent_matrix(self):
+        pass
     
     def reset_board(self):
         self.board = [[BasicSquare() for _ in range(self.width)] for _ in range(self.height)]
