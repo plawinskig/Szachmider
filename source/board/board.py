@@ -13,17 +13,29 @@ class Board:
             raise ValueError("Board dimensions must be at least 4x4")
         if width > 10 or height > 10:
             raise ValueError("Board dimensions must not exceed 10x10")
-        self.width = width
-        self.height = height
+            
+        self._width = width
+        self._height = height
+        self._last_move: Optional[tuple[Piece, Move]] = None
+        self._board: list[list[Square]] = []
         
-        self.last_move: Optional[tuple[Piece, Move]] = None
-        
-        self.board: list[list[Square]] = []
         self.reset_board()
+        
+    @property
+    def width(self) -> int:
+        return self._width
+
+    @property
+    def height(self) -> int:
+        return self._height
+
+    @property
+    def last_move(self) -> Optional[tuple[Piece, Move]]:
+        return self._last_move
         
     def get_square(self, x: int, y: int) -> Square:
         if self.is_valid_position(x, y):
-            return self.board[y][x]
+            return self._board[y][x]
         else:
             raise IndexError("Square coordinates out of bounds")
     
@@ -33,7 +45,7 @@ class Board:
         
     def set_square(self, x: int, y: int, square: Square):
         if self.is_valid_position(x, y):
-            self.board[y][x] = square
+            self._board[y][x] = square
         else:
             raise IndexError("Square coordinates out of bounds")
     
@@ -50,7 +62,7 @@ class Board:
         return square.is_empty() if square else False
     
     def is_valid_position(self, x: int, y: int) -> bool:
-        return 0 <= x < self.width and 0 <= y < self.height
+        return 0 <= x < self._width and 0 <= y < self._height
     
     def is_valid_move(self, move: Move) -> bool:
         from_x, from_y, to_x, to_y = move.from_x, move.from_y, move.to_x, move.to_y
@@ -95,7 +107,7 @@ class Board:
         self.set_piece(from_x, from_y, None)
         
         moving_piece.has_moved = True
-        self.last_move = (moving_piece, move)
+        self._last_move = (moving_piece, move)
     
     def _handle_castling(self, move: Move):
         if move.from_y != move.to_y:
@@ -105,7 +117,7 @@ class Board:
         
         # short castle
         if to_x > from_x:
-            rook_from_x = self.width - 1
+            rook_from_x = self._width - 1
             rook_to_x = to_x - 1
         # long castle
         else:
@@ -121,8 +133,8 @@ class Board:
             raise ValueError("Invalid castling move: Rook not found")
     
     def is_square_attacked(self, x: int, y: int, enemy_color: str) -> bool:
-        for row_y in range(self.height):
-            for col_x in range(self.width):
+        for row_y in range(self._height):
+            for col_x in range(self._width):
                 enemy_piece = self.get_piece(col_x, row_y)
                 
                 if enemy_piece and enemy_piece.color == enemy_color:
@@ -147,14 +159,14 @@ class Board:
         return True
     
     def display(self):
-        for row in self.board:
+        for row in self._board:
             print(" ".join(str(square) for square in row))
     
     def export_to_json(self) -> dict[str, Any]:
         squares_data: list[list[str]] = []
         pieces_data: list[list[dict[str, Any] | None]] = []
 
-        for row in self.board:
+        for row in self._board:
             row_squares: list[str] = []
             row_pieces: list[dict[str, Any] | None] = []
             for square in row:
@@ -182,20 +194,20 @@ class Board:
             pieces_data.append(row_pieces)
 
         return {
-            "width": self.width,
-            "height": self.height,
+            "width": self._width,
+            "height": self._height,
             "squares": squares_data,
             "pieces": pieces_data
         }
         
     def import_from_json(self, data: dict[str, Any]):
-        self.width = data["width"]
-        self.height = data["height"]
+        self._width = data["width"]
+        self._height = data["height"]
         
         self.reset_board() 
         
-        for y in range(self.height):
-            for x in range(self.width):
+        for y in range(self._height):
+            for x in range(self._width):
                 square_code = data["squares"][y][x]
                 square_class = SQUARE_MAP.get(square_code, BasicSquare) 
                 new_square = square_class()
@@ -217,7 +229,7 @@ class Board:
                             
                         new_square.piece = new_piece
                 
-                self.board[y][x] = new_square
+                self._board[y][x] = new_square
                 
         self.make_movement_matrix()
         
@@ -225,7 +237,7 @@ class Board:
         pass
     
     def reset_board(self):
-        self.board = [[BasicSquare() for _ in range(self.width)] for _ in range(self.height)]
+        self._board = [[BasicSquare() for _ in range(self._width)] for _ in range(self._height)]
         
 
 if __name__ == "__main__":
