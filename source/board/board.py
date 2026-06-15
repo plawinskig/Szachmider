@@ -219,9 +219,9 @@ class Board:
                 
                 self.board[y][x] = new_square
                 
-        self.make_movent_matrix()
+        self.make_movement_matrix()
         
-    def make_movent_matrix(self):
+    def make_movement_matrix(self):
         pass
     
     def reset_board(self):
