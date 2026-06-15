@@ -196,8 +196,8 @@ class Board:
         
         for y in range(self.height):
             for x in range(self.width):
-                sq_code = data["squares"][y][x]
-                square_class = SQUARE_MAP.get(sq_code, BasicSquare) 
+                square_code = data["squares"][y][x]
+                square_class = SQUARE_MAP.get(square_code, BasicSquare) 
                 new_square = square_class()
                 
                 piece_data = data["pieces"][y][x]
