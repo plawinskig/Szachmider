@@ -151,21 +151,31 @@ class Board:
             print(" ".join(str(square) for square in row))
     
     def export_to_json(self) -> dict[str, Any]:
+        squares_data: list[list[str]] = []
+        pieces_data: list[list[dict[str, Any] | None]] = []
+
+        for row in self.board:
+            row_sq: list[str] = []
+            row_pc: list[dict[str, Any] | None] = []
+            for square in row:
+                row_sq.append(square.get_code())
+                
+                if square.piece:
+                    row_pc.append({
+                        "type": square.piece.get_code(),
+                        "isBlack": square.piece.is_black()
+                    })
+                else:
+                    row_pc.append(None)
+                    
+            squares_data.append(row_sq)
+            pieces_data.append(row_pc)
+
         return {
             "width": self.width,
             "height": self.height,
-            "squares": [
-                [square.get_code() for square in row] for row in self.board
-            ],
-            "pieces": [ 
-                [
-                    {
-                        "code" : square.piece.get_code(),
-                        "color": square.piece.color,
-                        "has_moved": square.piece.has_moved
-                    } if square.piece else None for square in row
-                ] for row in self.board
-            ]
+            "squares": squares_data,
+            "pieces": pieces_data
         }
         
     def import_from_json(self, data: dict[str, Any]):

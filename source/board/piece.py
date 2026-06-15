@@ -10,6 +10,9 @@ class Piece(ABC):
     def __str__(self):
         return self.__class__.__name__
     
+    def is_black(self) -> bool:
+        return self.color == "Black"
+    
     @abstractmethod
     def get_code(self) -> str:
         pass
