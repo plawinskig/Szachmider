@@ -5,7 +5,7 @@ from piece import Piece, Rook, Knight, Bishop, Queen, King, Pawn
 from square import Square, BasicSquare, TeleportSquare, TrapSquare, HeartSquare, ShieldSquare, GrassSquare
 from board_json import save_to_json
 from move import Move
-from obj_mapping import square_mapping, piece_mapping
+from obj_mapping import SQUARE_MAP, PIECE_MAP
 
 class Board:
     def __init__(self, width: int, height: int):
@@ -188,12 +188,12 @@ class Board:
             row: list[Square] = []
             for x in range(self.width):
                 square_code = data["squares"][y][x]
-                square_class = square_mapping.get(square_code, BasicSquare)
+                square_class = SQUARE_MAP.get(square_code, BasicSquare)
                 square = square_class()
                 
                 piece_data = data["pieces"][y][x]
-                if piece_data and piece_mapping.get(piece_data["code"]):
-                    piece_instance = piece_mapping[piece_data["code"]]()
+                if piece_data and PIECE_MAP.get(piece_data["code"]):
+                    piece_instance = PIECE_MAP[piece_data["code"]]()
                     piece_instance.color = piece_data["color"]
                     piece_instance.has_moved = piece_data["has_moved"]
                     
