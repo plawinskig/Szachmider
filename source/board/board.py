@@ -77,7 +77,7 @@ class Board:
             return False
 
         target_piece = self.get_piece(to_x, to_y)
-        if target_piece is not None and target_piece.color == moving_piece.color:
+        if target_piece is not None and target_piece.is_black() == moving_piece.is_black():
             return False
         
         if not moving_piece.can_move(self, move):
@@ -132,12 +132,12 @@ class Board:
         else:
             raise ValueError("Invalid castling move: Rook not found")
     
-    def is_square_attacked(self, x: int, y: int, enemy_color: str) -> bool:
+    def is_square_attacked(self, x: int, y: int, enemy_is_black: bool) -> bool:
         for row_y in range(self._height):
             for col_x in range(self._width):
                 enemy_piece = self.get_piece(col_x, row_y)
                 
-                if enemy_piece and enemy_piece.color == enemy_color:
+                if enemy_piece and enemy_piece.is_black() == enemy_is_black:
                     test_move = Move(col_x, row_y, x, y)
                     if enemy_piece.can_move(self, test_move):
                         return True
@@ -248,17 +248,17 @@ if __name__ == "__main__":
     board.set_square(3, 0, HeartSquare())
     board.set_square(4, 0, ShieldSquare())
     board.set_square(5, 0, GrassSquare())
-    board.set_piece(0, 0, Rook())
-    board.set_piece(1, 0, Knight())
-    board.set_piece(2, 0, Bishop())
-    board.set_piece(3, 0, Queen())
-    board.set_piece(4, 0, King())
-    board.set_piece(5, 0, Bishop())
-    board.set_piece(6, 0, Knight())
-    board.set_piece(7, 0, Rook())
+    board.set_piece(0, 0, Rook(True))
+    board.set_piece(1, 0, Knight(True))
+    board.set_piece(2, 0, Bishop(True))
+    board.set_piece(3, 0, Queen(True))
+    board.set_piece(4, 0, King(True))
+    board.set_piece(5, 0, Bishop(True))
+    board.set_piece(6, 0, Knight(True))
+    board.set_piece(7, 0, Rook(True))
     
     for i in range(8):
-        board.set_piece(i, 1, Pawn())
+        board.set_piece(i, 1, Pawn(True))
     
     board.display()
     print()
