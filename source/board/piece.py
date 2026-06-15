@@ -3,12 +3,18 @@ from move import Move
 from board import Board
 
 class Piece(ABC):
-    def __init__(self):
-        self.color = "White"
+    def __init__(self, is_black: bool):
+        self._is_black = is_black
         self.has_moved = False
     
     def __str__(self):
         return self.__class__.__name__
+    
+    def is_black(self) -> bool:
+        return self._is_black
+    
+    def get_ID(self) -> str:
+        return self.get_code() + ("B" if self.is_black() else "W")
     
     @abstractmethod
     def get_code(self) -> str:
