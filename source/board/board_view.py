@@ -29,7 +29,21 @@ class BoardView:
 
 
 
-    
+    def get_board_pos_from_mouse(self, mouse_pos: tuple[int, int], perspective_dark: bool = False) -> tuple[int, int] | None:
+        mouse_x, mouse_y = mouse_pos
+
+        if mouse_x < self.x_offset or mouse_y < self.y_offset:
+            return None
+
+        x = int((mouse_x - self.x_offset) // self.x_tile_size)
+        y = int((mouse_y - self.y_offset) // self.y_tile_size)
+
+        if 0 <= x < self.width and 0 <= y < self.height:
+            if perspective_dark:
+                return (self.width - 1 - x, self.height - 1 - y)
+            return (x, y)
+            
+        return None
 
 
     def display(self, screen: Surface, perspective_dark: bool = False):

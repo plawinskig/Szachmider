@@ -1,6 +1,5 @@
-from __future__ import annotations
 from abc import ABC, abstractmethod
-import source.board.pieceMovement as pieceMovement
+import pieceMovement
 
 class Piece(ABC):
     instanceCounter = 0
@@ -42,16 +41,8 @@ class Piece(ABC):
         return [x for x in self._allPossibleMoves if x in self._moveRestriction]
 
     @abstractmethod
-    def can_move(self, board: Board, move: Move) -> bool:
+    def get_code(self):
         pass
-
-
-    def debug_print_moves(self):
-        print(f"moves: {self._allPossibleMoves}")
-        print(f"restriction: {self._moveRestriction}")
-
-
-
 
 
     def debug_print_moves(self):
@@ -91,9 +82,6 @@ class Knight(Piece):
 
     def get_code(self):
         return "Kni"
-    
-    def can_move(self, board: Board, move: Move) -> bool:
-        return True
 
 class Bishop(Piece):
     instanceCounter = 0
@@ -111,9 +99,6 @@ class Bishop(Piece):
 
     def get_code(self):
         return "Bis"
-    
-    def can_move(self, board: Board, move: Move) -> bool:
-        return True
 
 class Queen(Piece):
     instanceCounter = 0
@@ -136,9 +121,6 @@ class Queen(Piece):
 
     def get_code(self):
         return "Que"
-    
-    def can_move(self, board: Board, move: Move) -> bool:
-        return True
 
 class King(Piece):
     instanceCounter = 0
@@ -164,9 +146,6 @@ class King(Piece):
 
     def get_code(self):
         return "Kin"
-    
-    def can_move(self, board: Board, move: Move) -> bool:
-        return True
 
 class Pawn(Piece):
     instanceCounter = 0
