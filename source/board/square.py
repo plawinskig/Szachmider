@@ -46,7 +46,7 @@ class BasicSquare(Square):
         return "Basic functionality"
 
 class TeleportSquare(Square):
-    def __init__(self, tele: tuple[int, int], piece: Optional[Piece] = None):
+    def __init__(self, tele: tuple[int, int] = (0, 0), piece: Optional[Piece] = None):
         super().__init__(piece)
         self.img_tile_light = "assets/squares/SQR_tile_teleporter_light.png"
         self.img_tile_dark = "assets/squares/SQR_tile_teleporter_dark.png"

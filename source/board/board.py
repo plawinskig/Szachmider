@@ -37,18 +37,6 @@ class Board:
     def last_move(self) -> Optional[tuple[Piece, Move]]:
         return self._last_move
         
-    @property
-    def width(self) -> int:
-        return self._width
-
-    @property
-    def height(self) -> int:
-        return self._height
-
-    @property
-    def last_move(self) -> Optional[tuple[Piece, Move]]:
-        return self._last_move
-        
     def get_square(self, x: int, y: int) -> Square:
         if self.is_valid_position(x, y):
             return self._board[y][x]
@@ -249,11 +237,8 @@ class Board:
                 
         self.make_movement_matrix()
         
-    def make_movement_matrix(self):
-        pass
-    
     def reset_board(self):
-        self.board = [[BasicSquare() for _ in range(self.width)] for _ in range(self.height)]
+        self._board = [[BasicSquare() for _ in range(self.width)] for _ in range(self.height)]
 
 
     def iterate_board(self):

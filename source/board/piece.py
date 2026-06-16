@@ -1,5 +1,6 @@
+from __future__ import annotations
 from abc import ABC, abstractmethod
-import pieceMovement
+import source.board.pieceMovement as pieceMovement
 
 class Piece(ABC):
     instanceCounter = 0
