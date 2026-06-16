@@ -278,8 +278,11 @@ class Board:
                 theoriticalMoves = [] # wszystkie ruchy iteratora - do tworzenia oraniczeń
 
                 for move in moveInstance:
-                    if move[0] < 0 or move[0] >= self.width or move[1] < 0 or move[1] >= self.height:
-                        break
+                    if not self.is_valid_position(move[0], move[1]):
+                        if moveIter.is_finite():
+                            continue # Skoczek/Król: skanuj kolejne punkty z listy
+                        else:
+                            break
 
                     nextSquare = self.get_square(move[0], move[1])
                     nextPiece = self.get_piece(move[0], move[1])
@@ -352,6 +355,8 @@ class Board:
             kingIter = iter(currentKing.moveIterators[0])(*k)
 
             for move in kingIter:
+                if not self.is_valid_position(move[0], move[1]):
+                    continue
                 if currentKing.is_black():
                     attacking = self.__whiteMoveMatrix[move[1]][move[0]]
                     if attacking == []:
