@@ -84,8 +84,8 @@ class Board:
         if target_piece is not None and target_piece.is_black() == moving_piece.is_black():
             return False
         
-        if not moving_piece.can_move(self, move):
-            return False
+        # if not moving_piece.can_move(self, move):
+        #     return False
         
         return True
     

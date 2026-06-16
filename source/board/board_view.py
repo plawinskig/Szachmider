@@ -1,5 +1,6 @@
 import pygame
 from pygame import Surface
+import os
 
 from source.board.board import Board
 from source.board.square import *
@@ -75,7 +76,13 @@ class BoardView:
                             else:
                                 img = square.img_back_dark
                         elif section == "piece":
-                            img = None
+                            if square.piece is not None:
+                                p_code = square.piece.get_code()
+                                p_color = "B" if square.piece.is_black() else "W"
+                                
+                                img = f"assets{os.sep}pieces/{p_code}_{p_color}.png"
+                            else:
+                                img = None
                         elif section == "front":
                             if is_light:
                                 img = square.img_front_light
