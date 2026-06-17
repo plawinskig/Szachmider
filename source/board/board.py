@@ -5,7 +5,7 @@ from source.board.piece import Piece, Rook, Knight, Bishop, Queen, King, Pawn
 from source.board.square import Square, BasicSquare, TeleportSquare, TrapSquare, HeartSquare, ShieldSquare, GrassSquare
 from source.board.board_json import save_to_json
 from source.board.move import Move
-from source.board.obj_mapping import square_mapping, piece_mapping
+from source.board.obj_mapping import SQUARE_MAP, PIECE_MAP
 
 class Board:
     def __init__(self, width: int, height: int):
@@ -13,17 +13,29 @@ class Board:
             raise ValueError("Board dimensions must be at least 4x4")
         if width > 10 or height > 10:
             raise ValueError("Board dimensions must not exceed 10x10")
-        self.width = width
-        self.height = height
+            
+        self._width = width
+        self._height = height
+        self._last_move: Optional[tuple[Piece, Move]] = None
+        self._board: list[list[Square]] = []
         
-        self.last_move: Optional[tuple[Piece, Move]] = None
-        
-        self.board: list[list[Square]] = []
         self.reset_board()
+        
+    @property
+    def width(self) -> int:
+        return self._width
+
+    @property
+    def height(self) -> int:
+        return self._height
+
+    @property
+    def last_move(self) -> Optional[tuple[Piece, Move]]:
+        return self._last_move
         
     def get_square(self, x: int, y: int) -> Square:
         if self.is_valid_position(x, y):
-            return self.board[y][x]
+            return self._board[y][x]
         else:
             raise IndexError("Square coordinates out of bounds")
     
@@ -33,7 +45,7 @@ class Board:
         
     def set_square(self, x: int, y: int, square: Square):
         if self.is_valid_position(x, y):
-            self.board[y][x] = square
+            self._board[y][x] = square
         else:
             raise IndexError("Square coordinates out of bounds")
     
@@ -50,7 +62,7 @@ class Board:
         return square.is_empty() if square else False
     
     def is_valid_position(self, x: int, y: int) -> bool:
-        return 0 <= x < self.width and 0 <= y < self.height
+        return 0 <= x < self._width and 0 <= y < self._height
     
     def is_valid_move(self, move: Move) -> bool:
         from_x, from_y, to_x, to_y = move.from_x, move.from_y, move.to_x, move.to_y
@@ -65,7 +77,7 @@ class Board:
             return False
 
         target_piece = self.get_piece(to_x, to_y)
-        if target_piece is not None and target_piece.color == moving_piece.color:
+        if target_piece is not None and target_piece.is_black() == moving_piece.is_black():
             return False
         
         if not moving_piece.can_move(self, move):
@@ -95,7 +107,7 @@ class Board:
         self.set_piece(from_x, from_y, None)
         
         moving_piece.has_moved = True
-        self.last_move = (moving_piece, move)
+        self._last_move = (moving_piece, move)
     
     def _handle_castling(self, move: Move):
         if move.from_y != move.to_y:
@@ -105,7 +117,7 @@ class Board:
         
         # short castle
         if to_x > from_x:
-            rook_from_x = self.width - 1
+            rook_from_x = self._width - 1
             rook_to_x = to_x - 1
         # long castle
         else:
@@ -120,12 +132,12 @@ class Board:
         else:
             raise ValueError("Invalid castling move: Rook not found")
     
-    def is_square_attacked(self, x: int, y: int, enemy_color: str) -> bool:
-        for row_y in range(self.height):
-            for col_x in range(self.width):
+    def is_square_attacked(self, x: int, y: int, enemy_is_black: bool) -> bool:
+        for row_y in range(self._height):
+            for col_x in range(self._width):
                 enemy_piece = self.get_piece(col_x, row_y)
                 
-                if enemy_piece and enemy_piece.color == enemy_color:
+                if enemy_piece and enemy_piece.is_black() == enemy_is_black:
                     test_move = Move(col_x, row_y, x, y)
                     if enemy_piece.can_move(self, test_move):
                         return True
@@ -147,53 +159,85 @@ class Board:
         return True
     
     def display(self):
-        for row in self.board:
+        for row in self._board:
             print(" ".join(str(square) for square in row))
     
     def export_to_json(self) -> dict[str, Any]:
+        squares_data: list[list[str]] = []
+        pieces_data: list[list[dict[str, Any] | None]] = []
+
+        for row in self._board:
+            row_squares: list[str] = []
+            row_pieces: list[dict[str, Any] | None] = []
+            for square in row:
+                row_squares.append(square.get_code())
+                
+                if square.piece:
+                    piece_code = square.piece.get_code()
+                    piece_state: dict[str, Any] = {
+                        "type": piece_code,
+                        "isBlack": square.piece.is_black(),
+                        "id": square.piece.get_ID(),
+                    }
+
+                    if piece_code == "Kin":
+                        piece_state["moved"] = getattr(square.piece, "_King__moved", False)
+                    elif piece_code == "Paw":
+                        piece_state["moved"] = getattr(square.piece, "_Pawn__moved", False)
+                        piece_state["justMovedTwo"] = getattr(square.piece, "_Pawn__justMovedTwo", False)       
+                        
+                    row_pieces.append(piece_state)
+                else:
+                    row_pieces.append(None)
+                    
+            squares_data.append(row_squares)
+            pieces_data.append(row_pieces)
+
         return {
-            "width": self.width,
-            "height": self.height,
-            "squares": [
-                [square.get_code() for square in row] for row in self.board
-            ],
-            "pieces": [ 
-                [
-                    {
-                        "code" : square.piece.get_code(),
-                        "color": square.piece.color,
-                        "has_moved": square.piece.has_moved
-                    } if square.piece else None for square in row
-                ] for row in self.board
-            ]
+            "width": self._width,
+            "height": self._height,
+            "squares": squares_data,
+            "pieces": pieces_data
         }
         
     def import_from_json(self, data: dict[str, Any]):
-        self.width = data["width"]
-        self.height = data["height"]
-        self.last_move = None 
+        self._width = data["width"]
+        self._height = data["height"]
         
-        self.board = []
-        for y in range(self.height):
-            row: list[Square] = []
-            for x in range(self.width):
+        self.reset_board() 
+        
+        for y in range(self._height):
+            for x in range(self._width):
                 square_code = data["squares"][y][x]
-                square_class = square_mapping.get(square_code, BasicSquare)
-                square = square_class()
+                square_class = SQUARE_MAP.get(square_code, BasicSquare) 
+                new_square = square_class()
                 
                 piece_data = data["pieces"][y][x]
-                if piece_data and piece_mapping.get(piece_data["code"]):
-                    piece_instance = piece_mapping[piece_data["code"]]()
-                    piece_instance.color = piece_data["color"]
-                    piece_instance.has_moved = piece_data["has_moved"]
-                    
-                    square.piece = piece_instance
-                    
-                row.append(square)
-            self.board.append(row)
+                if piece_data is not None:
+                    piece_type = piece_data["type"]
+                    piece_class = PIECE_MAP.get(piece_type)
+                    if piece_class:
+                        new_piece = piece_class(isBlack=piece_data["isBlack"])
+                        
+                        new_piece._pieceID = piece_data["id"] 
+
+                        if piece_type == "Kin":
+                            setattr(new_piece, "_King__moved", piece_data["moved"])
+                        elif piece_type == "Paw":
+                            setattr(new_piece, "_Pawn__moved", piece_data["moved"])
+                            setattr(new_piece, "_Pawn__justMovedTwo", piece_data["justMovedTwo"])
+                            
+                        new_square.piece = new_piece
+                
+                self._board[y][x] = new_square
+                
+        self.make_movement_matrix()
+        
+    def make_movement_matrix(self):
+        pass
     
     def reset_board(self):
-        self.board = [[BasicSquare() for _ in range(self.width)] for _ in range(self.height)]
+        self._board = [[BasicSquare() for _ in range(self._width)] for _ in range(self._height)]
         
 
 if __name__ == "__main__":
@@ -204,17 +248,17 @@ if __name__ == "__main__":
     board.set_square(3, 0, HeartSquare())
     board.set_square(4, 0, ShieldSquare())
     board.set_square(5, 0, GrassSquare())
-    board.set_piece(0, 0, Rook())
-    board.set_piece(1, 0, Knight())
-    board.set_piece(2, 0, Bishop())
-    board.set_piece(3, 0, Queen())
-    board.set_piece(4, 0, King())
-    board.set_piece(5, 0, Bishop())
-    board.set_piece(6, 0, Knight())
-    board.set_piece(7, 0, Rook())
+    board.set_piece(0, 0, Rook(True))
+    board.set_piece(1, 0, Knight(True))
+    board.set_piece(2, 0, Bishop(True))
+    board.set_piece(3, 0, Queen(True))
+    board.set_piece(4, 0, King(True))
+    board.set_piece(5, 0, Bishop(True))
+    board.set_piece(6, 0, Knight(True))
+    board.set_piece(7, 0, Rook(True))
     
     for i in range(8):
-        board.set_piece(i, 1, Pawn())
+        board.set_piece(i, 1, Pawn(True))
     
     board.display()
     print()
