@@ -13,6 +13,9 @@ class Square(ABC):
         self.img_back_dark = None
         self.img_front_light = None
         self.img_front_dark = None
+
+        # For animating the heart and shield only when there is piece on the square
+        self.is_special: bool = False
         
     def is_empty(self) -> bool:
         return self.piece is None
@@ -88,6 +91,8 @@ class HeartSquare(Square):
         self.img_back_dark = None
         self.img_front_light = "assets/squares/SQR_tile_heart_front.png"
         self.img_front_dark = self.img_front_light
+
+        self.is_special = True
         
     def get_code(self) -> str:
         return "Hrt"
@@ -105,6 +110,8 @@ class ShieldSquare(Square):
         self.img_back_dark = None
         self.img_front_light = "assets/squares/SQR_tile_metal_front.png"
         self.img_front_dark = self.img_front_light
+
+        self.is_special = True
 
     def get_code(self) -> str:
         return "Shl"

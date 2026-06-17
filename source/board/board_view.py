@@ -1,4 +1,5 @@
 import pygame
+import math
 from pygame import Surface
 
 from source.board.board import Board
@@ -32,7 +33,7 @@ class BoardView:
     
 
 
-    def display(self, screen: Surface, perspective_dark: bool = False):
+    def display(self, screen: Surface, time, perspective_dark: bool = False):
         self.displayBase(screen, perspective_dark)
         for y in range(self.height):
             true_y = y
@@ -67,11 +68,21 @@ class BoardView:
                                 img = square.img_front_light
                             else:
                                 img = square.img_front_dark
+                            if square.is_special and not square.piece:
+                                img = None
                         if img != None:
                             img = pygame.image.load(img).convert_alpha()
                             img = pygame.transform.scale(img, (self.x_scale, self.y_scale))
+                            vertical_offset = 0
+                            if section in ["back", "piece", "front"]:
+                                direction = 1
+                                if section == "piece":
+                                    direction = -1
+                                    vertical_offset = 30
+                                angle = math.sin(time * 1.2 + x + y * 0.3 * direction)
+                                img = pygame.transform.rotate(img, angle)
                             screen.blit(img, (self.x_offset + x * self.x_tile_size, 
-                                                self.y_offset + y * self.y_tile_size))
+                                                self.y_offset + y * self.y_tile_size - vertical_offset))
                     
                                 
 

@@ -50,17 +50,6 @@ def mainMenu():
     PLAY_MENU = PlayersStartup((play_destination_offscreen, SCREEN_HEIGHT // 2), player_list, screen_width=SCREEN_WIDTH)
     render_play_menu = False
 
-    # TEST ONLY - Brudnopis że tak to nazwe
-    board = Board(8, 8)
-    board.set_square(0, 0, BasicSquare())
-    board.set_square(1, 0, TeleportSquare())
-    board.set_square(2, 0, TrapSquare())
-    board.set_square(3, 0, HeartSquare())
-    board.set_square(4, 0, ShieldSquare())
-    board.set_square(5, 0, GrassSquare())
-
-    boardView = BoardView(board, SCREEN_WIDTH, SCREEN_HEIGHT)
-
     while is_running:
         SCREEN.blit(BG, (0, 0))
 
@@ -78,8 +67,6 @@ def mainMenu():
             PLAY_MENU.update(SCREEN, time, TIME_DELTA, MOUSE_POS)
         if render_main_menu or MAIN_BTNS.is_moving:
             MAIN_BTNS.update(SCREEN, time, TIME_DELTA, MOUSE_POS)
-
-        boardView.display(SCREEN, False)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -101,6 +88,7 @@ def mainMenu():
                             print("Edit")
                         elif menu_button == 4:
                             is_running = False
+                
                 if render_play_menu:
                     play_menu_button = PLAY_MENU.checkForInput(MOUSE_POS)
                     if play_menu_button:
