@@ -51,6 +51,8 @@ class BasicSquare(Square):
 class TeleportSquare(Square):
     def __init__(self, piece: Optional[Piece] = None):
         super().__init__(piece)
+        self.__teleLocation = tele
+        
         self.img_tile_light = "assets/squares/SQR_tile_teleporter_light.png"
         self.img_tile_dark = "assets/squares/SQR_tile_teleporter_dark.png"
         self.img_back_light = "assets/squares/SQR_tile_teleporter_back.png"
@@ -58,6 +60,11 @@ class TeleportSquare(Square):
         self.img_front_light = "assets/squares/SQR_tile_teleporter_front.png"
         self.img_front_dark = self.img_front_light
         
+        
+    def get_tele_location(self):
+        return self.__teleLocation
+      
+      
     def get_code(self) -> str:
         return "Tel"
         
