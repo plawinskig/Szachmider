@@ -2,9 +2,8 @@ import os
 import types
 from typing import Optional
 
-from piece import *
-from source.board.square import Square
-from square import *
+from source.board.piece import *
+from source.board.square import *
 from board_json import save_to_json
 
 from source.board.obj_mapping import SQUARE_MAP, PIECE_MAP
@@ -20,7 +19,7 @@ class Board:
             
         self._width = width
         self._height = height
-        self._last_move: Optional[tuple[Piece, Move]] = None
+        # self._last_move: Optional[tuple[Piece, Move]] = None
         self._board: list[list[Square]] = []
         
         self.reset_board()
@@ -39,10 +38,10 @@ class Board:
     def height(self) -> int:
         return self._height
 
-    @property
-    def last_move(self) -> Optional[tuple[Piece, Move]]:
-        return self._last_move
-        
+    # @property
+    # def last_move(self) -> Optional[tuple[Piece, Move]]:
+    #     return self._last_move
+    #
     def get_square(self, x: int, y: int) -> Square:
         if self.is_valid_position(x, y):
             return self._board[y][x]
@@ -74,40 +73,39 @@ class Board:
     def is_valid_position(self, x: int, y: int) -> bool:
         return 0 <= x < self._width and 0 <= y < self._height
     
-    def is_valid_move(self, move: Move) -> bool:
-        from_x, from_y, to_x, to_y = move.from_x, move.from_y, move.to_x, move.to_y
-        if not (self.is_valid_position(from_x, from_y) and self.is_valid_position(to_x, to_y)):
-            return False
-
-        if from_x == to_x and from_y == to_y:
-            return False
-        
-        moving_piece = self.get_piece(from_x, from_y)
-        if moving_piece is None:
-            return False
-
-        target_piece = self.get_piece(to_x, to_y)
-        if target_piece is not None and target_piece.is_black() == moving_piece.is_black():
-            return False
-        
-        if not moving_piece.can_move(self, move):
-            return False
-        
-        return True
+    # def is_valid_move(self, move: Move) -> bool:
+    #     from_x, from_y, to_x, to_y = move.from_x, move.from_y, move.to_x, move.to_y
+    #     if not (self.is_valid_position(from_x, from_y) and self.is_valid_position(to_x, to_y)):
+    #         return False
+    #
+    #     if from_x == to_x and from_y == to_y:
+    #         return False
+    #
+    #     moving_piece = self.get_piece(from_x, from_y)
+    #     if moving_piece is None:
+    #         return False
+    #
+    #     target_piece = self.get_piece(to_x, to_y)
+    #     if target_piece is not None and target_piece.is_black() == moving_piece.is_black():
+    #         return False
+    #
+    #     if not moving_piece.can_move(self, move):
+    #         return False
+    #
+    #     return True
     
-    def move_piece(self, move: Move):
-        from_x, from_y, to_x, to_y = move.from_x, move.from_y, move.to_x, move.to_y
+    def move_piece(self, from_x: int, from_y: int, to_x: int, to_y: int):
         moving_piece = self.get_piece(from_x, from_y)
         
         if moving_piece is None:
             raise ValueError("No piece at the source square")
         
-        if not self.is_valid_move(move):
-            raise ValueError("Invalid move")
+        # if not self.is_valid_move(move):
+        #     raise ValueError("Invalid move")
         
-        self.set_piece(to_x, to_y, piece)
+        self.set_piece(to_x, to_y, moving_piece)
         self.set_piece(from_x, from_y, None)
-        piece.inc_move_counter()
+        moving_piece.inc_move_counter()
 
     def move_and_take(self, from_x: int, from_y: int, to_x: int, to_y: int):
         piece = self.get_piece(from_x, from_y)

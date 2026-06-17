@@ -1,11 +1,10 @@
 from abc import ABC, abstractmethod
 from typing import Callable, Any
 
-from board import Board
-
+from source.board.board import Board
 
 import pieceMovement
-from source.board.board import Board
+# from source.board.board import Board
 
 
 class Piece(ABC):
@@ -61,9 +60,9 @@ class Piece(ABC):
         ]:
         return [], [], []
 
-    @abstractmethod
-    def can_move(self, board: Board, move: Move) -> bool:
-        pass
+    # @abstractmethod
+    # def can_move(self, board: Board, move: Move) -> bool:
+    #     pass
 
 
     def debug_print_moves(self):
@@ -104,8 +103,8 @@ class Knight(Piece):
     def get_code(self):
         return "Kni"
     
-    def can_move(self, board: Board, move: Move) -> bool:
-        return True
+    # def can_move(self, board: Board, move: Move) -> bool:
+    #     return True
 
 class Bishop(Piece):
     instanceCounter = 0
@@ -124,8 +123,8 @@ class Bishop(Piece):
     def get_code(self):
         return "Bis"
     
-    def can_move(self, board: Board, move: Move) -> bool:
-        return True
+    # def can_move(self, board: Board, move: Move) -> bool:
+    #     return True
 
 class Queen(Piece):
     instanceCounter = 0
@@ -149,8 +148,8 @@ class Queen(Piece):
     def get_code(self):
         return "Que"
     
-    def can_move(self, board: Board, move: Move) -> bool:
-        return True
+    # def can_move(self, board: Board, move: Move) -> bool:
+    #     return True
 
 class King(Piece):
     instanceCounter = 0
@@ -175,8 +174,8 @@ class King(Piece):
     def get_code(self):
         return "Kin"
     
-    def can_move(self, board: Board, move: Move) -> bool:
-        return True
+    # def can_move(self, board: Board, move: Move) -> bool:
+    #     return True
 
 
     def __do_castle(self, board: Board, location: tuple[int, int], rookLocation: tuple[int, int], direction: int):
