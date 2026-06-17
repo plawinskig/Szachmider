@@ -138,10 +138,12 @@ class Board:
 
     # abandon all hope ye who enter here
     def __get_piece_moves(self):
-        kings = []
-        pieces = []
+        kings = [] # kings to evaluate later
+        pieces = [] # all pieces for ease of making the matrices
+        # existings checks iterators
         whiteChecks = []
         blackChecks = []
+        # additional moves that are checks but are in current setting unachievable moves (i.e. right behind a king when hes attacked by a rook or pawn attack)
         additionalBlackChecks = []
         additionalWhiteChecks = []
 
@@ -172,7 +174,7 @@ class Board:
 
                 plausibleMoves = [] # legalne ruchy iteratora
                 canGoFurther = True
-                theoriticalMoves = [] # wszystkie ruchy iteratora - do tworzenia oraniczeń
+                theoriticalMoves = [] # wszystkie ruchy iteratora - do tworzenia ograniczeń
 
                 for move in moveInstance:
                     if (move[0] < 0 or move[0] >= self.width or move[1] < 0 or move[1] >= self.height) and not moveInstance.is_finite():
@@ -248,7 +250,7 @@ class Board:
 
 
 
-
+            # teleporter
             if currentSquare.get_code() == "Tel":
                 teleLoc = currentSquare.get_tele_location()
                 currentPiece.add_possible_moves([(
@@ -297,6 +299,8 @@ class Board:
                 moveLoc = move[0]
                 currentMoveMatrix[moveLoc[1]][moveLoc[0]].append((p.get_ID(), move[1], move[2]))
 
+
+        # evaluating kings moves
         otherKing = ""
         for k in kings:
             currentKing = self.get_piece(*k)
@@ -331,7 +335,7 @@ class Board:
             otherKing = (currentKing.get_ID(), k)
 
 
-
+        # cchecking moves with existing checks to block them
         if whiteChecks != []:
             for place in self.iterate_board():
                 X, Y, *rest = place
