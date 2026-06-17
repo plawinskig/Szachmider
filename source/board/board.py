@@ -136,6 +136,7 @@ class Board:
 
 
 
+    # abandon all hope ye who enter here
     def __get_piece_moves(self):
         kings = []
         pieces = []
@@ -157,6 +158,10 @@ class Board:
 
             pieces.append(currentPiece)
 
+            currentAdditionalChecks = additionalBlackChecks if currentPiece.is_black() else additionalWhiteChecks
+            currentChecks = blackChecks if currentPiece.is_black() else whiteChecks
+
+
             for moveIter in currentPiece.moveIterators:
                 moveInstance = iter(moveIter)(boardX, boardY)
 
@@ -176,10 +181,17 @@ class Board:
                         continue
 
                     nextSquare = self.get_square(move[0], move[1])
+                    if nextSquare is None:
+                        if moveInstance.jumps_over():
+                            continue
+                        else:
+                            break
+
                     nextPiece = self.get_piece(move[0], move[1])
                     # print(nextPiece, move)
 
                     if nextPiece != None:
+
                         if moveIter.can_take() and nextSquare.get_code() != "Shl" and currentSquare.get_code() != "Hrt" and nextPiece.is_black() != currentPiece.is_black():
                             theoriticalMoves.append(move)
                             if canGoFurther: plausibleMoves.append((move, lambda : self.move_and_take(boardX, boardY, *move), moveInstance.can_take()))
@@ -191,13 +203,15 @@ class Board:
 
                         canGoFurther = moveIter.jumps_over() or nextSquare.get_code() == "Grs"
                     else:
+                        if moveIter.can_take() and not moveIter.can_move():
+                            currentAdditionalChecks.append(move)
+
                         if moveInstance.can_move():
                             if not foundKing: theoriticalMoves.append(move)
                             if finishedOnKing:
-                                if currentPiece.is_black():
-                                    additionalBlackChecks.append(move)
-                                else:
-                                    additionalWhiteChecks.append(move)
+
+                                currentAdditionalChecks.append(move)
+
                                 finishedOnKing = False
 
                             if canGoFurther: plausibleMoves.append((move, lambda : self.move_piece(boardX, boardY, *move), moveInstance.can_take()))
@@ -205,11 +219,9 @@ class Board:
                 if finishedOnKing:
                     try:
                         move = next(moveInstance)
-                        print(currentPiece.get_ID(), move)
-                        if currentPiece.is_black():
-                            additionalBlackChecks.append(move)
-                        else:
-                            additionalWhiteChecks.append(move)
+                        # print(currentPiece.get_ID(), move)
+                        if moveInstance.can_take():
+                            currentAdditionalChecks.append(move)
                     except StopIteration:
                         pass
                     except:
@@ -226,10 +238,14 @@ class Board:
                     restricedPiece.set_restrictions(theoriticalMoves)
                 elif foundKing and len(encounteredPieces) == 1:
                     theoriticalMoves.append((boardX, boardY))
-                    if currentPiece.is_black():
-                        blackChecks.append(theoriticalMoves if not moveInstance.jumps_over() else [kingLocation, (boardX, boardY)])
-                    else:
-                        whiteChecks.append(theoriticalMoves if not moveInstance.jumps_over() else [kingLocation, (boardX, boardY)])
+                    currentChecks.append(theoriticalMoves if not moveInstance.jumps_over() else [kingLocation, (boardX, boardY)])
+
+
+            specialMoves, specialChecks, specialAdditionalChecks = currentPiece.check_special_moves(self, (boardX, boardY))
+            currentPiece.add_possible_moves(specialMoves)
+            currentChecks.extend(specialChecks)
+            currentAdditionalChecks.extend(specialAdditionalChecks)
+
 
 
 
@@ -237,7 +253,8 @@ class Board:
                 teleLoc = currentSquare.get_tele_location()
                 currentPiece.add_possible_moves([(
                     teleLoc,
-                    lambda : (self.move_piece(boardX, boardY, *teleLoc) if self.get_piece(*teleLoc) is None else self.move_and_take(boardX, boardY, *teleLoc)
+                    lambda : (self.move_piece(boardX, boardY, *teleLoc) if self.get_piece(*teleLoc) is None else self.move_and_take(boardX, boardY, *teleLoc),
+                    True
                 ))])
 
         return kings, pieces, blackChecks, whiteChecks, additionalBlackChecks, additionalWhiteChecks
@@ -273,12 +290,12 @@ class Board:
         kings, pieces, blackChecks, whiteChecks, additionalBlackChecks, additionalWhiteChecks = self.__get_piece_moves()
         for p in pieces:
             # p.debug_print_moves()
+
+            currentMoveMatrix = self.__blackMoveMatrix if p.is_black() else self.__whiteMoveMatrix
+
             for move in p.get_actual_move_list():
                 moveLoc = move[0]
-                if p.is_black():
-                    self.__blackMoveMatrix[moveLoc[1]][moveLoc[0]].append((p.get_ID(), move[1]))
-                else:
-                    self.__whiteMoveMatrix[moveLoc[1]][moveLoc[0]].append((p.get_ID(), move[1]))
+                currentMoveMatrix[moveLoc[1]][moveLoc[0]].append((p.get_ID(), move[1], move[2]))
 
         otherKing = ""
         for k in kings:
@@ -291,12 +308,12 @@ class Board:
 
             for move in kingIter:
                 X, Y = move
-                if X < 0 or X >= self.width or Y < 0 or Y >= self.height:
+                if X < 0 or X >= self.width or Y < 0 or Y >= self.height or self.get_square(X, Y) is None:
                     continue
 
                 otherPiece = self.get_piece(*move)
 
-                attacking = attackingMatrix[Y][X]
+                attacking = [x for x in attackingMatrix[Y][X] if x[2]]
                 if attacking == [] and move not in attackingAdditionalChecks:
 
                     if otherPiece == None:
@@ -308,6 +325,8 @@ class Board:
                 elif otherKing != "" and otherKing in map(lambda x: x[0], attacking):
                     attacking.pop(self.__find_specific_in_list(otherKing, lambda x: x[0], attacking))
 
+            for move in currentKing.check_castling(self, k, attackingMatrix):
+                ownMoveMatrix[move[0][1]][move[0][0]].append((currentKing.get_ID(), move[1], move[2]))
 
             otherKing = (currentKing.get_ID(), k)
 
@@ -317,18 +336,18 @@ class Board:
             for place in self.iterate_board():
                 X, Y, *rest = place
 
-                hasKing = "Kin_B" in map(lambda x: x[0], self.__blackMoveMatrix[Y][X])
+                kingsMove = self.__find_move_in_moves_list("Kin_B", self.__blackMoveMatrix[Y][X])
 
                 if not self.__blocks_check(whiteChecks, (X, Y)):
-                    self.__blackMoveMatrix[Y][X] = [] if not hasKing else ["Kin_B"]
+                    self.__blackMoveMatrix[Y][X] = [] if kingsMove is None else [kingsMove]
         elif blackChecks != []:
             for place in self.iterate_board():
                 X, Y, *rest = place
 
-                hasKing = "Kin_W" in map(lambda x: x[0], self.__whiteMoveMatrix[Y][X])
+                kingsMove = self.__find_move_in_moves_list("Kin_W", self.__whiteMoveMatrix[Y][X])
 
                 if not self.__blocks_check(blackChecks, (X, Y)):
-                    self.__whiteMoveMatrix[Y][X] = [] if not hasKing else ["Kin_W"]
+                    self.__whiteMoveMatrix[Y][X] = [] if kingsMove is None else [kingsMove]
 
 
 
@@ -350,8 +369,35 @@ class Board:
 if __name__ == "__main__":
     board = Board(8, 8)
 
-    board.set_piece(3, 1, King(True))
-    board.set_piece(3, 3, Pawn(False))
+    # board.set_piece(0, 0, Rook(True))
+    # board.set_piece(7, 0, Rook(True))
+    # board.set_piece(1, 0, Knight(True))
+    # board.set_piece(6, 0, Knight(True))
+    # board.set_piece(2, 0, Bishop(True))
+    # board.set_piece(5, 0, Bishop(True))
+    # board.set_piece(3, 0, King(True))
+    # board.set_piece(4, 0, Queen(True))
+    #
+    # for i in range(8):
+    #     board.set_piece(i, 1, Pawn(True))
+    #
+    # board.set_piece(0, 7, Rook(False))
+    # board.set_piece(7, 7, Rook(False))
+    # board.set_piece(1, 7, Knight(False))
+    # board.set_piece(6, 7, Knight(False))
+    # board.set_piece(2, 7, Bishop(False))
+    # board.set_piece(5, 7, Bishop(False))
+    # board.set_piece(4, 7, King(False))
+    # board.set_piece(3, 7, Queen(False))
+    #
+    # for i in range(8):
+    #     board.set_piece(i, 6, Pawn(False))
+
+
+    board.set_piece(4, 5, King(True))
+    board.set_piece(0, 5, Rook(True))
+
+
 
     board.make_movement_matrix()
 

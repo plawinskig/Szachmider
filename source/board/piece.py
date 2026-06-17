@@ -5,6 +5,8 @@ from board import Board
 
 
 import pieceMovement
+from source.board.board import Board
+
 
 class Piece(ABC):
     instanceCounter = 0
@@ -49,11 +51,15 @@ class Piece(ABC):
     def inc_move_counter(self):
         self._moveCounter += 1
 
+
+    # treat it like a specialized, conditional part of Boarc.__get_piece_moves()
+    # tzn make sure it handles move restrictions, bcs the main function won't do it
     def check_special_moves(self, theEntireBoard: Board, location: tuple[int, int]) -> tuple[
-        list[tuple[tuple[int, int], Callable[[] ,None]]],
-        list[tuple[int, int]]
+        list[tuple[tuple[int, int], Callable[[] ,None], bool]], #plausible moves
+        list[tuple[int, int]], # checks
+        list[tuple[int, int]] # additional checks
         ]:
-        pass
+        return [], [], []
 
     @abstractmethod
     def get_code(self):
@@ -160,6 +166,63 @@ class King(Piece):
     def get_code(self):
         return "Kin"
 
+
+    def __do_castle(self, board: Board, location: tuple[int, int], rookLocation: tuple[int, int], direction: int):
+        board.move_piece(*location, location[0] + 2*direction, location[1])
+        board.move_piece(*rookLocation, location[0] + direction, location[1])
+
+
+
+    def check_castling(self, theEntireBoard: Board, location: tuple[int, int], otherColorMoveMatrix: list[list[tuple[str, Callable[[], None], bool]]]):
+        castles = []
+        if self._moveCounter > 0 or otherColorMoveMatrix[location[1]][location[0]] != []:
+            return castles
+
+
+
+
+        for dir in [-1, 1]:
+            moves = pieceMovement.MoveVectorDir((dir, 0))(*location)
+            allow = True
+            rookLocation = None
+            steps = 0
+            for move in moves:
+                # print(move)
+                if move[0] < 0 or move[0] >= theEntireBoard.width:
+                    break
+                steps += 1
+
+                potentialAttack = otherColorMoveMatrix[move[1]][move[0]]
+                attacked = False
+                for at in potentialAttack:
+                    if at[2]:
+                        attacked = True
+
+                if attacked:
+                    allow = False
+
+                nextSquare = theEntireBoard.get_square(*move)
+                if nextSquare is None:
+                    allow = False
+                    break
+
+                nextPiece = theEntireBoard.get_piece(*move)
+                if not nextPiece is None:
+                    if nextPiece.get_code() == "Roo" and self.is_black() == nextPiece.is_black() and nextPiece._moveCounter == 0:
+                        rookLocation = move
+                    else:
+                        allow = False
+
+            if steps < 3 or rookLocation is None:
+                allow = False
+
+            if allow:
+                castles.append(((location[0] + 2*dir, location[1]), lambda : self.__do_castle(theEntireBoard, location, rookLocation, dir), False))
+        print(castles)
+        return castles
+
+
+
 class Pawn(Piece):
     instanceCounter = 0
 
@@ -174,9 +237,13 @@ class Pawn(Piece):
             pieceMovement.MoveVectorList([(1, self.__direction), (-1, self.__direction)], canMove=False)
         ]
 
+    # nevermind I ain't doing this cursed rule
     def __do_en_passant(self, board: Board, location: tuple[int, int], moveToLocation: tuple[int, int], target: tuple[int, int]):
         board.move_piece(*location, *moveToLocation)
         board.take_piece(*target)
+
+        # Google en passant. Holy hell.
+        raise NotImplementedError("New response just dropped: Dev is too lazy")
 
     def __do_double_move(self, board: Board, from_x: int, from_y: int, to_x: int, to_y: int):
         board.move_piece(from_x, from_y, to_x, to_y)
@@ -188,7 +255,7 @@ class Pawn(Piece):
         x, y = location
         # double move
         dMove = (x, y + 2*self.__direction)
-        if self._moveCounter == 0 and not(dMove[1] < 0 or dMove[1] >= theEntireBoard.height) and theEntireBoard.get_piece(*dMove) == None:
+        if self._moveCounter == 0 and not(dMove[1] < 0 or dMove[1] >= theEntireBoard.height) and theEntireBoard.get_piece(*dMove) is None:
             validMoves.append((dMove, lambda : self.__do_double_move(theEntireBoard, x, y, *dMove), False))
 
 
@@ -204,7 +271,7 @@ class Pawn(Piece):
         #                 lambda : self.__do_en_passant(theEntireBoard, location, (target[0], target[1] + self.__direction), target)
         #             ))
 
-        return validMoves, []
+        return validMoves, [], []
 
     def get_code(self):
         return "Paw"
