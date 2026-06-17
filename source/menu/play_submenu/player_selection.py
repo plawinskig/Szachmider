@@ -178,3 +178,6 @@ class PlayerSelection():
     def addToList(self, player):
         self.player_list.append(player)
         self.filtratePlayerList(self.TEXT_FIELD.text)
+
+    def getPlayer(self) -> str:
+        return self.TEXT_FIELD.text

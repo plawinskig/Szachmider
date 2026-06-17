@@ -7,6 +7,10 @@ from source.menu.menu_background import MenuBackground
 from source.menu.main_buttons import MainButtons
 from source.menu.play_submenu.players_startup import PlayersStartup
 
+from source.board.board import Board
+from source.board.board_view import BoardView
+from source.board.square import *
+
 pygame.init()
 SCREEN = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 
@@ -84,6 +88,7 @@ def mainMenu():
                             print("Edit")
                         elif menu_button == 4:
                             is_running = False
+                
                 if render_play_menu:
                     play_menu_button = PLAY_MENU.checkForInput(MOUSE_POS)
                     if play_menu_button:
