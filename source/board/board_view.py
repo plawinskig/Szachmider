@@ -1,5 +1,114 @@
+import pygame
+import math
+from pygame import Surface
+
+from source.board.board import Board
+from source.board.square import *
 
 
 class BoardView:
-    pass
+    def __init__(self, board: Board, screen_width, screen_height, scale: int = 3):
+        self.board = board
+
+        self.width = board.width
+        self.height = board.height
+
+        self.screen_width = screen_width
+        self.screen_height = screen_height
+
+        self.x_tile_size = 22 * scale
+        self.y_tile_size = 17 * scale
+
+        self.x_scale = 32 * scale
+        self.y_scale = 37 * scale
+
+        board_x_size = self.width * self.x_tile_size + 30
+        board_y_size = self.height * self.y_tile_size
+
+        self.x_offset = (self.screen_width - board_x_size) / 2
+        self.y_offset = (self.screen_height - board_y_size) / 2 
+
+
+
+    
+
+
+    def display(self, screen: Surface, time, perspective_dark: bool = False):
+        self.displayBase(screen, perspective_dark)
+        for y in range(self.height):
+            true_y = y
+            if perspective_dark:
+                true_y = self.height - 1 - y
+            for section in ["tile", "back", "piece", "front"]:
+                for x in range(self.width):
+                    true_x = x
+                    if perspective_dark:
+                        true_x = self.width - 1 - x
+                    square = self.board.get_square(true_x, true_y)
+                    if square:
+                        img = None
+                        is_light = True
+                        if (x + y) % 2 == 1:
+                            is_light = False
+                        
+                        if section == "tile":
+                            if is_light:
+                                img = square.img_tile_light
+                            else:
+                                img = square.img_tile_dark
+                        elif section == "back":
+                            if is_light:
+                                img = square.img_back_light
+                            else:
+                                img = square.img_back_dark
+                        elif section == "piece":
+                            img = None
+                        elif section == "front":
+                            if is_light:
+                                img = square.img_front_light
+                            else:
+                                img = square.img_front_dark
+                            if square.is_special and not square.piece:
+                                img = None
+                        if img != None:
+                            img = pygame.image.load(img).convert_alpha()
+                            img = pygame.transform.scale(img, (self.x_scale, self.y_scale))
+                            vertical_offset = 0
+                            if section in ["back", "piece", "front"]:
+                                direction = 1
+                                if section == "piece":
+                                    direction = -1
+                                    vertical_offset = 30
+                                angle = math.sin(time * 1.2 + x + y * 0.3 * direction)
+                                img = pygame.transform.rotate(img, angle)
+                            screen.blit(img, (self.x_offset + x * self.x_tile_size, 
+                                                self.y_offset + y * self.y_tile_size - vertical_offset))
+                    
+                                
+
+                
+
+    def displayBase(self, screen: Surface, perspective_dark: bool = False):
+        img_base = ["assets/squares/SQR_base_01.png",
+                    "assets/squares/SQR_base_02.png",
+                    "assets/squares/SQR_base_03.png",
+                    "assets/squares/SQR_base_04.png"]
+        for base in img_base:
+            img = pygame.image.load(base).convert_alpha()
+            img = pygame.transform.scale(img, (self.x_scale, self.y_scale))
+            for y in range(self.height):
+                true_y = y
+                if perspective_dark:
+                    true_y = self.height - 1 - y
+                for x in range(self.width):
+                    true_x = x
+                    if perspective_dark:
+                        true_x = self.width - 1 - x
+                    square = self.board.get_square(true_x, true_y)
+                    if square:
+                        screen.blit(img, (self.x_offset + x * self.x_tile_size, 
+                                            self.y_offset + y * self.y_tile_size))
+
+                    
+
 

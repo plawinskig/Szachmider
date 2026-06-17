@@ -62,7 +62,7 @@ class Piece(ABC):
         return [], [], []
 
     @abstractmethod
-    def get_code(self):
+    def can_move(self, board: Board, move: Move) -> bool:
         pass
 
 
@@ -103,6 +103,9 @@ class Knight(Piece):
 
     def get_code(self):
         return "Kni"
+    
+    def can_move(self, board: Board, move: Move) -> bool:
+        return True
 
 class Bishop(Piece):
     instanceCounter = 0
@@ -120,6 +123,9 @@ class Bishop(Piece):
 
     def get_code(self):
         return "Bis"
+    
+    def can_move(self, board: Board, move: Move) -> bool:
+        return True
 
 class Queen(Piece):
     instanceCounter = 0
@@ -142,6 +148,9 @@ class Queen(Piece):
 
     def get_code(self):
         return "Que"
+    
+    def can_move(self, board: Board, move: Move) -> bool:
+        return True
 
 class King(Piece):
     instanceCounter = 0
@@ -165,6 +174,9 @@ class King(Piece):
 
     def get_code(self):
         return "Kin"
+    
+    def can_move(self, board: Board, move: Move) -> bool:
+        return True
 
 
     def __do_castle(self, board: Board, location: tuple[int, int], rookLocation: tuple[int, int], direction: int):
