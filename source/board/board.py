@@ -182,7 +182,7 @@ class Board:
                     if nextPiece != None:
                         if moveIter.can_take() and nextSquare.get_code() != "Shl" and currentSquare.get_code() != "Hrt" and nextPiece.is_black() != currentPiece.is_black():
                             theoriticalMoves.append(move)
-                            if canGoFurther: plausibleMoves.append((move, lambda : self.move_and_take(boardX, boardY, *move)))
+                            if canGoFurther: plausibleMoves.append((move, lambda : self.move_and_take(boardX, boardY, *move), moveInstance.can_take()))
                             if not foundKing: encounteredPieces.append(nextPiece)
                             if isinstance(nextPiece, King):
                                 foundKing = True
@@ -200,7 +200,7 @@ class Board:
                                     additionalWhiteChecks.append(move)
                                 finishedOnKing = False
 
-                            if canGoFurther: plausibleMoves.append((move, lambda : self.move_piece(boardX, boardY, *move)))
+                            if canGoFurther: plausibleMoves.append((move, lambda : self.move_piece(boardX, boardY, *move), moveInstance.can_take()))
 
                 if finishedOnKing:
                     try:
@@ -257,6 +257,14 @@ class Board:
         new = list(map(func, l))
         return new.index(val)
 
+    def __find_move_in_moves_list(self, pieceID: str, moves):
+        found = None
+        for i in moves:
+            if i[0] == pieceID:
+                found = i
+
+        return found
+
     def make_movement_matrix(self):
         self.__whiteMoveMatrix = [[[] for _ in range(self.width)] for _ in range(self.height)]
         self.__blackMoveMatrix = [[[] for _ in range(self.width)] for _ in range(self.height)]
@@ -282,26 +290,23 @@ class Board:
             attackingAdditionalChecks = additionalWhiteChecks if currentKing.is_black() else additionalBlackChecks
 
             for move in kingIter:
-                if move[0] < 0 or move[0] >= self.width or move[1] < 0 or move[1] >= self.height:
+                X, Y = move
+                if X < 0 or X >= self.width or Y < 0 or Y >= self.height:
                     continue
 
                 otherPiece = self.get_piece(*move)
 
-                attacking = attackingMatrix[move[1]][move[0]]
+                attacking = attackingMatrix[Y][X]
                 if attacking == [] and move not in attackingAdditionalChecks:
 
                     if otherPiece == None:
-                        ownMoveMatrix[move[1]][move[0]].append((currentKing.get_ID(), lambda : self.move_piece(*k, *move)))
-                    elif not otherPiece.is_black():
-                        ownMoveMatrix[move[1]][move[0]].append((currentKing.get_ID(), lambda : self.move_and_take(*k, *move)))
+                        ownMoveMatrix[Y][X].append((currentKing.get_ID(), lambda : self.move_piece(*k, *move), True))
+                    elif otherPiece.is_black() != currentKing.is_black():
+                        ownMoveMatrix[Y][X].append((currentKing.get_ID(), lambda : self.move_and_take(*k, *move), True))
 
 
                 elif otherKing != "" and otherKing in map(lambda x: x[0], attacking):
                     attacking.pop(self.__find_specific_in_list(otherKing, lambda x: x[0], attacking))
-                elif otherKing != "" and otherKing in map(lambda x: x[0], attacking):
-                    attacking.pop(self.__find_specific_in_list(otherKing, lambda x: x[0], attacking))
-
-
 
 
             otherKing = (currentKing.get_ID(), k)
@@ -312,7 +317,7 @@ class Board:
             for place in self.iterate_board():
                 X, Y, *rest = place
 
-                hasKing = "Kin_B" in self.__blackMoveMatrix[Y][X]
+                hasKing = "Kin_B" in map(lambda x: x[0], self.__blackMoveMatrix[Y][X])
 
                 if not self.__blocks_check(whiteChecks, (X, Y)):
                     self.__blackMoveMatrix[Y][X] = [] if not hasKing else ["Kin_B"]
@@ -320,7 +325,7 @@ class Board:
             for place in self.iterate_board():
                 X, Y, *rest = place
 
-                hasKing = "Kin_W" in self.__whiteMoveMatrix[Y][X]
+                hasKing = "Kin_W" in map(lambda x: x[0], self.__whiteMoveMatrix[Y][X])
 
                 if not self.__blocks_check(blackChecks, (X, Y)):
                     self.__whiteMoveMatrix[Y][X] = [] if not hasKing else ["Kin_W"]
@@ -330,13 +335,12 @@ class Board:
 
     def debug_print_movementMatrix(self):
         print("czarne:")
-
         for x in range(self.height):
-            print(self.__blackMoveMatrix[x])
+            print([list(map(lambda b: b[0], a)) for a in self.__blackMoveMatrix[x]])
 
         print("biale:")
         for x in range(self.height):
-            print(self.__whiteMoveMatrix[x])
+            print([list(map(lambda b: b[0], a)) for a in self.__whiteMoveMatrix[x]])
 
 
 
@@ -346,7 +350,7 @@ class Board:
 if __name__ == "__main__":
     board = Board(8, 8)
 
-    board.set_piece(2, 2, Pawn(True))
+    board.set_piece(3, 1, King(True))
     board.set_piece(3, 3, Pawn(False))
 
     board.make_movement_matrix()

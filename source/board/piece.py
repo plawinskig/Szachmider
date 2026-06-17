@@ -49,7 +49,10 @@ class Piece(ABC):
     def inc_move_counter(self):
         self._moveCounter += 1
 
-    def check_special_moves(self, theEntireBoard: Board, location: tuple[int, int]):
+    def check_special_moves(self, theEntireBoard: Board, location: tuple[int, int]) -> tuple[
+        list[tuple[tuple[int, int], Callable[[] ,None]]],
+        list[tuple[int, int]]
+        ]:
         pass
 
     @abstractmethod
@@ -186,7 +189,7 @@ class Pawn(Piece):
         # double move
         dMove = (x, y + 2*self.__direction)
         if self._moveCounter == 0 and not(dMove[1] < 0 or dMove[1] >= theEntireBoard.height) and theEntireBoard.get_piece(*dMove) == None:
-            validMoves.append((dMove, lambda : self.__do_double_move(theEntireBoard, x, y, *dMove)))
+            validMoves.append((dMove, lambda : self.__do_double_move(theEntireBoard, x, y, *dMove), False))
 
 
         # en passant
@@ -201,7 +204,7 @@ class Pawn(Piece):
         #                 lambda : self.__do_en_passant(theEntireBoard, location, (target[0], target[1] + self.__direction), target)
         #             ))
 
-        return validMoves
+        return validMoves, []
 
     def get_code(self):
         return "Paw"
