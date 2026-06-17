@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from piece import Piece
+from piece import *
 
 
 class Square(ABC):

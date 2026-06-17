@@ -7,10 +7,11 @@ class MovementIter(ABC):
 
     SQRT_OF_2 = sqrt(2)
 
-    def __init__(self, canTake: bool):
+    def __init__(self, canTake: bool, canMove: bool):
         self._location: tuple[int, int]
         self._finite: bool
         self._canTake: bool = canTake
+        self._canMove: bool = canMove
 
 
     def __iter__(self):
@@ -33,6 +34,8 @@ class MovementIter(ABC):
 
     def can_take(self):
         return self._canTake
+    def can_move(self):
+        return self._canMove
 
     def _vector_dist(self, vec1: tuple[int, int], vec2: tuple[int, int]):
         return sqrt((vec1[0] - vec2[0]) ** 2 + (vec1[1] - vec2[1]) ** 2)
@@ -42,15 +45,15 @@ class MovementIter(ABC):
 
 # outputs consecutive moves in the direction of vector
 class MoveVectorDir(MovementIter):
-    def __init__(self, vector: tuple[int, int], canTake: bool, jumps: bool = False):
-        super().__init__(canTake)
+    def __init__(self, vector: tuple[int, int], canTake: bool = True, jumps: bool = False, canMove: bool = True):
+        super().__init__(canTake, canMove)
         self.__vector = vector
         self.__jumps = jumps
 
         self._finite = False
 
     def __next__(self):
-        old = self._location
+
         self._location = (self._location[0] + self.__vector[0], self._location[1] + self.__vector[1])
 
         return self._location
@@ -63,8 +66,8 @@ class MoveVectorDir(MovementIter):
 
 # outputs moves in the direction of each vector in vectors
 class MoveVectorList(MovementIter):
-    def __init__(self, vectors: list[tuple[int, int]], canTake: bool):
-        super().__init__(canTake)
+    def __init__(self, vectors: list[tuple[int, int]], canTake: bool = True, canMove: bool = True):
+        super().__init__(canTake, canMove)
         self._finite = True
 
         self.__vectors = vectors
@@ -83,8 +86,8 @@ class MoveVectorList(MovementIter):
 # outputs moves in every transformation of  vector
 # just horsin' around
 class MoveVectorSymmetrical(MovementIter):
-    def __init__(self, vector: tuple[int, int], canTake: bool):
-        super().__init__(canTake)
+    def __init__(self, vector: tuple[int, int], canTake: bool = True, canMove: bool = True):
+        super().__init__(canTake, canMove)
 
         x = vector[0]
         y = vector[1]
@@ -101,7 +104,7 @@ class MoveVectorSymmetrical(MovementIter):
         ]
         moves = list(set(moves))
 
-        self.__insideIter = MoveVectorList(moves, canTake)
+        self.__insideIter = MoveVectorList(moves, canTake, canMove)
 
         self._finite = True
 
