@@ -73,25 +73,25 @@ class Board:
     def is_valid_position(self, x: int, y: int) -> bool:
         return 0 <= x < self._width and 0 <= y < self._height
     
-    def is_valid_move(self, from_x: int, from_y: int, to_x: int, to_y: int) -> bool:
-        if not (self.is_valid_position(from_x, from_y) and self.is_valid_position(to_x, to_y)):
-            return False
+    # def is_valid_move(self, from_x: int, from_y: int, to_x: int, to_y: int) -> bool:
+    #     if not (self.is_valid_position(from_x, from_y) and self.is_valid_position(to_x, to_y)):
+    #         return False
     
-        if from_x == to_x and from_y == to_y:
-            return False
+    #     if from_x == to_x and from_y == to_y:
+    #         return False
     
-        moving_piece = self.get_piece(from_x, from_y)
-        if moving_piece is None:
-            return False
+    #     moving_piece = self.get_piece(from_x, from_y)
+    #     if moving_piece is None:
+    #         return False
     
-        target_piece = self.get_piece(to_x, to_y)
-        if target_piece is not None and target_piece.is_black() == moving_piece.is_black():
-            return False
+    #     target_piece = self.get_piece(to_x, to_y)
+    #     if target_piece is not None and target_piece.is_black() == moving_piece.is_black():
+    #         return False
     
-        # if not moving_piece.can_move(self, move):
-        #     return False
+    #     # if not moving_piece.can_move(self, move):
+    #     #     return False
     
-        return True
+    #     return True
     
     def move_piece(self, from_x: int, from_y: int, to_x: int, to_y: int):
         moving_piece = self.get_piece(from_x, from_y)
@@ -119,8 +119,8 @@ class Board:
             else:
                 self.__takenWhite.append(taken)
 
-        if not self.is_valid_move(from_x, from_y, to_x, to_y):
-            raise ValueError("Invalid move")
+        # if not self.is_valid_move(from_x, from_y, to_x, to_y):
+        #     raise ValueError("Invalid move")
 
         self.set_piece(to_x, to_y, piece)
         self.set_piece(from_x, from_y, None)
