@@ -183,10 +183,8 @@ class King(Piece):
 
 
     def __do_castle(self, board: Board, location: tuple[int, int], rookLocation: tuple[int, int], direction: int):
-        king_move = (*location, location[0] + 2*direction, location[1])
-        board.move_piece(king_move)
-        rook_move = (*rookLocation, location[0] + direction, location[1])
-        board.move_piece(rook_move)
+        board.move_piece(*location, location[0] + 2*direction, location[1])
+        board.move_piece(*rookLocation, location[0] + direction, location[1])
 
 
 
@@ -262,14 +260,14 @@ class Pawn(Piece):
 
     # nevermind I ain't doing this cursed rule
     def __do_en_passant(self, board: Board, location: tuple[int, int], moveToLocation: tuple[int, int], target: tuple[int, int]):
-        board.move_piece((*location, *moveToLocation))
+        board.move_piece(*location, *moveToLocation)
         board.take_piece(*target)
 
         # Google en passant. Holy hell.
         raise NotImplementedError("New response just dropped: Dev is too lazy")
 
     def __do_double_move(self, board: Board, from_x: int, from_y: int, to_x: int, to_y: int):
-        board.move_piece((from_x, from_y, to_x, to_y))
+        board.move_piece(from_x, from_y, to_x, to_y)
         self.__movedTwo = True
 
     def check_special_moves(self, theEntireBoard: Board, location: tuple[int, int]):
