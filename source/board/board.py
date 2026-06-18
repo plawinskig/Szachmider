@@ -406,6 +406,7 @@ class Board:
         otherKing = ""
         for k in kings:
             currentKing = self.get_piece(*k)
+            assert isinstance(currentKing, King)
             kingIter = iter(currentKing.moveIterators[0])(*k)
 
             attackingMatrix = self.__whiteMoveMatrix if currentKing.is_black() else self.__blackMoveMatrix
