@@ -493,32 +493,6 @@ if __name__ == "__main__":
     #     board.set_piece(i, 6, Pawn(False))
 
 
-    board.set_piece(4, 5, King(True))
-    board.set_piece(0, 5, Rook(True))
-
-
-
-    board.make_movement_matrix()
-
-    board.debug_print_movementMatrix()
-    board.display_pieces()
-    board.set_square(0, 0, BasicSquare())
-    board.set_square(1, 0, TeleportSquare())
-    board.set_square(2, 0, TrapSquare())
-    board.set_square(3, 0, HeartSquare())
-    board.set_square(4, 0, ShieldSquare())
-    board.set_square(5, 0, GrassSquare())
-    board.set_piece(0, 0, Rook(True))
-    board.set_piece(1, 0, Knight(True))
-    board.set_piece(2, 0, Bishop(True))
-    board.set_piece(3, 0, Queen(True))
-    board.set_piece(4, 0, King(True))
-    board.set_piece(5, 0, Bishop(True))
-    board.set_piece(6, 0, Knight(True))
-    board.set_piece(7, 0, Rook(True))
-    
-    for i in range(8):
-        board.set_piece(i, 1, Pawn(True))
     
     # for i in range(8):
     #     board.set_piece(i, 1, Pawn())
