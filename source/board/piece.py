@@ -24,6 +24,10 @@ class Piece(ABC):
     def __str__(self):
         return self.__class__.__name__
 
+    @abstractmethod
+    def get_code(self):
+        pass
+
     def get_ID(self):
         return self._pieceID
 
