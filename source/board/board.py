@@ -4,7 +4,6 @@ from typing import Optional
 
 from source.board.piece import *
 from source.board.square import *
-from source.board.move import Move
 from board_json import save_to_json
 
 from source.board.obj_mapping import SQUARE_MAP, PIECE_MAP
@@ -74,8 +73,8 @@ class Board:
     def is_valid_position(self, x: int, y: int) -> bool:
         return 0 <= x < self._width and 0 <= y < self._height
     
-    def is_valid_move(self, move: Move) -> bool:
-        from_x, from_y, to_x, to_y = move.from_x, move.from_y, move.to_x, move.to_y
+    def is_valid_move(self, move: tuple[int, int, int, int]) -> bool:
+        from_x, from_y, to_x, to_y = move
         if not (self.is_valid_position(from_x, from_y) and self.is_valid_position(to_x, to_y)):
             return False
     
@@ -95,8 +94,8 @@ class Board:
     
         return True
     
-    def move_piece(self, move: Move):
-        from_x, from_y, to_x, to_y = move.from_x, move.from_y, move.to_x, move.to_y
+    def move_piece(self, move: tuple[int, int, int, int]):
+        from_x, from_y, to_x, to_y = move
         moving_piece = self.get_piece(from_x, from_y)
         
         if moving_piece is None:
@@ -109,8 +108,8 @@ class Board:
         self.set_piece(from_x, from_y, None)
         moving_piece.inc_move_counter()
 
-    def move_and_take(self, move: Move):
-        from_x, from_y, to_x, to_y = move.from_x, move.from_y, move.to_x, move.to_y
+    def move_and_take(self, move: tuple[int, int, int, int]):
+        from_x, from_y, to_x, to_y = move
         piece = self.get_piece(from_x, from_y)
         taken = self.get_piece(to_x, to_y)
 
@@ -295,7 +294,7 @@ class Board:
 
                         if moveIter.can_take() and nextSquare.get_code() != "Shl" and currentSquare.get_code() != "Hrt" and nextPiece.is_black() != currentPiece.is_black():
                             theoriticalMoves.append(move)
-                            full_move = Move(boardX, boardY, move[0], move[1])
+                            full_move = (boardX, boardY, move[0], move[1])
                             if canGoFurther: plausibleMoves.append((move, lambda : self.move_and_take(full_move), moveInstance.can_take()))
                             if not foundKing: encounteredPieces.append(nextPiece)
                             if isinstance(nextPiece, King):
@@ -315,7 +314,7 @@ class Board:
                                 currentAdditionalChecks.append(move)
 
                                 finishedOnKing = False
-                            full_move = Move(boardX, boardY, move[0], move[1])
+                            full_move = (boardX, boardY, move[0], move[1])
                             if canGoFurther: plausibleMoves.append((move, lambda : self.move_piece(full_move), moveInstance.can_take()))
 
                 if finishedOnKing:
@@ -354,7 +353,7 @@ class Board:
             if currentSquare.get_code() == "Tel":
                 currentSquare: TeleportSquare
                 teleLoc = currentSquare.get_tele_location()
-                full_move = Move(boardX, boardY, *teleLoc)
+                full_move = (boardX, boardY, *teleLoc)
                 currentPiece.add_possible_moves([(
                     teleLoc,
                     lambda : (self.move_piece(full_move) if self.get_piece(*teleLoc) is None else self.move_and_take(full_move),
