@@ -232,7 +232,13 @@ class King(Piece):
                 allow = False
 
             if allow:
-                castles.append(((location[0] + 2*dir, location[1]), lambda : self.__do_castle(theEntireBoard, location, rookLocation, dir), False))
+                castles.append(
+                    (
+                        (location[0] + 2*dir, location[1]), 
+                        lambda : self.__do_castle(theEntireBoard, location, rookLocation, dir), # type: ignore
+                        False
+                    )
+                )
         print(castles)
         return castles
 
