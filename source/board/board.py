@@ -345,8 +345,7 @@ class Board:
 
 
             # teleporter
-            if currentSquare.get_code() == "Tel":
-                currentSquare: TeleportSquare
+            if isinstance(currentSquare, TeleportSquare):
                 teleLoc = currentSquare.get_tele_location()
                 currentPiece.add_possible_moves([(
                     teleLoc,
