@@ -22,16 +22,11 @@ class BoardView:
         self.x_scale = 32 * scale
         self.y_scale = 37 * scale
 
-        board_x_size = self.width * self.x_tile_size + 30
-        board_y_size = self.height * self.y_tile_size
+        board_x_size = self.width * self.x_tile_size + 10 * scale
+        board_y_size = self.height * self.y_tile_size + 20 * scale
 
         self.x_offset = (self.screen_width - board_x_size) / 2
         self.y_offset = (self.screen_height - board_y_size) / 2 
-
-
-
-    
-
 
     def display(self, screen: Surface, time, perspective_dark: bool = False):
         self.displayBase(screen, perspective_dark)
@@ -62,7 +57,8 @@ class BoardView:
                             else:
                                 img = square.img_back_dark
                         elif section == "piece":
-                            img = None
+                            if square.piece:
+                                img = square.piece._sprite
                         elif section == "front":
                             if is_light:
                                 img = square.img_front_light
@@ -78,7 +74,7 @@ class BoardView:
                                 direction = 1
                                 if section == "piece":
                                     direction = -1
-                                    vertical_offset = 30
+                                    vertical_offset = 13
                                 angle = math.sin(time * 1.2 + x + y * 0.3 * direction)
                                 img = pygame.transform.rotate(img, angle)
                             screen.blit(img, (self.x_offset + x * self.x_tile_size, 

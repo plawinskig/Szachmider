@@ -45,14 +45,14 @@ class PlayersStartup:
             row = 0
         i = 0
 
-        # Buttons start moving from the side closer to the direction they are moving
+        # Buttons start moving from the side closer to the direction they are moving <- doesn't work sadly
         # Looks more natural that way
         real_buttons_index = [0, 2, 3, 5]
         buttons = [self.BTN_BACK, self.fst_player, self.BTN_FST_COLOR, 
                    self.BTN_SCND_COLOR, self.scnd_player, self.BTN_CHOOSE_BOARD]
-        if (self.x_dest > self.x_pos):
-            buttons = buttons[::-1]
-            real_buttons_index = [5, 3, 2, 0]
+        #if (self.x_dest > self.x_pos):
+         #   buttons = buttons[::-1]
+          #  real_buttons_index = [5, 3, 2, 0]
 
         for btn in buttons:
             # Logic for moving the buttons

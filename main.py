@@ -8,7 +8,10 @@ from source.menu.main_buttons import MainButtons
 from source.menu.play_submenu.players_startup import PlayersStartup
 
 from source.board.board import Board
+from source.board.piece import *
+from source.board.board_json import *
 from source.board.board_view import BoardView
+from source.menu.choose_board_submenu.choose_boards import ChooseBoard
 from source.board.square import *
 
 pygame.init()

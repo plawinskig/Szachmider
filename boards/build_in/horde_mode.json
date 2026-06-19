@@ -1,0 +1,329 @@
+{
+    "width": 8,
+    "height": 8,
+    "name": "Horda",
+    "squares": [
+        [
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc"
+        ],
+        [
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc"
+        ],
+        [
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc"
+        ],
+        [
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc"
+        ],
+        [
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc"
+        ],
+        [
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc"
+        ],
+        [
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc"
+        ],
+        [
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc"
+        ]
+    ],
+    "pieces": [
+        [
+            {
+                "type": "Roo",
+                "isBlack": true,
+                "id": "Roo_0_B"
+            },
+            {
+                "type": "Kni",
+                "isBlack": true,
+                "id": "Kni_0_B"
+            },
+            {
+                "type": "Bis",
+                "isBlack": true,
+                "id": "Bis_0_B"
+            },
+            {
+                "type": "Kin",
+                "isBlack": true,
+                "id": "Kin_B"
+            },
+            {
+                "type": "Que",
+                "isBlack": true,
+                "id": "Que_0_B"
+            },
+            {
+                "type": "Bis",
+                "isBlack": true,
+                "id": "Bis_1_B"
+            },
+            {
+                "type": "Kni",
+                "isBlack": true,
+                "id": "Kni_1_B"
+            },
+            {
+                "type": "Roo",
+                "isBlack": true,
+                "id": "Roo_1_B"
+            }
+        ],
+        [
+            {
+                "type": "Paw",
+                "isBlack": true,
+                "id": "Paw_0_B"
+            },
+            {
+                "type": "Paw",
+                "isBlack": true,
+                "id": "Paw_1_B"
+            },
+            {
+                "type": "Paw",
+                "isBlack": true,
+                "id": "Paw_2_B"
+            },
+            {
+                "type": "Paw",
+                "isBlack": true,
+                "id": "Paw_3_B"
+            },
+            {
+                "type": "Paw",
+                "isBlack": true,
+                "id": "Paw_4_B"
+            },
+            {
+                "type": "Paw",
+                "isBlack": true,
+                "id": "Paw_5_B"
+            },
+            {
+                "type": "Paw",
+                "isBlack": true,
+                "id": "Paw_6_B"
+            },
+            {
+                "type": "Paw",
+                "isBlack": true,
+                "id": "Paw_7_B"
+            }
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_8_W"
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_9_W"
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_10_W"
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_11_W"
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_12_W"
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_13_W"
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_14_W"
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_15_W"
+            }
+        ],
+        [
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_16_W"
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_17_W"
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_18_W"
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_19_W"
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_20_W"
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_21_W"
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_22_W"
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_23_W"
+            }
+        ],
+        [
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_24_W"
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_25_W"
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_26_W"
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_27_W"
+            },
+            {
+                "type": "Kin",
+                "isBlack": false,
+                "id": "Kin_W"
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_28_W"
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_29_W"
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_30_W"
+            }
+        ]
+    ]
+}

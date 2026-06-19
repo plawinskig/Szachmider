@@ -1,11 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Callable, Any
 
-from source.board.board import Board
-
-import pieceMovement
-# from source.board.board import Board
-
+import source.board.board as board
+import source.board.pieceMovement as pieceMovement 
 
 class Piece(ABC):
     instanceCounter = 0
@@ -57,7 +54,7 @@ class Piece(ABC):
 
     # treat it like a specialized, conditional part of Boarc.__get_piece_moves()
     # tzn make sure it handles move restrictions, bcs the main function won't do it
-    def check_special_moves(self, theEntireBoard: Board, location: tuple[int, int]) -> tuple[
+    def check_special_moves(self, theEntireBoard: board.Board, location: tuple[int, int]) -> tuple[
         list[tuple[tuple[int, int], Callable[[] ,None], bool]], #plausible moves
         list[tuple[int, int]], # checks
         list[tuple[int, int]] # additional checks
@@ -81,6 +78,10 @@ class Rook(Piece):
 
     def __init__(self, isBlack: bool):
         super().__init__(isBlack)
+        if self._isBlack:
+            self._sprite = "assets/pieces/Rook_dark.png"
+        else:
+            self._sprite = "assets/pieces/Rook_light.png"
 
         self.moveIterators = [
             pieceMovement.MoveVectorDir((1, 0)),
@@ -100,6 +101,11 @@ class Knight(Piece):
 
     def __init__(self, isBlack: bool):
         super().__init__(isBlack)
+        if self._isBlack:
+            self._sprite = "assets/pieces/Knight_dark.png"
+        else:
+            self._sprite = "assets/pieces/Knight_light.png"
+
         self.moveIterators = [
             pieceMovement.MoveVectorSymmetrical((2, 1), True)
         ]
@@ -115,6 +121,10 @@ class Bishop(Piece):
 
     def __init__(self, isBlack: bool):
         super().__init__(isBlack)
+        if self._isBlack:
+            self._sprite = "assets/pieces/Bishop_dark.png"
+        else:
+            self._sprite = "assets/pieces/Bishop_light.png"
 
         self.moveIterators = [
             pieceMovement.MoveVectorDir((1, 1)),
@@ -135,6 +145,10 @@ class Queen(Piece):
 
     def __init__(self, isBlack: bool):
         super().__init__(isBlack)
+        if self._isBlack:
+            self._sprite = "assets/pieces/Queen_dark.png"
+        else:
+            self._sprite = "assets/pieces/Queen_light.png"
 
         self.moveIterators = [
             pieceMovement.MoveVectorDir((1, 1)),
@@ -160,6 +174,10 @@ class King(Piece):
 
     def __init__(self, isBlack: bool):
         super().__init__(isBlack)
+        if self._isBlack:
+            self._sprite = "assets/pieces/King_dark.png"
+        else:
+            self._sprite = "assets/pieces/King_light.png"
 
         self.moveIterators = [
             pieceMovement.MoveVectorList([
@@ -182,19 +200,15 @@ class King(Piece):
     #     return True
 
 
-    def __do_castle(self, board: Board, location: tuple[int, int], rookLocation: tuple[int, int], direction: int):
+    def __do_castle(self, board: board.Board, location: tuple[int, int], rookLocation: tuple[int, int], direction: int):
         board.move_piece(*location, location[0] + 2*direction, location[1])
         board.move_piece(*rookLocation, location[0] + direction, location[1])
 
 
-
-    def check_castling(self, theEntireBoard: Board, location: tuple[int, int], otherColorMoveMatrix: list[list[list[tuple[str, Callable[[], None], bool]]]]):
+    def check_castling(self, theEntireBoard: board.Board, location: tuple[int, int], otherColorMoveMatrix: list[list[list[tuple[str, Callable[[], None], bool]]]]):
         castles = []
         if self._moveCounter > 0 or otherColorMoveMatrix[location[1]][location[0]] != []:
             return castles
-
-
-
 
         for dir in [-1, 1]:
             moves = pieceMovement.MoveVectorDir((dir, 0))(*location)
@@ -249,6 +263,11 @@ class Pawn(Piece):
 
     def __init__(self, isBlack: bool):
         super().__init__(isBlack)
+        if self._isBlack:
+            self._sprite = "assets/pieces/Pawn_dark.png"
+        else:
+            self._sprite = "assets/pieces/Pawn_light.png"
+
         self.__movedTwo = False
 
         self.__direction = (1 if self._isBlack else -1)
@@ -259,18 +278,18 @@ class Pawn(Piece):
         ]
 
     # nevermind I ain't doing this cursed rule
-    def __do_en_passant(self, board: Board, location: tuple[int, int], moveToLocation: tuple[int, int], target: tuple[int, int]):
+    def __do_en_passant(self, board: board.Board, location: tuple[int, int], moveToLocation: tuple[int, int], target: tuple[int, int]):
         board.move_piece(*location, *moveToLocation)
         board.take_piece(*target)
 
         # Google en passant. Holy hell.
         raise NotImplementedError("New response just dropped: Dev is too lazy")
 
-    def __do_double_move(self, board: Board, from_x: int, from_y: int, to_x: int, to_y: int):
+    def __do_double_move(self, board: board.Board, from_x: int, from_y: int, to_x: int, to_y: int):
         board.move_piece(from_x, from_y, to_x, to_y)
         self.__movedTwo = True
 
-    def check_special_moves(self, theEntireBoard: Board, location: tuple[int, int]):
+    def check_special_moves(self, theEntireBoard: board.Board, location: tuple[int, int]):
         validMoves = []
 
         x, y = location

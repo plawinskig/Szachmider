@@ -4,7 +4,7 @@ from typing import Optional
 
 from source.board.piece import *
 from source.board.square import *
-from board_json import save_to_json
+from source.board.board_json import save_to_json
 
 from source.board.obj_mapping import SQUARE_MAP, PIECE_MAP
 
@@ -166,13 +166,7 @@ class Board:
                         "type": piece_code,
                         "isBlack": square.piece.is_black(),
                         "id": square.piece.get_ID(),
-                    }
-
-                    if piece_code == "Kin":
-                        piece_state["moved"] = getattr(square.piece, "_King__moved", False)
-                    elif piece_code == "Paw":
-                        piece_state["moved"] = getattr(square.piece, "_Pawn__moved", False)
-                        piece_state["justMovedTwo"] = getattr(square.piece, "_Pawn__justMovedTwo", False)       
+                    }      
                         
                     row_pieces.append(piece_state)
                 else:
@@ -208,14 +202,8 @@ class Board:
                     piece_class = PIECE_MAP.get(piece_type)
                     if piece_class:
                         new_piece = piece_class(isBlack=piece_data["isBlack"])
-                        
-                        new_piece._pieceID = piece_data["id"] 
 
-                        if piece_type == "Kin":
-                            setattr(new_piece, "_King__moved", piece_data["moved"])
-                        elif piece_type == "Paw":
-                            setattr(new_piece, "_Pawn__moved", piece_data["moved"])
-                            setattr(new_piece, "_Pawn__justMovedTwo", piece_data["justMovedTwo"])
+                        new_piece._pieceID = piece_data["id"] 
                             
                         new_square.piece = new_piece
                 
@@ -224,7 +212,7 @@ class Board:
         self.make_movement_matrix()
     
     def reset_board(self):
-        self.board = [[BasicSquare() for _ in range(self.width)] for _ in range(self.height)]
+        self._board = [[BasicSquare() for _ in range(self.width)] for _ in range(self.height)]
 
 
     def iterate_board(self):
@@ -241,7 +229,8 @@ class Board:
         # existings checks iterators
         whiteChecks = []
         blackChecks = []
-        # additional moves that are checks but are in current setting unachievable moves (i.e. right behind a king when hes attacked by a rook or pawn attack)
+        # additional moves that are checks but are in current setting unachievable moves 
+        # (i.e. right behind a king when hes attacked by a rook or pawn attack)
         additionalBlackChecks = []
         additionalWhiteChecks = []
 
