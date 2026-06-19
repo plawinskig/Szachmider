@@ -449,6 +449,28 @@ class Board:
                     self.__whiteMoveMatrix[Y][X] = [] if kingsMove is None else [kingsMove]
 
 
+    def get_available_moves(self, pieceID: str):
+        black = pieceID.split("_")[-1] == "B"
+        moveMatrix = self.__blackMoveMatrix if black else self.__whiteMoveMatrix
+        result = []
+
+        for y in range(self.height):
+            for x in range(self.width):
+                if self.__find_move_in_moves_list(pieceID, moveMatrix[y][x]):
+                    result.append((x, y))
+
+
+        return result
+
+
+    def execute_move(self, pieceID: str, X: int, Y: int):
+        black = pieceID.split("_")[-1] == "B"
+        moveMatrix = self.__blackMoveMatrix if black else self.__whiteMoveMatrix
+
+        moves = moveMatrix[Y][X]
+        moves[self.__find_specific_in_list(pieceID, lambda x: x[0], moves)][1]()
+
+
 
 
     def debug_print_movementMatrix(self):
