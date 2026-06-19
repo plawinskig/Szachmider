@@ -11,7 +11,7 @@ from source.board.obj_mapping import SQUARE_MAP, PIECE_MAP
 
 
 class Board:
-    def __init__(self, width: int, height: int):
+    def __init__(self, width: int, height: int, name: str):
         if width < 4 or height < 4:
             raise ValueError("Board dimensions must be at least 4x4")
         if width > 10 or height > 10:
@@ -19,6 +19,7 @@ class Board:
             
         self._width = width
         self._height = height
+        self.__name = name
         # self._last_move: Optional[tuple[Piece, Move]] = None
         self._board: list[list[Square]] = []
         
@@ -181,6 +182,7 @@ class Board:
             pieces_data.append(row_pieces)
 
         return {
+            "name": self.__name,
             "width": self._width,
             "height": self._height,
             "squares": squares_data,
@@ -190,6 +192,7 @@ class Board:
     def import_from_json(self, data: dict[str, Any]):
         self._width = data["width"]
         self._height = data["height"]
+        self.__name = data["name"]
         
         self.reset_board() 
         
