@@ -1,5 +1,8 @@
+from source.menu.play_submenu.player import *
 from source.gui.button import Button
 from source.gui.text_field import TextField
+# from Szachmider.source.gui.button import Button
+# from Szachmider.source.gui.text_field import TextField
 import pygame
 
 class PlayerSelection():
@@ -95,8 +98,9 @@ class PlayerSelection():
         for btn in self.BTN_PLAYER_LIST:
             if btn.checkForInput(position):
                 if not self.contains_equal and i-3 == len(self.BTN_PLAYER_LIST):
-                    # TODO: normalne dodawanie gracza, a nie tylko do listy
                     self.player_list.append(self.TEXT_FIELD.text.strip())
+                    # adding player to the database
+                    Player.create(username=self.TEXT_FIELD.text.strip())
                     self.contains_equal = True
                 else:
                     self.TEXT_FIELD.text = btn.text
