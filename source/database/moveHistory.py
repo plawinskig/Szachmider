@@ -1,7 +1,7 @@
 import os
 
 from peewee import *
-from games import Games
+from Szachmider.source.database.games import Games
 
 class MoveHistory(Model):
     game=ForeignKeyField(Games,null=False)
