@@ -147,7 +147,7 @@ class Board:
             print(" ".join(str(square) for square in row))
 
     def display_pieces(self):
-        for row in self.board:
+        for row in self._board:
             print(" ".join(str(square.piece) for square in row))
     
     def export_to_json(self) -> dict[str, Any]:
@@ -155,10 +155,17 @@ class Board:
         pieces_data: list[list[dict[str, Any] | None]] = []
 
         for row in self._board:
-            row_squares: list[str] = []
+            row_squares: list[str | dict[str, Any]] = []
             row_pieces: list[dict[str, Any] | None] = []
             for square in row:
-                row_squares.append(square.get_code())
+                if square.get_code() == "Tel":
+                    assert(isinstance(square, TeleportSquare))
+                    row_squares.append({
+                        "type": square.get_code(),
+                        "teleportLocation": square.get_tele_location()
+                    })
+                else:
+                    row_squares.append(square.get_code())
                 
                 if square.piece:
                     piece_code = square.piece.get_code()
@@ -192,9 +199,19 @@ class Board:
         
         for y in range(self._height):
             for x in range(self._width):
-                square_code = data["squares"][y][x]
-                square_class = SQUARE_MAP.get(square_code, BasicSquare) 
-                new_square = square_class()
+                square_data = data["squares"][y][x]
+
+                if isinstance(square_data, dict):
+                    square_code = square_data["type"]
+                    
+                    if square_code == "Tel":
+                        tele_loc = tuple[Any, ...](square_data["teleportLocation"])
+                        new_square = TeleportSquare(teleportLocation=tele_loc)
+
+                else:
+                    square_code = square_data
+                    square_class = SQUARE_MAP.get(square_code, BasicSquare) 
+                    new_square = square_class()
                 
                 piece_data = data["pieces"][y][x]
                 if piece_data is not None:
