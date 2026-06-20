@@ -151,15 +151,14 @@ class Board:
             print(" ".join(str(square.piece) for square in row))
     
     def export_to_json(self) -> dict[str, Any]:
-        squares_data: list[list[str]] = []
+        squares_data: list[list[str | dict[str, Any]]] = []
         pieces_data: list[list[dict[str, Any] | None]] = []
 
         for row in self._board:
             row_squares: list[str | dict[str, Any]] = []
             row_pieces: list[dict[str, Any] | None] = []
             for square in row:
-                if square.get_code() == "Tel":
-                    assert(isinstance(square, TeleportSquare))
+                if isinstance(square, TeleportSquare):
                     row_squares.append({
                         "type": square.get_code(),
                         "teleportLocation": square.get_tele_location()
@@ -205,8 +204,10 @@ class Board:
                     square_code = square_data["type"]
                     
                     if square_code == "Tel":
-                        tele_loc = tuple[Any, ...](square_data["teleportLocation"])
+                        tele_loc: tuple[int, int] = tuple(square_data["teleportLocation"])
                         new_square = TeleportSquare(teleportLocation=tele_loc)
+                    else:
+                        raise ValueError(f"Unrecognised field type in the JSON dictionary: {square_code}")
 
                 else:
                     square_code = square_data
