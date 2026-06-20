@@ -17,6 +17,8 @@ from source.board.board_view import BoardView
 from source.menu.choose_board_submenu.choose_board_to_play import ChoosingBoardToPlay
 from source.board.square import *
 
+from source.database.datbaseConnector import *
+
 pygame.init()
 SCREEN = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 
@@ -30,6 +32,8 @@ BG = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
 BG.fill(pygame.Color('#f9e6cf'))
 
 CLOCK = pygame.time.Clock()
+
+DATABASE = DatabaseConnector()
 
 def mainMenu():
     pygame.display.set_caption("Szachmider - Menu")
@@ -51,8 +55,7 @@ def mainMenu():
     play_pos = int(SCREEN_WIDTH / 2)
     play_destination_offscreen = SCREEN_WIDTH * 1.5
 
-    # TODO: normalne pobieranie listy graczy
-    player_list = ["Gracz 1", "Bardzo długi nick", "Limit znaków = 20", "Chyba działa", "Mam nadzieję"]
+    player_list = DATABASE.get_player_list()
     PLAY_MENU = PlayersStartup((play_destination_offscreen, SCREEN_HEIGHT // 2), player_list, screen_width=SCREEN_WIDTH)
     render_play_menu = False
 

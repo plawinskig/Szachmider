@@ -499,8 +499,8 @@ class Board:
 
         return pieces
 
-    def does_color_have_any_moves(self, black: bool):
-        moveMatrix = self.__blackMoveMatrix if black else self.__whiteMoveMatrix
+    def does_color_have_any_moves(self, isBlack: bool):
+        moveMatrix = self.__blackMoveMatrix if isBlack else self.__whiteMoveMatrix
 
         result = True
         for Y in moveMatrix:
