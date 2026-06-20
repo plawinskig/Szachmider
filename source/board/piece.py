@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Callable, Any
+from functools import partial
 
 import source.board.board as board
 import source.board.pieceMovement as pieceMovement 
@@ -243,7 +244,7 @@ class King(Piece):
                 castles.append(
                     (
                         (location[0] + 2*dir, location[1]), 
-                        lambda : self.__do_castle(theEntireBoard, location, rookLocation, dir), # type: ignore
+                        partial(self.__do_castle, theEntireBoard, location, rookLocation, dir), # type: ignore
                         False
                     )
                 )
@@ -289,7 +290,7 @@ class Pawn(Piece):
         # double move
         dMove = (x, y + 2*self.__direction)
         if self._moveCounter == 0 and not(dMove[1] < 0 or dMove[1] >= theEntireBoard.height) and theEntireBoard.get_piece(*dMove) is None:
-            validMoves.append((dMove, lambda : self.__do_double_move(theEntireBoard, x, y, *dMove), False))
+            validMoves.append((dMove, partial(self.__do_double_move, theEntireBoard, x, y, *dMove), False))
 
 
         # en passant

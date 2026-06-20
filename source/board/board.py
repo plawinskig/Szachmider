@@ -1,6 +1,9 @@
+import copy
 import os
 import types
 from typing import Optional
+
+from functools import partial
 
 from source.board.piece import *
 from source.board.square import *
@@ -95,6 +98,7 @@ class Board:
     #     return True
     
     def move_piece(self, from_x: int, from_y: int, to_x: int, to_y: int):
+        print(from_x, from_y, to_x, to_y)
         moving_piece = self.get_piece(from_x, from_y)
         
         if moving_piece is None:
@@ -147,7 +151,7 @@ class Board:
             print(" ".join(str(square) for square in row))
 
     def display_pieces(self):
-        for row in self.board:
+        for row in self._board:
             print(" ".join(str(square.piece) for square in row))
     
     def export_to_json(self) -> dict[str, Any]:
@@ -263,6 +267,7 @@ class Board:
                 theoriticalMoves = [] # wszystkie ruchy iteratora - do tworzenia ograniczeń
 
                 for move in moveInstance:
+                    print(move)
                     if (move[0] < 0 or move[0] >= self.width or move[1] < 0 or move[1] >= self.height) and not moveInstance.is_finite():
                         break
                     elif (move[0] < 0 or move[0] >= self.width or move[1] < 0 or move[1] >= self.height) and moveInstance.is_finite():
@@ -282,7 +287,7 @@ class Board:
 
                         if moveIter.can_take() and nextSquare.get_code() != "Shl" and currentSquare.get_code() != "Hrt" and nextPiece.is_black() != currentPiece.is_black():
                             theoriticalMoves.append(move)
-                            if canGoFurther: plausibleMoves.append((move, lambda : self.move_and_take(boardX, boardY, move[0], move[1]), moveInstance.can_take()))
+                            if canGoFurther: plausibleMoves.append((move, partial(self.move_and_take, boardX, boardY, move[0], move[1]), moveInstance.can_take()))
                             if not foundKing: encounteredPieces.append(nextPiece)
                             if isinstance(nextPiece, King):
                                 foundKing = True
@@ -301,7 +306,7 @@ class Board:
                                 currentAdditionalChecks.append(move)
 
                                 finishedOnKing = False
-                            if canGoFurther: plausibleMoves.append((move, lambda : self.move_piece(boardX, boardY, move[0], move[1]), moveInstance.can_take()))
+                            if canGoFurther: plausibleMoves.append((move, partial(self.move_piece, boardX, boardY, move[0], move[1]), moveInstance.can_take()))
 
                 if finishedOnKing:
                     try:
@@ -328,6 +333,8 @@ class Board:
                     currentChecks.append(theoriticalMoves if not moveInstance.jumps_over() else [kingLocation, (boardX, boardY)])
 
 
+
+
             specialMoves, specialChecks, specialAdditionalChecks = currentPiece.check_special_moves(self, (boardX, boardY))
             currentPiece.add_possible_moves(specialMoves)
             currentChecks.extend(specialChecks)
@@ -340,7 +347,7 @@ class Board:
                 teleLoc = currentSquare.get_tele_location()
                 currentPiece.add_possible_moves([(
                     teleLoc,
-                    lambda : (self.move_piece(boardX, boardY, *teleLoc) if self.get_piece(*teleLoc) is None else self.move_and_take(boardX, boardY, *teleLoc)),
+                    partial(self.move_piece, boardX, boardY, *teleLoc) if self.get_piece(*teleLoc) is None else partial(self.move_and_take, boardX, boardY, *teleLoc),
                     True
                 )])
 
@@ -407,9 +414,9 @@ class Board:
                 if attacking == [] and move not in attackingAdditionalChecks:
 
                     if otherPiece == None:
-                        ownMoveMatrix[Y][X].append((currentKing.get_ID(), lambda : self.move_piece(*k, *move), True))
+                        ownMoveMatrix[Y][X].append((currentKing.get_ID(), partial(self.move_piece, *k, *move), True))
                     elif otherPiece.is_black() != currentKing.is_black():
-                        ownMoveMatrix[Y][X].append((currentKing.get_ID(), lambda : self.move_and_take(*k, *move), True))
+                        ownMoveMatrix[Y][X].append((currentKing.get_ID(), partial(self.move_and_take, *k, *move), True))
 
 
                 elif otherKing != "" and otherKing in map(lambda x: x[0], attacking):
@@ -488,43 +495,12 @@ class Board:
         
 
 if __name__ == "__main__":
-    board = Board(8, 8)
+    board = Board(8, 8, "niedziala")
 
-    # board.set_piece(0, 0, Rook(True))
-    # board.set_piece(7, 0, Rook(True))
-    # board.set_piece(1, 0, Knight(True))
-    # board.set_piece(6, 0, Knight(True))
-    # board.set_piece(2, 0, Bishop(True))
-    # board.set_piece(5, 0, Bishop(True))
-    # board.set_piece(3, 0, King(True))
-    # board.set_piece(4, 0, Queen(True))
-    #
-    # for i in range(8):
-    #     board.set_piece(i, 1, Pawn(True))
-    #
-    # board.set_piece(0, 7, Rook(False))
-    # board.set_piece(7, 7, Rook(False))
-    # board.set_piece(1, 7, Knight(False))
-    # board.set_piece(6, 7, Knight(False))
-    # board.set_piece(2, 7, Bishop(False))
-    # board.set_piece(5, 7, Bishop(False))
-    # board.set_piece(4, 7, King(False))
-    # board.set_piece(3, 7, Queen(False))
-    #
-    # for i in range(8):
-    #     board.set_piece(i, 6, Pawn(False))
+    board.set_piece(3, 3, Rook(True))
+    rook = board.get_piece(3, 3)
+    board.display_pieces()
+    board.make_movement_matrix()
+    board.execute_move(rook.get_ID(), 3, 5)
+    board.display_pieces()
 
-
-    
-    # for i in range(8):
-    #     board.set_piece(i, 1, Pawn())
-    #
-    # board.display()
-    # print()
-    # saved_state = board.export_to_json()
-    # save_to_json(saved_state, "boards" + os.sep + "board_state.json")
-    # print()
-    # board.reset_board()
-    # board.display()
-    # board.import_from_json(board.export_to_json())
-    # board.display()
