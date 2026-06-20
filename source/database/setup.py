@@ -2,7 +2,7 @@ import sqlite3
 
 db = sqlite3.connect("szachmider.db")
 
-commands = open("sqlCommands.txt", "r")
+commands = open("dbSetup.txt", "r")
 
 
 cursor = db.cursor()
