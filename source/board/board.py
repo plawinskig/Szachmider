@@ -222,7 +222,6 @@ class Board:
 
 
 
-    # abandon all hope ye who enter here
     def __get_piece_moves(self):
         kings = [] # kings to evaluate later
         pieces = [] # all pieces for ease of making the matrices
@@ -422,7 +421,7 @@ class Board:
             otherKing = (currentKing.get_ID(), k)
 
 
-        # cchecking moves with existing checks to block them
+        # checking moves with existing checks to block them
         if whiteChecks != []:
             for place in self.iterate_board():
                 X, Y, *rest = place

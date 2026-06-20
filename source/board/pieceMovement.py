@@ -84,7 +84,6 @@ class MoveVectorList(MovementIter):
         return newLocation
 
 # outputs moves in every transformation of  vector
-# just horsin' around
 class MoveVectorSymmetrical(MovementIter):
     def __init__(self, vector: tuple[int, int], canTake: bool = True, canMove: bool = True):
         super().__init__(canTake, canMove)
