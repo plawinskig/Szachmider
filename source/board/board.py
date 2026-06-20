@@ -63,6 +63,7 @@ class Board:
             raise IndexError("Square coordinates out of bounds")
     
     def set_piece(self, x: int, y: int, piece: Optional[Piece]):
+        print(x, y)
         square = self.get_square(x, y)
         
         if square:
@@ -155,14 +156,20 @@ class Board:
             print(" ".join(str(square.piece) for square in row))
     
     def export_to_json(self) -> dict[str, Any]:
-        squares_data: list[list[str]] = []
+        squares_data: list[list[str | dict[str, Any]]] = []
         pieces_data: list[list[dict[str, Any] | None]] = []
 
         for row in self._board:
-            row_squares: list[str] = []
+            row_squares: list[str | dict[str, Any]] = []
             row_pieces: list[dict[str, Any] | None] = []
             for square in row:
-                row_squares.append(square.get_code())
+                if isinstance(square, TeleportSquare):
+                    row_squares.append({
+                        "type": square.get_code(),
+                        "teleportLocation": square.get_tele_location()
+                    })
+                else:
+                    row_squares.append(square.get_code())
                 
                 if square.piece:
                     piece_code = square.piece.get_code()
@@ -170,6 +177,7 @@ class Board:
                         "type": piece_code,
                         "isBlack": square.piece.is_black(),
                         "id": square.piece.get_ID(),
+                        "moveCounter": square.piece._moveCounter
                     }      
                         
                     row_pieces.append(piece_state)
@@ -196,9 +204,21 @@ class Board:
         
         for y in range(self._height):
             for x in range(self._width):
-                square_code = data["squares"][y][x]
-                square_class = SQUARE_MAP.get(square_code, BasicSquare) 
-                new_square = square_class()
+                square_data = data["squares"][y][x]
+
+                if isinstance(square_data, dict):
+                    square_code = square_data["type"]
+                    
+                    if square_code == "Tel":
+                        tele_loc: tuple[int, int] = tuple(square_data["teleportLocation"])
+                        new_square = TeleportSquare(teleportLocation=tele_loc)
+                    else:
+                        raise ValueError(f"Unrecognised field type in the JSON dictionary: {square_code}")
+
+                else:
+                    square_code = square_data
+                    square_class = SQUARE_MAP.get(square_code, BasicSquare) 
+                    new_square = square_class()
                 
                 piece_data = data["pieces"][y][x]
                 if piece_data is not None:
@@ -206,8 +226,9 @@ class Board:
                     piece_class = PIECE_MAP.get(piece_type)
                     if piece_class:
                         new_piece = piece_class(isBlack=piece_data["isBlack"])
-
                         new_piece._pieceID = piece_data["id"] 
+                        
+                        new_piece._moveCounter = piece_data.get("moveCounter", 0)
                             
                         new_square.piece = new_piece
                 

@@ -45,14 +45,14 @@ class PlayersStartup:
             row = 0
         i = 0
 
-        # Buttons start moving from the side closer to the direction they are moving <- doesn't work sadly
+        # Buttons start moving from the side closer to the direction they are moving <- doesn't work sadly (commented the part that broke)
         # Looks more natural that way
         real_buttons_index = [0, 2, 3, 5]
         buttons = [self.BTN_BACK, self.fst_player, self.BTN_FST_COLOR, 
                    self.BTN_SCND_COLOR, self.scnd_player, self.BTN_CHOOSE_BOARD]
         #if (self.x_dest > self.x_pos):
-         #   buttons = buttons[::-1]
-          #  real_buttons_index = [5, 3, 2, 0]
+        #   buttons = buttons[::-1]
+        #   real_buttons_index = [5, 3, 2, 0]
 
         for btn in buttons:
             # Logic for moving the buttons
@@ -95,7 +95,10 @@ class PlayersStartup:
 
     def move(self, x_dest):
         self.is_moving = True
-        self.x_dest = x_dest + 1
+        if x_dest < 0:
+            self.x_dest = x_dest - 1
+        else:
+            self.x_dest = x_dest + 1
         self.moving_row = 0
     
     def checkForInput(self, position):
@@ -127,6 +130,8 @@ class PlayersStartup:
             return 4
         elif self.BTN_BACK.checkForInput(position):
             return 5
+        elif self.BTN_CHOOSE_BOARD.checkForInput(position):
+            return 6
         return 0
 
     def input(self, event):
@@ -137,3 +142,9 @@ class PlayersStartup:
         return (self.fst_player.getPlayer() != self.scnd_player.getPlayer()
             and self.fst_player.getPlayer().strip() in self.player_list
             and self.scnd_player.getPlayer().strip() in self.player_list)
+    
+    def getCurrentPlayers(self) -> tuple[str, str]:
+        return (self.fst_player.getPlayer().strip(), self.scnd_player.getPlayer().strip())
+    
+    def getColors(self) -> tuple[int, int]:
+        return (self.BTN_FST_COLOR.color, self.BTN_SCND_COLOR)
