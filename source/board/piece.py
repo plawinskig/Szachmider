@@ -248,7 +248,7 @@ class King(Piece):
                         False
                     )
                 )
-        print(castles)
+        # print(castles)
         return castles
 
 
