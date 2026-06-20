@@ -60,6 +60,7 @@ class Board:
             raise IndexError("Square coordinates out of bounds")
     
     def set_piece(self, x: int, y: int, piece: Optional[Piece]):
+        print(x, y)
         square = self.get_square(x, y)
         
         if square:

@@ -15,6 +15,8 @@ class BoardView:
 
         self.screen_width = screen_width
         self.screen_height = screen_height
+        
+        self.scale = scale
 
         self.x_tile_size = 22 * scale
         self.y_tile_size = 17 * scale
@@ -74,7 +76,7 @@ class BoardView:
                                 direction = 1
                                 if section == "piece":
                                     direction = -1
-                                    vertical_offset = 13
+                                    vertical_offset = 13 * self.scale
                                 angle = math.sin(time * 1.2 + x + y * 0.3 * direction)
                                 img = pygame.transform.rotate(img, angle)
                             screen.blit(img, (self.x_offset + x * self.x_tile_size, 
@@ -105,6 +107,24 @@ class BoardView:
                         screen.blit(img, (self.x_offset + x * self.x_tile_size, 
                                             self.y_offset + y * self.y_tile_size))
 
-                    
+    
+    def getBoardCoords(self, mouse_pos):
+        offset_pos = (mouse_pos[0] - self.x_offset, mouse_pos[1] - self.y_offset)
+        # Offseting the board border
+        offset_pos = (offset_pos[0] - 5 * self.scale, offset_pos[1] - 5 * self.scale)
+        # Changing size
+        offset_pos = (offset_pos[0] / self.x_tile_size, offset_pos[1] / self.y_tile_size)
+
+        if offset_pos[0] < 0 or offset_pos[1] < 0:
+            return None
+        
+        offset_pos = (int(offset_pos[0]), int(offset_pos[1]))
+
+        if offset_pos[0] < self.width and offset_pos[1] < self.height:
+            return offset_pos
+        return None
+
+
+
 
 
