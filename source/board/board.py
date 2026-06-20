@@ -172,6 +172,7 @@ class Board:
                         "type": piece_code,
                         "isBlack": square.piece.is_black(),
                         "id": square.piece.get_ID(),
+                        "moveCounter": square.piece._moveCounter
                     }      
                         
                     row_pieces.append(piece_state)
@@ -220,8 +221,9 @@ class Board:
                     piece_class = PIECE_MAP.get(piece_type)
                     if piece_class:
                         new_piece = piece_class(isBlack=piece_data["isBlack"])
-
                         new_piece._pieceID = piece_data["id"] 
+                        
+                        new_piece._moveCounter = piece_data.get("moveCounter", 0)
                             
                         new_square.piece = new_piece
                 
