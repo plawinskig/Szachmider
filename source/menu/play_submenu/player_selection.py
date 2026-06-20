@@ -1,3 +1,4 @@
+from source.database.datbaseConnector import DatabaseConnector
 from source.gui.button import Button
 from source.gui.text_field import TextField
 import pygame
@@ -97,6 +98,9 @@ class PlayerSelection():
                 if not self.contains_equal and i-3 == len(self.BTN_PLAYER_LIST):
                     # TODO: normalne dodawanie gracza, a nie tylko do listy
                     self.player_list.append(self.TEXT_FIELD.text.strip())
+                    dbConnecor=DatabaseConnector()
+                    dbConnecor.add_player(self.TEXT_FIELD.text.strip())
+                    del dbConnecor
                     self.contains_equal = True
                 else:
                     self.TEXT_FIELD.text = btn.text
