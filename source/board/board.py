@@ -462,7 +462,16 @@ class Board:
         moves[self.__find_specific_in_list(pieceID, lambda x: x[0], moves)][1]()
 
 
+    # returns coordinates of every piece of a given color
+    def get_colors_pieces(self, blackIsPlaying: bool) -> list[tuple[int, int]]:
+        color = "B" if blackIsPlaying else "W"
 
+        pieces = []
+        for X, Y, sq, pc in self.iterate_board():
+            if pc.get_ID().split("_")[-1] == color:
+                pieces.append((X, Y))
+
+        return pieces
 
     def debug_print_movementMatrix(self):
         print("czarne:")
