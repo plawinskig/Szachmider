@@ -30,13 +30,14 @@ class BoardView:
         self.x_offset = (self.screen_width - board_x_size) / 2
         self.y_offset = (self.screen_height - board_y_size) / 2 
 
-    def display(self, screen: Surface, time, perspective_dark: bool = False):
+    def display(self, screen: Surface, time, perspective_dark: bool = False,
+                possible_moves = None, piece_pos = (-1, -1)):
         self.displayBase(screen, perspective_dark)
         for y in range(self.height):
             true_y = y
             if perspective_dark:
                 true_y = self.height - 1 - y
-            for section in ["tile", "back", "piece", "front"]:
+            for section in ["tile", "move", "back", "piece", "front"]:
                 for x in range(self.width):
                     true_x = x
                     if perspective_dark:
@@ -53,6 +54,15 @@ class BoardView:
                                 img = square.img_tile_light
                             else:
                                 img = square.img_tile_dark
+                        elif section == "move":
+                            if square.piece and piece_pos:
+                                if x == piece_pos[0] and y == piece_pos[1]:
+                                    img = "assets/squares/SQR_show_selected.png"
+                            if possible_moves and (x, y) in possible_moves:
+                                if square.piece:
+                                    img = "assets/squares/SQR_show_take.png"
+                                else:
+                                    img = "assets/squares/SQR_show_move.png"
                         elif section == "back":
                             if is_light:
                                 img = square.img_back_light

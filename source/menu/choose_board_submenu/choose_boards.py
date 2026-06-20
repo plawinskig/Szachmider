@@ -23,7 +23,7 @@ class ChooseBoard():
         self.screen_width = screen_width
         self.screen_height = screen_height
 
-        self.BTN_LEFT = Button(pos=(self.x_pos/2-475, screen_height/2), text="",
+        self.BTN_LEFT = Button(pos=(self.x_pos-475, screen_height/2), text="",
                             img_normal=pygame.image.load("assets/buttons/BTN_arrow_left.png").convert_alpha(),
                             img_hover=pygame.image.load("assets/buttons/BTN_arrow_left_hover.png").convert_alpha(),
                             r = -1)

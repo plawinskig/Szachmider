@@ -4,9 +4,9 @@ from collections import Counter
 
 from peewee import *
 
-from Szachmider.source.database.moveHistory import MoveHistory
-from Szachmider.source.database.players import Players
-from Szachmider.source.database.games import Games
+from source.database.moveHistory import MoveHistory
+from source.database.players import Players
+from source.database.games import Games
 
 class DatabaseConnector:
 

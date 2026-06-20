@@ -1,8 +1,8 @@
 import os
 
 from peewee import *
-from Szachmider.source.database.players import Players
-from Szachmider.source.database.boards import Boards
+from source.database.players import Players
+from source.database.boards import Boards
 
 class Games(Model):
     GId=IntegerField(primary_key=True)

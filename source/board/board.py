@@ -63,7 +63,6 @@ class Board:
             raise IndexError("Square coordinates out of bounds")
     
     def set_piece(self, x: int, y: int, piece: Optional[Piece]):
-        print(x, y)
         square = self.get_square(x, y)
         
         if square:
@@ -99,7 +98,6 @@ class Board:
     #     return True
     
     def move_piece(self, from_x: int, from_y: int, to_x: int, to_y: int):
-        print(from_x, from_y, to_x, to_y)
         moving_piece = self.get_piece(from_x, from_y)
         
         if moving_piece is None:
@@ -288,7 +286,7 @@ class Board:
                 theoriticalMoves = [] # wszystkie ruchy iteratora - do tworzenia ograniczeń
 
                 for move in moveInstance:
-                    print(move)
+                    #print(move)
                     if (move[0] < 0 or move[0] >= self.width or move[1] < 0 or move[1] >= self.height) and not moveInstance.is_finite():
                         break
                     elif (move[0] < 0 or move[0] >= self.width or move[1] < 0 or move[1] >= self.height) and moveInstance.is_finite():

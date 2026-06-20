@@ -102,14 +102,14 @@
                 "id": "Bis_0_B"
             },
             {
-                "type": "Kin",
-                "isBlack": true,
-                "id": "Kin_B"
-            },
-            {
                 "type": "Que",
                 "isBlack": true,
                 "id": "Que_0_B"
+            },
+            {
+                "type": "Kin",
+                "isBlack": true,
+                "id": "Kin_B"
             },
             {
                 "type": "Bis",
@@ -305,11 +305,6 @@
                 "id": "Paw_27_W"
             },
             {
-                "type": "Kin",
-                "isBlack": false,
-                "id": "Kin_W"
-            },
-            {
                 "type": "Paw",
                 "isBlack": false,
                 "id": "Paw_28_W"
@@ -323,6 +318,11 @@
                 "type": "Paw",
                 "isBlack": false,
                 "id": "Paw_30_W"
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_31_W"
             }
         ]
     ]
