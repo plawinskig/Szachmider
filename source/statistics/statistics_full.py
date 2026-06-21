@@ -98,7 +98,7 @@ class Statistics():
             return -1
         if self.BTN_DELETE.check_for_input(position):
             player = self.left_side_bar.TEXT_FIELD.text.strip()
-            if player in self.playerList and not player == "Random Bot":
+            if player in self.playerList and player not in ["Random Bot", "Greedy Bot"]:
                 DATABASE = DatabaseConnector()
                 DATABASE.delete_player(DATABASE.get_player_id(player))
                 del DATABASE
