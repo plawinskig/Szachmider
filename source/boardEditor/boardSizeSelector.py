@@ -29,7 +29,7 @@ class SizeSelector:
 
         self.currentSizeChoice = 8
         self.upperSizeLimit = 10
-        self.lowerSizeLimit = 3
+        self.lowerSizeLimit = 4
 
     def update(self, screen, time, time_delta, position):
 
@@ -41,13 +41,13 @@ class SizeSelector:
         return self.currentSizeChoice
 
     def check_for_input(self, position):
-        i = 0
+        i = 1
 
         for btn in [self.BTN_UP, self.BTN_DOWN]:
             if btn.check_for_input(position):
-                if i == 0:
+                if i == 1:
                     self.currentSizeChoice = min(self.currentSizeChoice+1, self.upperSizeLimit)
-                elif i == 1:
+                elif i == 2:
                     self.currentSizeChoice = max(self.currentSizeChoice-1, self.lowerSizeLimit)
                 self.BTN_SIZE_DISPLAY.text = f"{self.currentSizeChoice}"
                 return i
@@ -55,3 +55,10 @@ class SizeSelector:
         return 0
 
 
+    def set_alpha(self, al):
+        self.BTN_UP.alpha = al
+        self.BTN_UP.newAlpha = al
+        self.BTN_DOWN.alpha = al
+        self.BTN_DOWN.newAlpha = al
+        self.BTN_SIZE_DISPLAY.alpha = al
+        self.BTN_SIZE_DISPLAY.newAlpha = al

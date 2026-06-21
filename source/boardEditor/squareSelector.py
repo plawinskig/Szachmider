@@ -21,7 +21,7 @@ class SquareSelector:
                                       r=r + rCounter))
             rCounter += 1
 
-        self.__currentSelection = 0
+        self.__currentSelection = 1
 
 
 
@@ -37,5 +37,14 @@ class SquareSelector:
         for btnIndex in range(len(self.__buttons)):
             if self.__buttons[btnIndex].check_for_input(position):
                 self.__currentSelection = btnIndex
-                return btnIndex
+                return 1
+        return 0
+
+    def get_selection(self):
         return self.__currentSelection
+
+    def set_alpha(self, al: int):
+
+        for b in self.__buttons:
+            b.alpha = al
+            b.newAlpha = al

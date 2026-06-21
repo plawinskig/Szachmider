@@ -63,6 +63,9 @@ class TeleportSquare(Square):
         
     def get_tele_location(self):
         return self.__teleLocation
+
+    def set_tele_location(self, x: int, y: int):
+        self.__teleLocation = (x, y)
       
       
     def get_code(self) -> str:

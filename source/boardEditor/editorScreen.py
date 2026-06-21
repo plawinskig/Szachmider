@@ -1,5 +1,6 @@
 import pygame
 
+from board.board import Board
 from source.gui.button import Button
 from source.boardEditor.boardSizeSelector import SizeSelector
 from source.boardEditor.squareSelector import SquareSelector
@@ -27,11 +28,17 @@ class EditorScreen:
 
         self.__board = Board(8, 8, "New board")
 
-        self.__boardView = BoardView(self.__board, screenWidth, screenHeight, screenHeight/360)
+
+        self.__boardViewStats = (screenWidth, screenHeight, screenHeight/360)
+        self.__boardView = BoardView(self.__board, *self.__boardViewStats)
 
 
         self.__currentSelection = ("S", 0)
         self.__squareList = [BasicSquare, GrassSquare, HeartSquare, ShieldSquare, TeleportSquare, None]
+
+
+        self.__isPlacingTele = False
+        self.__lastTeleLocation = (0, 0)
 
 
 
@@ -54,18 +61,64 @@ class EditorScreen:
 
 
 
+
     def check_for_input(self, position):
 
         if self.BTN_BACK.check_for_input(position):
             return -1
         if self.xSizeSel.check_for_input(position):
+            self.__board = self.__board.get_resized(self.xSizeSel.get_current_choise(), self.__board.height)
+            self.__refresh_board_view()
             return 1
         if self.ySizeSel.check_for_input(position):
+            self.__board = self.__board.get_resized(self.__board.width, self.ySizeSel.get_current_choise())
+            self.__refresh_board_view()
             return 2
-        sel = self.squareSelector.check_for_input(position)
-        if sel:
-            self.__currentSelection = ("S", sel)
+
+        if self.squareSelector.check_for_input(position):
+            self.__currentSelection = ("S", self.squareSelector.get_selection())
             return 3
+
+        coords = self.__boardView.getBoardCoords(position)
+        if not coords is None:
+            if self.__currentSelection[0] == "S":
+                self.__set_new_square(*coords)
+
+            self.__refresh_board_view()
+            return 10
 
         return 0
 
+
+    def __refresh_board_view(self):
+        self.__boardView = BoardView(self.__board, *self.__boardViewStats)
+
+
+
+    def __set_new_square(self, x: int, y: int):
+        match self.__currentSelection[1]:
+            case 5:
+                self.__board.set_square(x, y, None)
+            case 4:
+                if not self.__isPlacingTele:
+                    self.__board.exchange_square(x, y, TeleportSquare((0, 0), None))
+
+                    self.__isPlacingTele = True
+                    self.__lastTeleLocation = (x, y)
+                    self.squareSelector.set_alpha(0)
+                    # self.pieceSelector.set_alpha(0)
+
+                    self.xSizeSel.set_alpha(0)
+                    self.ySizeSel.set_alpha(0)
+                elif (x, y) != self.__lastTeleLocation:
+                    self.__board.exchange_square(x, y, TeleportSquare(self.__lastTeleLocation, None))
+                    self.__board.get_square(*self.__lastTeleLocation).set_tele_location(x, y)
+
+                    self.__isPlacingTele = False
+                    self.squareSelector.set_alpha(255)
+                    # self.pieceSelector.set_alpha(255)
+
+                    self.xSizeSel.set_alpha(255)
+                    self.ySizeSel.set_alpha(255)
+            case other:
+                self.__board.exchange_square(x, y, self.__squareList[other](None))
