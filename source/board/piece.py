@@ -289,7 +289,8 @@ class Pawn(Piece):
         x, y = location
         # double move
         dMove = (x, y + 2*self.__direction)
-        if self._moveCounter == 0 and not(dMove[1] < 0 or dMove[1] >= theEntireBoard.height) and theEntireBoard.get_piece(*dMove) is None:
+        singleMove = (x, y + self.__direction)
+        if self._moveCounter == 0 and not(dMove[1] < 0 or dMove[1] >= theEntireBoard.height) and theEntireBoard.get_piece(*dMove) is None and theEntireBoard.get_piece(*singleMove) is None:
             validMoves.append((dMove, partial(self.__do_double_move, theEntireBoard, x, y, *dMove), False))
 
 

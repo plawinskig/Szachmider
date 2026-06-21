@@ -36,6 +36,9 @@ class GameControl():
                 self.is_white_turn = not self.is_white_turn
                 self.current_piece = None
                 self.board.make_movement_matrix()
+                print("turn ", self.current_turn)
+                self.board.debug_print_movementMatrix()
+                self.board.display_pieces()
                 if not self.hasLegalMoves():
                     self.game_ended = True
             else:

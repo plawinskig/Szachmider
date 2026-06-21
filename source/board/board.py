@@ -246,13 +246,17 @@ class Board:
 
 
     def __get_piece_moves(self):
+        for _, _, _, pc in self.iterate_board():
+            if not pc is None:
+                pc.clear_restrictions()
+
         kings = [] # kings to evaluate later
         pieces = [] # all pieces for ease of making the matrices
         # existings checks iterators
         whiteChecks = []
         blackChecks = []
         # additional moves that are checks but are in current setting unachievable moves 
-        # (i.e. right behind a king when hes attacked by a rook or pawn attack)
+        # (i.e. right behind a king when hes attacked by a rook or bishop attack)
         additionalBlackChecks = []
         additionalWhiteChecks = []
 
@@ -303,12 +307,16 @@ class Board:
                     # print(nextPiece, move)
 
                     if nextPiece != None:
+                        if nextPiece.is_black() == currentPiece.is_black():
+                            currentAdditionalChecks.append(move)
 
+                        if not foundKing: encounteredPieces.append(nextPiece)
                         if moveIter.can_take() and nextSquare.get_code() != "Shl" and currentSquare.get_code() != "Hrt" and nextPiece.is_black() != currentPiece.is_black():
                             theoriticalMoves.append(move)
                             if canGoFurther: plausibleMoves.append((move, partial(self.move_and_take, boardX, boardY, move[0], move[1]), moveInstance.can_take()))
-                            if not foundKing: encounteredPieces.append(nextPiece)
+
                             if isinstance(nextPiece, King):
+
                                 foundKing = True
                                 kingLocation = move
                                 finishedOnKing = True
@@ -320,14 +328,17 @@ class Board:
 
                         if moveInstance.can_move():
                             if not foundKing: theoriticalMoves.append(move)
-                            if finishedOnKing:
+                            if finishedOnKing and len(encounteredPieces) == 1:
 
                                 currentAdditionalChecks.append(move)
 
                                 finishedOnKing = False
                             if canGoFurther: plausibleMoves.append((move, partial(self.move_piece, boardX, boardY, move[0], move[1]), moveInstance.can_take()))
 
-                if finishedOnKing:
+
+                if currentPiece.get_code() == "Roo": print(currentPiece.get_ID(), len(encounteredPieces))
+
+                if finishedOnKing and len(encounteredPieces) == 1:
                     try:
                         move = next(moveInstance)
                         # print(currentPiece.get_ID(), move)
@@ -342,12 +353,12 @@ class Board:
                 # print(plausibleMoves)
                 currentPiece.add_possible_moves(plausibleMoves)
 
-                if foundKing and len(encounteredPieces) == 2:
+                if foundKing and len(encounteredPieces) == 2 and encounteredPieces[0].is_black() == encounteredPieces[1].is_black():
                     restricedPiece = encounteredPieces[0]
                     if isinstance(restricedPiece, King): restricedPiece = encounteredPieces[1]
                     theoriticalMoves.append((boardX, boardY))
                     restricedPiece.set_restrictions(theoriticalMoves)
-                elif foundKing and len(encounteredPieces) == 1:
+                if foundKing and (len(encounteredPieces) == 1 or moveInstance.jumps_over()):
                     theoriticalMoves.append((boardX, boardY))
                     currentChecks.append(theoriticalMoves if not moveInstance.jumps_over() else [kingLocation, (boardX, boardY)])
 
@@ -401,6 +412,12 @@ class Board:
 
 
         kings, pieces, blackChecks, whiteChecks, additionalBlackChecks, additionalWhiteChecks = self.__get_piece_moves()
+        print(f"black checks: {blackChecks}")
+        print(f"white checks: {whiteChecks}")
+        print(f"black add checks: {additionalBlackChecks}")
+        print(f"white add checks: {additionalWhiteChecks}")
+
+
         for p in pieces:
             # p.debug_print_moves()
 
