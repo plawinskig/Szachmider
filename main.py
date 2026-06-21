@@ -17,6 +17,8 @@ from source.board.board_view import BoardView
 from source.menu.choose_board_submenu.choose_board_to_play import ChoosingBoardToPlay
 from source.board.square import *
 
+from source.boardEditor.editorScreen import EditorScreen
+
 from source.database.datbaseConnector import *
 
 from source.shaders.crt_effect import *
@@ -106,8 +108,8 @@ def mainMenu():
                             PLAY_MENU.move(play_pos)
                         elif menu_button == 2:
                             print("Statystyki")
-                        elif menu_button == 3:
-                            print("Edit")
+                        elif (menu_button == 3):
+                            editScreen(time)
                         elif menu_button == 4:
                             is_running = False
                 
@@ -187,6 +189,45 @@ def gameScreen(currentBoard: Board, players: tuple[str, str], colors: tuple[str,
 
     pygame.quit()
     sys.exit()
+
+
+def editScreen(time: float):
+    pygame.display.set_caption("Szachmider - Gra")
+    MENU_BG = MenuBackground(SCREEN_WIDTH, SCREEN_HEIGHT)
+
+    is_running = True
+
+    EDIT_MENU = EditorScreen((0, 0), SCREEN_WIDTH, SCREEN_HEIGHT)
+
+    while is_running:
+        SCREEN.blit(BG, (0, 0))
+
+        MOUSE_POS = pygame.mouse.get_pos()
+        TIME_DELTA = CLOCK.tick(60) / 1000.0
+        time = time + TIME_DELTA
+
+        if time < 0:
+            time = 0
+
+        MENU_BG.update(SCREEN)
+        EDIT_MENU.update(SCREEN, time, TIME_DELTA, MOUSE_POS)
+
+        apply_crt_effect(SCREEN)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                is_running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                screenInput = EDIT_MENU.check_for_input(MOUSE_POS)
+                match screenInput:
+                    case -1:
+                        is_running = False
+
+
+        pygame.display.update()
+
+    # pygame.quit()
+    # sys.exit()
 
 
 if __name__ == "__main__":
