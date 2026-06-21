@@ -1,7 +1,6 @@
 from datbaseConnector import DatabaseConnector
 
 db=DatabaseConnector()
-list=db.get_player_list()
-print(list)
+db.delete_player(4)
 
 del db
