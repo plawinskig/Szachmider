@@ -86,10 +86,10 @@ class PlayersStartup:
                 btn.update(screen, time, timeDelta, mousePos)
             i += 1
         
-        if (self.isMoving and not self.fstPlayer.is_moving
+        if (self.isMoving and not self.fstPlayer.isMoving
                             and not self.BTN_FST_COLOR.isMoving
                             and not self.BTN_SCND_COLOR.isMoving
-                            and not self.scndPlayer.is_moving
+                            and not self.scndPlayer.isMoving
                             and not self.BTN_BACK.isMoving):
             self.isMoving = False
 
@@ -102,9 +102,9 @@ class PlayersStartup:
         self.movingRow = 0
     
     def check_for_input(self, position):
-        if self.fstPlayer.checkForInput(position):
+        if self.fstPlayer.check_for_input(position):
             return 1
-        elif self.scndPlayer.checkForInput(position):
+        elif self.scndPlayer.check_for_input(position):
             return 2
         # Changing color of one player also changes the color of the other, 
         # so that they are not the same
