@@ -377,11 +377,18 @@ class Board:
             # teleporter
             if isinstance(currentSquare, TeleportSquare):
                 teleLoc = currentSquare.get_tele_location()
-                currentPiece.add_possible_moves([(
-                    teleLoc,
-                    partial(self.move_piece, boardX, boardY, *teleLoc) if self.get_piece(*teleLoc) is None else partial(self.move_and_take, boardX, boardY, *teleLoc),
-                    True
-                )])
+                allow = False
+                if self.get_piece(*teleLoc) is None:
+                    allow = True
+                elif self.get_piece(*teleLoc).is_black() != currentPiece.is_black():
+                    allow = True
+
+                if allow:
+                    currentPiece.add_possible_moves([(
+                        teleLoc,
+                        partial(self.move_piece, boardX, boardY, *teleLoc) if self.get_piece(*teleLoc) is None else partial(self.move_and_take, boardX, boardY, *teleLoc),
+                        True
+                    )])
 
         return kings, pieces, blackChecks, whiteChecks, additionalBlackChecks, additionalWhiteChecks
 
@@ -437,6 +444,7 @@ class Board:
             currentKing = self.get_piece(*k)
             assert isinstance(currentKing, King)
             kingIter = iter(currentKing.moveIterators[0])(*k)
+            currentSquare = self.get_square(*k)
 
             attackingMatrix = self.__whiteMoveMatrix if currentKing.is_black() else self.__blackMoveMatrix
             ownMoveMatrix = self.__whiteMoveMatrix if not currentKing.is_black() else self.__blackMoveMatrix
@@ -451,15 +459,20 @@ class Board:
                     continue
 
                 otherPiece = self.get_piece(*move)
+                otherSquare = self.get_square(*move)
 
                 attacking = [x for x in attackingMatrix[Y][X] if x[2]]
                 # if attacking != []: print(list(map(lambda x: x[0], attacking)))
                 if attacking == [] and move not in attackingAdditionalChecks and (otherKing == "" or not move in otherKingsTheoriticalMoves):
 
-                    if otherPiece == None:
-                        ownMoveMatrix[Y][X].append((currentKing.get_ID(), partial(self.move_piece, *k, *move), True))
-                    elif otherPiece.is_black() != currentKing.is_black():
-                        ownMoveMatrix[Y][X].append((currentKing.get_ID(), partial(self.move_and_take, *k, *move), True))
+
+
+                        if otherPiece is None:
+                            ownMoveMatrix[Y][X].append((currentKing.get_ID(), partial(self.move_piece, *k, *move), True))
+                        
+                        elif otherPiece.is_black() != currentKing.is_black() and currentSquare.get_code() != "Hrt" and otherSquare.get_code() != "Shl":
+
+                            ownMoveMatrix[Y][X].append((currentKing.get_ID(), partial(self.move_and_take, *k, *move), True))
 
 
                 elif otherKing != "" and otherKing in map(lambda x: x[0], attacking):
@@ -469,6 +482,26 @@ class Board:
 
             for move in currentKing.check_castling(self, k, attackingMatrix):
                 ownMoveMatrix[move[0][1]][move[0][0]].append((currentKing.get_ID(), move[1], move[2]))
+
+
+            # for teleporter
+            if currentSquare.get_code() == "Tel":
+                X, Y = currentSquare.get_tele_location()
+                otherPiece = self.get_piece(X, Y)
+                attacking = [x for x in attackingMatrix[Y][X] if x[2]]
+                move = (X, Y)
+                if attacking == [] and move not in attackingAdditionalChecks and (otherKing == "" or not move in otherKingsTheoriticalMoves):
+
+                    if otherPiece == None:
+                        ownMoveMatrix[Y][X].append((currentKing.get_ID(), partial(self.move_piece, *k, *move), True))
+                    elif otherPiece.is_black() != currentKing.is_black() and currentSquare.get_code() != "Hrt" and otherSquare.get_code() != "Shl":
+                        ownMoveMatrix[Y][X].append((currentKing.get_ID(), partial(self.move_and_take, *k, *move), True))
+
+                elif otherKing != "" and otherKing in map(lambda x: x[0], attacking):
+                    kingIndex = self.__find_specific_in_list(otherKing, lambda x: x[0], attackingMatrix[Y][X])
+
+                    attackingMatrix[Y][X].pop(kingIndex)
+
 
             otherKing = currentKing.get_ID()
 
