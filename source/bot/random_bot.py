@@ -16,7 +16,7 @@ class _MovablePiece(Protocol):
     def is_black(self) -> bool:
         ...
 
-    def get_actual_move_list(self) -> list[Move]:
+    def get_ID(self) -> str:
         ...
 
 
@@ -42,7 +42,7 @@ class RandomBot(BaseBot):
                     continue
 
                 typed_piece = cast("Piece", piece)
-                legal_moves = piece.get_actual_move_list()
+                legal_moves = board.get_available_move_packages(piece.get_ID())
 
                 for move in legal_moves:
                     available_moves.append((typed_piece, move)) # type: ignore
