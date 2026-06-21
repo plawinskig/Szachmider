@@ -1,0 +1,41 @@
+
+import random
+from typing import Any, cast
+
+from source.bot.base_bot import BaseBot, BotMove, Move
+
+from source.board.board import Board
+from source.board.piece import Piece
+
+
+class RandomBot(BaseBot):
+    def get_best_move(
+        self,
+        board: "Board",
+        move_history: Any | None = None,
+        time_limit: float | None = None,
+    ) -> BotMove | None:
+        available_moves: list[BotMove] = []
+
+        for row in board._board:
+            for square in row:
+                if square is None:
+                    continue
+
+                piece = square.piece
+                if not isinstance(piece, Piece):
+                    continue
+
+                if piece.is_black() != self.is_black:
+                    continue
+
+                typed_piece = cast("Piece", piece)
+                legal_moves = cast(list[Move], piece.get_actual_move_list())
+
+                for move in legal_moves:
+                    available_moves.append((typed_piece, move))
+
+        if not available_moves:
+            return None
+
+        return random.choice(available_moves)
