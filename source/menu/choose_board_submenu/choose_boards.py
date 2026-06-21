@@ -28,39 +28,7 @@ class ChooseBoard():
                                imgNormal=pygame.image.load("assets/buttons/BTN_arrow_left.png").convert_alpha(),
                                imgHover=pygame.image.load("assets/buttons/BTN_arrow_left_hover.png").convert_alpha(),
                                r = -1)
-        self.boardList: list[Board]
-        self.boardList = []
-
-        DATABASE = DatabaseConnector()
-        boardNames = DATABASE.get_boards()
-        for name in boardNames:
-            boardData = load_from_json("boards/" + name)
-            board = Board(5, 5, "template")
-            board.import_from_json(boardData)
-            self.boardList.append(board)
-
-        self.BTN_BOARD_LIST = []
-        i = 0
-        for board in self.boardList:
-            imgNormal=pygame.image.load("assets/buttons/BTN_board_select.png").convert_alpha()
-            imgHover=pygame.image.load("assets/buttons/BTN_board_select_hover.png").convert_alpha()
-
-            boardView = BoardView(board, imgNormal.get_width(), imgNormal.get_height(), scale=1)
-
-            boardView.display(imgNormal, 0)
-            boardView.display(imgHover, 0)
-
-            button = Button(pos=(self.xPos + 300 * i, screenHeight / 2), text=board.getName(),
-                            imgNormal=imgNormal, fontOffset=(1, 100), textBasicColor=(pygame.Color("#8a4836")),
-                            imgHover=imgHover, textHoverColor=(pygame.Color("#e69c69")),
-                            r = i + 1)
-            
-            self.BTN_BOARD_LIST.append(button)
-            i += 1
-        
-        self.currentListPos = 0
-        self.maxListPos = i
-        self.move_the_list(0)
+        self.setUp()
         
         # Dummy button for better looking movement of BTN_DOWN, 
         # so it's not moved with the same speed as the player list
@@ -162,3 +130,38 @@ class ChooseBoard():
         if index >= 3:
             return self.boardList[index - 3]
         return 0
+    
+    def setUp(self):
+        self.boardList: list[Board]
+        self.boardList = []
+
+        DATABASE = DatabaseConnector()
+        boardNames = DATABASE.get_boards()
+        for name in boardNames:
+            boardData = load_from_json("boards/" + name)
+            board = Board(5, 5, "template")
+            board.import_from_json(boardData)
+            self.boardList.append(board)
+
+        self.BTN_BOARD_LIST = []
+        i = 0
+        for board in self.boardList:
+            imgNormal=pygame.image.load("assets/buttons/BTN_board_select.png").convert_alpha()
+            imgHover=pygame.image.load("assets/buttons/BTN_board_select_hover.png").convert_alpha()
+
+            boardView = BoardView(board, imgNormal.get_width(), imgNormal.get_height(), scale=1)
+
+            boardView.display(imgNormal, 0)
+            boardView.display(imgHover, 0)
+
+            button = Button(pos=(self.xPos + 300 * i, self.screenHeight / 2), text=board.getName(),
+                            imgNormal=imgNormal, fontOffset=(1, 100), textBasicColor=(pygame.Color("#8a4836")),
+                            imgHover=imgHover, textHoverColor=(pygame.Color("#e69c69")),
+                            r = i + 1)
+            
+            self.BTN_BOARD_LIST.append(button)
+            i += 1
+        
+        self.currentListPos = 0
+        self.maxListPos = i
+        self.move_the_list(0)
