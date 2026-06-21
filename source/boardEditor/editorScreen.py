@@ -5,8 +5,11 @@ from source.gui.button import Button
 from source.boardEditor.boardSizeSelector import SizeSelector
 from source.boardEditor.squareSelector import SquareSelector
 from source.board.square import *
+from source.board.piece import *
+
 from source.board.board import Board
 from source.board.board_view import BoardView
+from source.boardEditor.pieceSelector import PieceSelector
 
 class EditorScreen:
     def __init__(self, position, screenWidth, screenHeight):
@@ -25,6 +28,7 @@ class EditorScreen:
         self.ySizeSel = SizeSelector(screenWidth//10+80, screenHeight//3, r=1)
 
         self.squareSelector = SquareSelector(screenWidth//3, screenHeight-100, r=1)
+        self.pieceSelector = PieceSelector(screenWidth//3, screenHeight-250)
 
         self.__board = Board(8, 8, "New board")
 
@@ -35,17 +39,23 @@ class EditorScreen:
 
         self.__currentSelection = ("S", 0)
         self.__squareList = [BasicSquare, GrassSquare, HeartSquare, ShieldSquare, TeleportSquare, None]
+        self.__pieceList = [Pawn, Knight, Bishop, Rook, Queen, King]
 
 
         self.__isPlacingTele = False
         self.__lastTeleLocation = (0, 0)
 
 
+        self.__whiteKingExists = False
+        self.__blackKingExists = False
+
+
+
 
 
 
     def update(self, screen, time, timeDelta, mousePos):
-        selectors = [self.xSizeSel, self.ySizeSel, self.squareSelector]
+        selectors = [self.xSizeSel, self.ySizeSel, self.squareSelector, self.pieceSelector]
         buttons = [self.BTN_BACK]
 
         for sl in selectors:
@@ -79,10 +89,16 @@ class EditorScreen:
             self.__currentSelection = ("S", self.squareSelector.get_selection())
             return 3
 
+        if self.pieceSelector.check_for_input(position):
+            self.__currentSelection = ("P", self.pieceSelector.get_selection())
+            return 4
+
         coords = self.__boardView.getBoardCoords(position)
         if not coords is None:
             if self.__currentSelection[0] == "S":
                 self.__set_new_square(*coords)
+            elif self.__currentSelection[0] == "P":
+                self.__set_new_piece(*coords)
 
             self.__refresh_board_view()
             return 10
@@ -106,7 +122,7 @@ class EditorScreen:
                     self.__isPlacingTele = True
                     self.__lastTeleLocation = (x, y)
                     self.squareSelector.set_alpha(0)
-                    # self.pieceSelector.set_alpha(0)
+                    # self.pieceSelector.hide()
 
                     self.xSizeSel.set_alpha(0)
                     self.ySizeSel.set_alpha(0)
@@ -116,9 +132,12 @@ class EditorScreen:
 
                     self.__isPlacingTele = False
                     self.squareSelector.set_alpha(255)
-                    # self.pieceSelector.set_alpha(255)
+                    # self.pieceSelector.show()
 
                     self.xSizeSel.set_alpha(255)
                     self.ySizeSel.set_alpha(255)
             case other:
                 self.__board.exchange_square(x, y, self.__squareList[other](None))
+
+
+    def __set_new_square
