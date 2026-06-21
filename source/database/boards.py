@@ -4,7 +4,7 @@ from peewee import *
 
 class Boards(Model):
     BId=IntegerField(primary_key=True)
-    fileName=CharField(null=False)
+    fileName=CharField(unique=True, null=False)
 
     class Meta:
         BASE_DIR = os.path.dirname(os.path.abspath(__file__))

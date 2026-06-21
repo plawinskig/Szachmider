@@ -8,7 +8,7 @@ from source.board.square import *
 
 class BoardView:
     def __init__(self, board: Board, screen_width, screen_height, scale: int = 3):
-        self.board = board
+        self.board: Board = board
 
         self.width = board.width
         self.height = board.height
@@ -24,20 +24,23 @@ class BoardView:
         self.x_scale = 32 * scale
         self.y_scale = 37 * scale
 
-        board_x_size = self.width * self.x_tile_size + 10 * scale
-        board_y_size = self.height * self.y_tile_size + 20 * scale
+        self.board_x_size = self.width * self.x_tile_size + 10 * scale
+        self.board_y_size = self.height * self.y_tile_size + 20 * scale
 
-        self.x_offset = (self.screen_width - board_x_size) / 2
-        self.y_offset = (self.screen_height - board_y_size) / 2 
+        self.x_offset = (self.screen_width - self.board_x_size) / 2
+        self.y_offset = (self.screen_height - self.board_y_size) / 2 
 
     def display(self, screen: Surface, time, perspective_dark: bool = False,
-                possible_moves = None, piece_pos = (-1, -1)):
+                possible_moves = None, piece_pos = (-1, -1), 
+                isBlackChecked: bool = False, isWhiteChecked: bool = False,
+                isWhiteTurn: bool = True, isBlackTurn: bool = True,
+                displayGrid: bool = False):
         self.displayBase(screen, perspective_dark)
         for y in range(self.height):
             true_y = y
             if perspective_dark:
                 true_y = self.height - 1 - y
-            for section in ["tile", "move", "back", "piece", "front"]:
+            for section in ["grid", "tile", "move", "back", "piece", "check", "front"]:
                 for x in range(self.width):
                     true_x = x
                     if perspective_dark:
@@ -46,19 +49,20 @@ class BoardView:
                     if square:
                         img = None
                         is_light = True
-                        if (x + y) % 2 == 1:
+                        if (true_x + true_y) % 2 == 1:
                             is_light = False
-                        
-                        if section == "tile":
+                        if section == "grid" and displayGrid:
+                            img = "assets/squares/SQR_grid.png"
+                        elif section == "tile":
                             if is_light:
                                 img = square.img_tile_light
                             else:
                                 img = square.img_tile_dark
                         elif section == "move":
                             if square.piece and piece_pos:
-                                if x == piece_pos[0] and y == piece_pos[1]:
+                                if true_x == piece_pos[0] and true_y == piece_pos[1]:
                                     img = "assets/squares/SQR_show_selected.png"
-                            if possible_moves and (x, y) in possible_moves:
+                            if possible_moves and (true_x, true_y) in possible_moves:
                                 if square.piece:
                                     img = "assets/squares/SQR_show_take.png"
                                 else:
@@ -71,6 +75,16 @@ class BoardView:
                         elif section == "piece":
                             if square.piece:
                                 img = square.piece._sprite
+                        elif section == "check":
+                            if square.piece:
+                                if ((square.piece.get_code() == "Kin" 
+                                    and square.piece.is_black() 
+                                    and isBlackChecked) 
+                                    or 
+                                    (square.piece.get_code() == "Kin" 
+                                    and not square.piece.is_black() 
+                                    and isWhiteChecked)):
+                                    img = "assets/squares/SQR_check_intigator.png"
                         elif section == "front":
                             if is_light:
                                 img = square.img_front_light
@@ -82,11 +96,17 @@ class BoardView:
                             img = pygame.image.load(img).convert_alpha()
                             img = pygame.transform.scale(img, (self.x_scale, self.y_scale))
                             vertical_offset = 0
-                            if section in ["back", "piece", "front"]:
+                            if section in ["back", "piece", "check", "front"]:
                                 direction = 1
                                 if section == "piece":
                                     direction = -1
                                     vertical_offset = 13 * self.scale
+                                    if square.piece.is_black() and not isBlackTurn:
+                                        img.set_alpha(175)
+                                    if not square.piece.is_black() and not isWhiteTurn:
+                                        img.set_alpha(175)
+                                if section == "check":
+                                    vertical_offset = 40 * self.scale
                                 angle = math.sin(time * 1.2 + x + y * 0.3 * direction)
                                 img = pygame.transform.rotate(img, angle)
                             screen.blit(img, (self.x_offset + x * self.x_tile_size, 
@@ -133,7 +153,6 @@ class BoardView:
         if offset_pos[0] < self.width and offset_pos[1] < self.height:
             return offset_pos
         return None
-
 
 
 

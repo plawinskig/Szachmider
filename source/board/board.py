@@ -167,7 +167,10 @@ class Board:
                         "teleportLocation": square.get_tele_location()
                     })
                 else:
-                    row_squares.append(square.get_code())
+                    if square:
+                        row_squares.append(square.get_code())
+                    else:
+                        row_squares.append(None)
                 
                 if square.piece:
                     piece_code = square.piece.get_code()
@@ -203,23 +206,24 @@ class Board:
         for y in range(self._height):
             for x in range(self._width):
                 square_data = data["squares"][y][x]
-
-                if isinstance(square_data, dict):
-                    square_code = square_data["type"]
+                if square_data is not None:
+                    if isinstance(square_data, dict):
+                        square_code = square_data["type"]
                     
-                    if square_code == "Tel":
-                        tele_loc: tuple[int, int] = tuple(square_data["teleportLocation"])
-                        new_square = TeleportSquare(teleportLocation=tele_loc)
+                        if square_code == "Tel":
+                            tele_loc: tuple[int, int] = tuple(square_data["teleportLocation"])
+                            new_square = TeleportSquare(teleportLocation=tele_loc)
+                        else:
+                            raise ValueError(f"Unrecognised field type in the JSON dictionary: {square_code}")
                     else:
-                        raise ValueError(f"Unrecognised field type in the JSON dictionary: {square_code}")
-
+                        square_code = square_data
+                        square_class = SQUARE_MAP.get(square_code, BasicSquare) 
+                        new_square = square_class()
                 else:
-                    square_code = square_data
-                    square_class = SQUARE_MAP.get(square_code, BasicSquare) 
-                    new_square = square_class()
+                    new_square = None
                 
                 piece_data = data["pieces"][y][x]
-                if piece_data is not None:
+                if piece_data is not None and new_square is not None:
                     piece_type = piece_data["type"]
                     piece_class = PIECE_MAP.get(piece_type)
                     if piece_class:
@@ -427,6 +431,7 @@ class Board:
 
         # evaluating kings moves
         otherKing = ""
+        otherKingsTheoriticalMoves = []
         for k in kings:
             currentKing = self.get_piece(*k)
             assert isinstance(currentKing, King)
@@ -438,13 +443,17 @@ class Board:
 
             for move in kingIter:
                 X, Y = move
+
+                if otherKing == "": otherKingsTheoriticalMoves.append(move)
+
                 if X < 0 or X >= self.width or Y < 0 or Y >= self.height or self.get_square(X, Y) is None:
                     continue
 
                 otherPiece = self.get_piece(*move)
 
                 attacking = [x for x in attackingMatrix[Y][X] if x[2]]
-                if attacking == [] and move not in attackingAdditionalChecks:
+                # if attacking != []: print(list(map(lambda x: x[0], attacking)))
+                if attacking == [] and move not in attackingAdditionalChecks and (otherKing == "" or not move in otherKingsTheoriticalMoves):
 
                     if otherPiece == None:
                         ownMoveMatrix[Y][X].append((currentKing.get_ID(), partial(self.move_piece, *k, *move), True))
@@ -453,12 +462,14 @@ class Board:
 
 
                 elif otherKing != "" and otherKing in map(lambda x: x[0], attacking):
-                    attacking.pop(self.__find_specific_in_list(otherKing, lambda x: x[0], attacking))
+                    kingIndex = self.__find_specific_in_list(otherKing, lambda x: x[0], attackingMatrix[Y][X])
+
+                    attackingMatrix[Y][X].pop(kingIndex)
 
             for move in currentKing.check_castling(self, k, attackingMatrix):
                 ownMoveMatrix[move[0][1]][move[0][0]].append((currentKing.get_ID(), move[1], move[2]))
 
-            otherKing = (currentKing.get_ID(), k)
+            otherKing = currentKing.get_ID()
 
 
         # checking moves with existing checks to block them
@@ -516,30 +527,29 @@ class Board:
     def does_color_have_any_moves(self, isBlack: bool):
         moveMatrix = self.__blackMoveMatrix if isBlack else self.__whiteMoveMatrix
 
-        result = True
+        result = False
         for Y in moveMatrix:
             for X in Y:
-                if not X:
-                    result = False
+                if X:
+                    result = True
 
         return result
 
     def king_in_check(self, black: bool):
         kingLoc = None
         for x, y, square, piece in self.iterate_board():
-            if piece.get_ID() == f"Kin_{"B" if black else "W"}":
+            if piece and piece.get_ID() == f"Kin_{"B" if black else "W"}":
                 kingLoc = (x, y)
-
+                
         if kingLoc is None:
             return False
 
         attacking = self.__whiteMoveMatrix if black else self.__blackMoveMatrix
-
+        
         result = False
         for at in attacking[kingLoc[1]][kingLoc[0]]:
             if at[2]:
                 result = True
-
         return result
 
     def change_name(self, newName: str):
@@ -570,8 +580,11 @@ class Board:
             print([list(map(lambda b: b[0], a)) for a in self.__whiteMoveMatrix[x]])
 
 
-
-
+    def getName(self):
+        return self.__name
+    
+    def getFileName(self):
+        return self.__name + ".json"
         
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@ import pygame
 import copy
 import sys
 
-from source.menu.play_submenu.player_selection import PlayerSelection
+from source.statistics.statistics_full import Statistics
 from source.menu.logo import Logo
 from source.menu.menu_background import MenuBackground
 from source.menu.main_buttons import MainButtons
@@ -37,8 +37,6 @@ BG.fill(pygame.Color('#f9e6cf'))
 
 CLOCK = pygame.time.Clock()
 
-DATABASE = DatabaseConnector()
-
 def mainMenu():
     pygame.display.set_caption("Szachmider - Menu")
     MENU_BG = MenuBackground(SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -59,7 +57,9 @@ def mainMenu():
     play_pos = int(SCREEN_WIDTH / 2)
     play_destination_offscreen = SCREEN_WIDTH * 1.5
 
+    DATABASE = DatabaseConnector()
     player_list = DATABASE.get_player_list()
+    del DATABASE
     PLAY_MENU = PlayersStartup((play_destination_offscreen, SCREEN_HEIGHT // 2), player_list, screenWidth=SCREEN_WIDTH)
     render_play_menu = False
 
@@ -154,17 +154,35 @@ def mainMenu():
     pygame.quit()
     sys.exit()
 
-def gameScreen(currentBoard: Board, players: tuple[str, str], colors: tuple[str, str], time: float):
+def gameScreen(currentBoard: Board, players: tuple[str, str], colors: tuple[int, int], time: float):
     pygame.display.set_caption("Szachmider - Gra")
     MENU_BG = MenuBackground(SCREEN_WIDTH, SCREEN_HEIGHT)
 
-    is_running = True
-    time = time
+    isRunning = True
+
+    # 1 - white, 2 - black, 3 - random
+    if colors[0] == 3:
+        if random.random() < 0.5:
+            colors = (1, 2)
+        else:
+            colors = (2, 1)
+
+    if colors[0] == 1:
+        whitePlayer = players[0]
+        blackPlayer = players[1]
+    else:
+        whitePlayer = players[1]
+        blackPlayer = players[0]
 
     BOARD_VIEW = BoardView(copy.deepcopy(currentBoard), SCREEN_WIDTH, SCREEN_HEIGHT)
-    GAME_LOGIC = GameControl(BOARD_VIEW)
+    GAME_LOGIC = GameControl(BOARD_VIEW, whitePlayer, blackPlayer, SCREEN_WIDTH, SCREEN_HEIGHT)
 
-    while is_running:
+    DATABASE = DatabaseConnector()
+    DATABASE.add_game(DATABASE.get_player_id(whitePlayer),
+                    DATABASE.get_player_id(blackPlayer),
+                    DATABASE.get_board_id(BOARD_VIEW.board.getFileName()))
+
+    while isRunning:
         SCREEN.blit(BG, (0, 0))
 
         MOUSE_POS = pygame.mouse.get_pos()
@@ -175,20 +193,60 @@ def gameScreen(currentBoard: Board, players: tuple[str, str], colors: tuple[str,
             time = 0
 
         MENU_BG.update(SCREEN)
-        GAME_LOGIC.display(SCREEN, time)
+        GAME_LOGIC.update(SCREEN, time, TIME_DELTA, MOUSE_POS)
 
         apply_crt_effect(SCREEN)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:   
-                is_running = False
+                isRunning = False
             if event.type == pygame.MOUSEBUTTONDOWN:
-                board_input = GAME_LOGIC.checkForInput(MOUSE_POS)
+                board_input = GAME_LOGIC.check_for_input(MOUSE_POS)
+                if board_input:
+                    if board_input == -1:
+                        isRunning = False
         
         pygame.display.update()
 
-    pygame.quit()
-    sys.exit()
+def statisticsScreen(time: float):
+    pygame.display.set_caption("Szachmider - Gra")
+    MENU_BG = MenuBackground(SCREEN_WIDTH, SCREEN_HEIGHT)
+
+    isRunning = True
+
+    STATISTICS = Statistics(SCREEN_WIDTH, SCREEN_HEIGHT)
+
+    while isRunning:
+        SCREEN.blit(BG, (0, 0))
+
+        MOUSE_POS = pygame.mouse.get_pos()
+        TIME_DELTA = CLOCK.tick(60) / 1000.0
+        time = time + TIME_DELTA
+
+        if time < 0:
+            time = 0
+
+        MENU_BG.update(SCREEN)
+
+        STATISTICS.update(SCREEN, time, TIME_DELTA, MOUSE_POS)
+
+        apply_crt_effect(SCREEN)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:   
+                isRunning = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                statistics_button = STATISTICS.check_for_input(MOUSE_POS)
+                if statistics_button:
+                    if statistics_button == -1:
+                        isRunning = False
+        
+            if event.type == pygame.KEYDOWN:
+                STATISTICS.input(event)
+        
+        pygame.display.update()
+
+
 
 
 def editScreen(time: float):
