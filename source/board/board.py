@@ -512,6 +512,18 @@ class Board:
         moves = moveMatrix[Y][X]
         moves[self.__find_specific_in_list(pieceID, lambda x: x[0], moves)][1]()
 
+    def get_available_move_packages(self, pieceID: str) -> list[tuple[tuple[int, int], Callable[[], None], bool]]:
+        black = pieceID.split("_")[-1] == "B"
+        moveMatrix = self.__blackMoveMatrix if black else self.__whiteMoveMatrix
+        result: list[tuple[tuple[int, int], Callable[[], None], bool]] = []
+
+        for y in range(self.height):
+            for x in range(self.width):
+                matrixMove = self.__find_move_in_moves_list(pieceID, moveMatrix[y][x])
+                if matrixMove:
+                    result.append(((x, y), matrixMove[1], matrixMove[2]))
+
+        return result
 
     # returns coordinates of every piece of a given color
     def get_colors_pieces(self, blackIsPlaying: bool) -> list[tuple[int, int]]:
