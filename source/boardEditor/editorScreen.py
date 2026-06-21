@@ -1,9 +1,9 @@
 import pygame
 
-from board.board import Board
-from board.board_json import save_to_json
-from database.datbaseConnector import DatabaseConnector
-from gui.text_field import TextField
+from source.board.board import Board
+from source.board.board_json import save_to_json
+from source.database.datbaseConnector import DatabaseConnector
+from source.gui.text_field import TextField
 from source.gui.button import Button
 from source.boardEditor.boardSizeSelector import SizeSelector
 from source.boardEditor.squareSelector import SquareSelector
