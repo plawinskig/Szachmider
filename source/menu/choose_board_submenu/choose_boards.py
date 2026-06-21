@@ -7,96 +7,96 @@ from source.board.board import Board
 from source.board.board_json import *
 
 class ChooseBoard():
-    def __init__(self, position, screen_width, screen_height, can_add_new: bool = False):
-        self.x_pos = position[0]
-        self.y_pos = position[1]
+    def __init__(self, position, screenWidth, screenHeight, canAddNew: bool = False):
+        self.xPos = position[0]
+        self.yPos = position[1]
 
-        self.x_dest = self.x_pos
-        self.y_dest = self.y_pos
+        self.xDest = self.xPos
+        self.yDest = self.yPos
 
-        self.is_moving = False
-        self.moving_row = 0
-        self.row_delay = 0
+        self.isMoving = False
+        self.movingRow = 0
+        self.rowDelay = 0
 
-        self.can_add_new = can_add_new
+        self.canAddNew = canAddNew
 
-        self.screen_width = screen_width
-        self.screen_height = screen_height
+        self.screenWidth = screenWidth
+        self.screenHeight = screenHeight
 
-        self.BTN_LEFT = Button(pos=(self.x_pos-475, screen_height/2), text="",
-                            img_normal=pygame.image.load("assets/buttons/BTN_arrow_left.png").convert_alpha(),
-                            img_hover=pygame.image.load("assets/buttons/BTN_arrow_left_hover.png").convert_alpha(),
-                            r = -1)
-        self.board_list: list[Board]
-        self.board_list = []
+        self.BTN_LEFT = Button(pos=(self.xPos - 475, screenHeight / 2), text="",
+                               imgNormal=pygame.image.load("assets/buttons/BTN_arrow_left.png").convert_alpha(),
+                               imgHover=pygame.image.load("assets/buttons/BTN_arrow_left_hover.png").convert_alpha(),
+                               r = -1)
+        self.boardList: list[Board]
+        self.boardList = []
 
         path = "boards"
         for folder in os.scandir(path):
             if folder.is_dir():
                 for file in os.scandir(folder):
                     if file.is_file():
-                        board_data = load_from_json(file.path)
+                        boardData = load_from_json(file.path)
                         board = Board(5, 5, "template")
-                        board.import_from_json(board_data)
-                        self.board_list.append(board)
+                        board.import_from_json(boardData)
+                        self.boardList.append(board)
 
         self.BTN_BOARD_LIST = []
         i = 0
-        for board in self.board_list:
-            img_normal=pygame.image.load("assets/buttons/BTN_board_select.png").convert_alpha()
-            img_hover=pygame.image.load("assets/buttons/BTN_board_select_hover.png").convert_alpha()
+        for board in self.boardList:
+            imgNormal=pygame.image.load("assets/buttons/BTN_board_select.png").convert_alpha()
+            imgHover=pygame.image.load("assets/buttons/BTN_board_select_hover.png").convert_alpha()
 
-            board_view = BoardView(board, img_normal.get_width(), img_normal.get_height(), scale=1)
+            boardView = BoardView(board, imgNormal.get_width(), imgNormal.get_height(), scale=1)
 
-            board_view.display(img_normal, 0)
-            board_view.display(img_hover, 0)
+            boardView.display(imgNormal, 0)
+            boardView.display(imgHover, 0)
 
-            button = Button(pos=(self.x_pos + 300 * i, screen_height/2), text="",
-                            img_normal=img_normal,
-                            img_hover=img_hover,
+            button = Button(pos=(self.xPos + 300 * i, screenHeight / 2), text="",
+                            imgNormal=imgNormal,
+                            imgHover=imgHover,
                             r = i + 1)
             
             self.BTN_BOARD_LIST.append(button)
             i += 1
         
-        self.current_list_pos = 0
-        self.max_list_pos = i
-        self.moveTheList(0)
+        self.currentListPos = 0
+        self.maxListPos = i
+        self.move_the_list(0)
         
         # Dummy button for better looking movement of BTN_DOWN, 
         # so it's not moved with the same speed as the player list
-        self.BTN_EMPTY = Button(pos=(self.x_pos, 0), text="",
-                            img_normal=pygame.image.load("assets/buttons/BTN_nametag.png").convert_alpha(),
-                            img_hover=pygame.image.load("assets/buttons/BTN_nametag_hover.png").convert_alpha(),
-                            r = 0)
+        self.BTN_EMPTY = Button(pos=(self.xPos, 0), text="",
+                                imgNormal=pygame.image.load("assets/buttons/BTN_nametag.png").convert_alpha(),
+                                imgHover=pygame.image.load("assets/buttons/BTN_nametag_hover.png").convert_alpha(),
+                                r = 0)
         self.BTN_EMPTY.alpha = 0
-        self.BTN_EMPTY.new_alpha = 0
+        self.BTN_EMPTY.newAlpha = 0
 
-        self.BTN_RIGHT = Button(pos=(self.x_pos+475, screen_height/2), text="",
-                            img_normal=pygame.image.load("assets/buttons/BTN_arrow_right.png").convert_alpha(),
-                            img_hover=pygame.image.load("assets/buttons/BTN_arrow_right_hover.png").convert_alpha(),
-                            r = 1)
+        self.BTN_RIGHT = Button(pos=(self.xPos + 475, screenHeight / 2), text="",
+                                imgNormal=pygame.image.load("assets/buttons/BTN_arrow_right.png").convert_alpha(),
+                                imgHover=pygame.image.load("assets/buttons/BTN_arrow_right_hover.png").convert_alpha(),
+                                r = 1)
         
 
 
     def update(self, screen, time, time_delta, mouse_pos):
-        if self.is_moving:
-            buttons_pos = pygame.math.lerp(self.x_pos, self.x_dest, time_delta * 6, True)
-            self.x_pos = buttons_pos
+        if self.isMoving:
+            buttonsPos = pygame.math.lerp(self.xPos, self.xDest, time_delta * 6, True)
+            self.xPos = buttonsPos
             row = 0
         i = 0
         for btn in [self.BTN_LEFT, self.BTN_EMPTY, self.BTN_RIGHT]:
             # Logic for moving the buttons 
-            if self.is_moving:
-                if row == self.moving_row and not btn.is_moving:
+            if self.isMoving:
+                if row == self.movingRow and not btn.isMoving:
                     if i == 0:
-                        btn.move(position=(self.x_dest-475, btn.y_pos))
+                        btn.move(position=(self.xDest - 475, btn.yPos))
                     else:
-                        btn.move(position=(self.x_dest+475, btn.y_pos))
-                if self.row_delay >= 0.3:
-                    self.moving_row += 1
-                    self.row_delay = 0
-                self.row_delay += time_delta
+                        btn.move(position=(self.xDest + 475, btn.yPos))
+                if self.rowDelay >= 0.3:
+                    self.movingRow += 1
+                    self.rowDelay = 0
+                self.rowDelay += time_delta
                 row += 1
             
             btn.hover(mouse_pos)
@@ -106,60 +106,60 @@ class ChooseBoard():
         # Logic for moving the board list
         i = 0
         for btn in self.BTN_BOARD_LIST:
-            if self.is_moving and not btn.is_moving and self.moving_row > 1:
-                btn.move(position=(self.x_dest + 300 * (i - self.current_list_pos), btn.y_dest))
+            if self.isMoving and not btn.isMoving and self.movingRow > 1:
+                btn.move(position=(self.xDest + 300 * (i - self.currentListPos), btn.yDest))
             i += 1
             
             btn.hover(mouse_pos)
             btn.update(screen, time, time_delta)
 
-        if (self.is_moving and not self.BTN_LEFT.is_moving
-                            and not self.BTN_EMPTY.is_moving 
-                            and not self.BTN_RIGHT.is_moving):
-            self.is_moving = False
+        if (self.isMoving and not self.BTN_LEFT.isMoving
+                            and not self.BTN_EMPTY.isMoving
+                            and not self.BTN_RIGHT.isMoving):
+            self.isMoving = False
 
 
-    def moveTheList(self, direction: int):
-        if ((direction + self.current_list_pos) >= 0 
-            and (direction + self.current_list_pos) < self.max_list_pos):
+    def move_the_list(self, direction: int):
+        if ((direction + self.currentListPos) >= 0
+            and (direction + self.currentListPos) < self.maxListPos):
             #and not self.BTN_BOARD_LIST[self.current_list_pos].is_moving):
-            self.current_list_pos = direction + self.current_list_pos
+            self.currentListPos = direction + self.currentListPos
             i = 0
             for btn in self.BTN_BOARD_LIST:
-                btn.move(position=(btn.x_dest + 300 * (-1 * direction), btn.y_dest))
-                if i <= self.current_list_pos - 2 or i >= self.current_list_pos + 2:
-                    btn.new_alpha = 0
+                btn.move(position=(btn.xDest + 300 * (-1 * direction), btn.yDest))
+                if i <= self.currentListPos - 2 or i >= self.currentListPos + 2:
+                    btn.newAlpha = 0
                     if direction == 0:
                         btn.alpha = 0
                 else:
-                    btn.new_alpha = 255
+                    btn.newAlpha = 255
                     if direction == 0:
                         btn.alpha = 255
                 i += 1
 
-    def checkForInput(self, position):
+    def check_for_input(self, position):
         i = 1
         for btn in [self.BTN_LEFT, self.BTN_RIGHT]:
-            if btn.checkForInput(position):
+            if btn.check_for_input(position):
                 if i == 1:
-                    self.moveTheList(-1)
+                    self.move_the_list(-1)
                 elif i == 2:
-                    self.moveTheList(1)
+                    self.move_the_list(1)
                 return i
             i += 1
         
         for btn in self.BTN_BOARD_LIST:
-            if btn.checkForInput(position):
+            if btn.check_for_input(position):
                 return i
             i += 1
         return 0
 
     def move(self, x_dest):
-        self.is_moving = True
-        self.x_dest = x_dest + 1
-        self.moving_row = 0
+        self.isMoving = True
+        self.xDest = x_dest + 1
+        self.movingRow = 0
 
     def getRespectiveBoard(self, index) -> Board:
         if index >= 3:
-            return self.board_list[index-3]
+            return self.boardList[index - 3]
         return 0

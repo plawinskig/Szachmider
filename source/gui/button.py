@@ -2,106 +2,106 @@ import math
 import pygame
 
 class Button():
-    def __init__(self, pos, text: str, img_normal, img_hover, r: int, 
-                 text_hover_color = pygame.Color("#ffffff"), text_basic_color =  pygame.Color("#ffffff"), 
-                 font_size = 30, font_offset=(1, -4), right_detection_offset=0):
-        self.x_pos = pos[0]
-        self.y_pos = pos[1]
+    def __init__(self, pos, text: str, imgNormal, imgHover, r: int,
+                 textHoverColor = pygame.Color("#ffffff"), textBasicColor =  pygame.Color("#ffffff"),
+                 fontSize = 30, fontOffset=(1, -4), rightDetectionOffset=0):
+        self.xPos = pos[0]
+        self.yPos = pos[1]
 
         # Mainly for text fields, 
         # determines how much pixels from the right edge of the button the input detection should end
-        self.right_detection_offset = right_detection_offset
+        self.rightDetectionOffset = rightDetectionOffset
 
-        self.img_normal = img_normal
-        self.img_hover = img_hover
+        self.imgNormal = imgNormal
+        self.imgHover = imgHover
         self.r = r  # Random number for floating animation
 
         self.text = text
-        self.font = pygame.font.Font("assets/fonts/born2bsporty-fs.otf", size=font_size)
+        self.font = pygame.font.Font("assets/fonts/born2bsporty-fs.otf", size=fontSize)
 
-        self.text_basic_color = text_basic_color
-        self.text_hover_color = text_hover_color
+        self.textBasicColor = textBasicColor
+        self.textHoverColor = textHoverColor
 
-        self.current_image = self.img_normal
-        self.img_rect = self.current_image.get_rect(center=(self.x_pos, self.y_pos))
+        self.currentImage = self.imgNormal
+        self.imgRect = self.currentImage.get_rect(center=(self.xPos, self.yPos))
 
-        self.width = self.img_normal.get_width()
-        self.height = self.img_normal.get_height()
+        self.width = self.imgNormal.get_width()
+        self.height = self.imgNormal.get_height()
         self.size = 1.0
         self.scale = 1.0
 
-        self.font_x_offset = font_offset[0]
-        self.font_y_offset = font_offset[1]
-        self.font_text = self.font.render(text=self.text, antialias=False, color=self.text_basic_color)
-        self.text_rect = self.font_text.get_rect(center=(self.width / 2 + self.font_x_offset, self.height / 2 + self.font_y_offset))
+        self.fontXOffset = fontOffset[0]
+        self.fontYOffset = fontOffset[1]
+        self.fontText = self.font.render(text=self.text, antialias=False, color=self.textBasicColor)
+        self.textRect = self.fontText.get_rect(center=(self.width / 2 + self.fontXOffset, self.height / 2 + self.fontYOffset))
 
         self.alpha = 255
-        self.new_alpha = 255
+        self.newAlpha = 255
 
         # Moving logic
-        self.x_dest = self.x_pos
-        self.y_dest = self.y_pos
-        self.is_moving = False
+        self.xDest = self.xPos
+        self.yDest = self.yPos
+        self.isMoving = False
         
 
-    def update(self, screen, time, time_delta):
+    def update(self, screen, time, timeDelta):
         # Moving logic
-        if self.is_moving:
-            self.x_pos = pygame.math.lerp(self.x_pos, self.x_dest, time_delta * 6, True)
-            self.y_pos = pygame.math.lerp(self.y_pos, self.y_dest, time_delta * 6, True)
-        if (self.is_moving and int(self.x_pos) in range(int(self.x_dest) - 2, int(self.x_dest) + 2) 
-                            and int(self.y_pos) in range(int(self.y_dest) - 2, int(self.y_dest) + 2)):
-            self.is_moving = False
+        if self.isMoving:
+            self.xPos = pygame.math.lerp(self.xPos, self.xDest, timeDelta * 6, True)
+            self.yPos = pygame.math.lerp(self.yPos, self.yDest, timeDelta * 6, True)
+        if (self.isMoving and int(self.xPos) in range(int(self.xDest) - 2, int(self.xDest) + 2)
+                            and int(self.yPos) in range(int(self.yDest) - 2, int(self.yDest) + 2)):
+            self.isMoving = False
 
         # Float animation
         angle = math.sin(time * 1.2 + self.r * 0.6)
-        new_y_pos = self.y_pos + math.sin(time * 1.5 + self.r * 0.8) * 3
-        self.current_image = pygame.transform.rotate(self.current_image, angle)
-        self.current_image = pygame.transform.scale(self.current_image, 
-                                                    (self.current_image.get_width() * self.scale, 
-                                                     self.current_image.get_height() * self.scale))
-        self.img_rect = self.current_image.get_rect(center=(self.x_pos, new_y_pos))
+        newYPos = self.yPos + math.sin(time * 1.5 + self.r * 0.8) * 3
+        self.currentImage = pygame.transform.rotate(self.currentImage, angle)
+        self.currentImage = pygame.transform.scale(self.currentImage,
+                                                   (self.currentImage.get_width() * self.scale,
+                                                    self.currentImage.get_height() * self.scale))
+        self.imgRect = self.currentImage.get_rect(center=(self.xPos, newYPos))
 
 
-        self.font_text = pygame.transform.rotate(self.font_text, angle)
-        self.font_text = pygame.transform.scale(self.font_text,
-                                                (self.font_text.get_width() * self.scale, 
-                                                 self.font_text.get_height() * self.scale))
-        self.text_rect = self.font_text.get_rect(center=(self.width / 2 + self.font_x_offset, 
-                                                         self.height / 2 + self.font_y_offset))
+        self.fontText = pygame.transform.rotate(self.fontText, angle)
+        self.fontText = pygame.transform.scale(self.fontText,
+                                               (self.fontText.get_width() * self.scale,
+                                                self.fontText.get_height() * self.scale))
+        self.textRect = self.fontText.get_rect(center=(self.width / 2 + self.fontXOffset,
+                                                       self.height / 2 + self.fontYOffset))
 
         # Drawing to screen
         if self.text:
-            self.current_image.blit(self.font_text, self.text_rect)
+            self.currentImage.blit(self.fontText, self.textRect)
         
-        self.alpha = pygame.math.lerp(self.alpha, self.new_alpha, time_delta * 6, True)
-        self.current_image.set_alpha(self.alpha)
+        self.alpha = pygame.math.lerp(self.alpha, self.newAlpha, timeDelta * 6, True)
+        self.currentImage.set_alpha(self.alpha)
 
-        screen.blit(self.current_image, self.img_rect)
+        screen.blit(self.currentImage, self.imgRect)
 
-    def checkForInput(self, position):
-        if (position[0] in range(self.img_rect.left, self.img_rect.right - self.right_detection_offset) 
-            and position[1] in range(self.img_rect.top, self.img_rect.bottom)
+    def check_for_input(self, position):
+        if (position[0] in range(self.imgRect.left, self.imgRect.right - self.rightDetectionOffset)
+            and position[1] in range(self.imgRect.top, self.imgRect.bottom)
             and self.alpha > 0):
             return True
         return False
 
     def hover(self, position):
-        if (position[0] in range(self.img_rect.left, self.img_rect.right - self.right_detection_offset) 
-            and position[1] in range(self.img_rect.top, self.img_rect.bottom)):
-            self.current_image = self.img_hover
+        if (position[0] in range(self.imgRect.left, self.imgRect.right - self.rightDetectionOffset)
+            and position[1] in range(self.imgRect.top, self.imgRect.bottom)):
+            self.currentImage = self.imgHover
             self.scale = self.size * 1.05
-            self.font_text = self.font.render(text=self.text, 
-                                              antialias=False, 
-                                              color=self.text_hover_color)
+            self.fontText = self.font.render(text=self.text,
+                                             antialias=False,
+                                             color=self.textHoverColor)
         else:
-            self.current_image = self.img_normal
+            self.currentImage = self.imgNormal
             self.scale = self.size * 1.0
-            self.font_text = self.font.render(text=self.text, 
-                                              antialias=False, 
-                                              color=self.text_basic_color)
+            self.fontText = self.font.render(text=self.text,
+                                             antialias=False,
+                                             color=self.textBasicColor)
 
     def move(self, position):
-        self.x_dest = position[0]
-        self.y_dest = position[1]
-        self.is_moving = True
+        self.xDest = position[0]
+        self.yDest = position[1]
+        self.isMoving = True

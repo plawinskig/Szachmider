@@ -2,59 +2,59 @@ import pygame
 from source.gui.button import Button
 
 class ColorButton(Button):
-    def __init__(self, pos, starting_color,r: int, 
-                 text_hover_color = pygame.Color("#8a4836"), text_basic_color =  pygame.Color("#5d2c28")):
-        self.white_img_normal = pygame.image.load("assets/buttons/BTN_light_piece.png").convert_alpha()
-        self.white_img_hover = pygame.image.load("assets/buttons/BTN_light_piece_hover.png").convert_alpha()
+    def __init__(self, pos, startingColor, r: int,
+                 textCoverColor = pygame.Color("#8a4836"), textBasicColor =  pygame.Color("#5d2c28")):
+        self.whiteImgNormal = pygame.image.load("assets/buttons/BTN_light_piece.png").convert_alpha()
+        self.whiteImgHover = pygame.image.load("assets/buttons/BTN_light_piece_hover.png").convert_alpha()
 
-        self.black_img_normal = pygame.image.load("assets/buttons/BTN_dark_piece.png").convert_alpha()
-        self.black_img_hover = pygame.image.load("assets/buttons/BTN_dark_piece_hover.png").convert_alpha()
+        self.blackImgNormal = pygame.image.load("assets/buttons/BTN_dark_piece.png").convert_alpha()
+        self.blackImgHover = pygame.image.load("assets/buttons/BTN_dark_piece_hover.png").convert_alpha()
 
-        self.random_img_normal = pygame.image.load("assets/buttons/BTN_random_piece.png").convert_alpha()
-        self.random_img_hover = pygame.image.load("assets/buttons/BTN_random_piece_hover.png").convert_alpha()
+        self.randomImgNormal = pygame.image.load("assets/buttons/BTN_random_piece.png").convert_alpha()
+        self.randomImgHover = pygame.image.load("assets/buttons/BTN_random_piece_hover.png").convert_alpha()
 
-        self.img_normal = self.white_img_normal
-        self.img_hover = self.white_img_hover
+        self.imgNormal = self.whiteImgNormal
+        self.imgHover = self.whiteImgHover
 
          # 1 - white, 2 - black, 3 - random
-        self.starting_color = starting_color
-        self.opposite_color = 0
-        if starting_color == 1:
-            self.opposite_color = 2
+        self.startingColor = startingColor
+        self.oppositeColor = 0
+        if startingColor == 1:
+            self.oppositeColor = 2
         else:
-            self.opposite_color = 1
-            self.img_normal = self.black_img_normal
-            self.img_hover = self.black_img_hover
+            self.oppositeColor = 1
+            self.imgNormal = self.blackImgNormal
+            self.imgHover = self.blackImgHover
 
-        self.color = starting_color
+        self.color = startingColor
 
-        super().__init__(pos, "", self.img_normal, self.img_hover, r, text_hover_color, text_basic_color, 
-                         font_size=50, font_offset=(1, -8))
+        super().__init__(pos, "", self.imgNormal, self.imgHover, r, textCoverColor, textBasicColor,
+                         fontSize=50, fontOffset=(1, -8))
     
     def updateColor(self):
         if self.color == 1:
-            self.img_normal = self.white_img_normal
-            self.img_hover = self.white_img_hover
+            self.imgNormal = self.whiteImgNormal
+            self.imgHover = self.whiteImgHover
             self.text = ""
         elif self.color == 2:
-            self.img_normal = self.black_img_normal
-            self.img_hover = self.black_img_hover
+            self.imgNormal = self.blackImgNormal
+            self.imgHover = self.blackImgHover
             self.text = ""
         else:
-            self.img_normal = self.random_img_normal
-            self.img_hover = self.random_img_hover
+            self.imgNormal = self.randomImgNormal
+            self.imgHover = self.randomImgHover
             self.text = "?"
 
-    def checkForInput(self, position):
-        if (position[0] in range(self.img_rect.left, self.img_rect.right) 
-            and position[1] in range(self.img_rect.top, self.img_rect.bottom)
+    def check_for_input(self, position):
+        if (position[0] in range(self.imgRect.left, self.imgRect.right)
+            and position[1] in range(self.imgRect.top, self.imgRect.bottom)
             and self.alpha > 0):
-            if self.color == self.starting_color:
-                self.color = self.opposite_color
-            elif self.color == self.opposite_color:
+            if self.color == self.startingColor:
+                self.color = self.oppositeColor
+            elif self.color == self.oppositeColor:
                 self.color = 3
             else:
-                self.color = self.starting_color
+                self.color = self.startingColor
             self.updateColor()
             return True
         return False

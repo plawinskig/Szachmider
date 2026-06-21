@@ -56,14 +56,14 @@ def mainMenu():
     play_destination_offscreen = SCREEN_WIDTH * 1.5
 
     player_list = DATABASE.get_player_list()
-    PLAY_MENU = PlayersStartup((play_destination_offscreen, SCREEN_HEIGHT // 2), player_list, screen_width=SCREEN_WIDTH)
+    PLAY_MENU = PlayersStartup((play_destination_offscreen, SCREEN_HEIGHT // 2), player_list, screenWidth=SCREEN_WIDTH)
     render_play_menu = False
 
     # Choose board to play sub-sub-menu
     choose_to_play_pos = SCREEN_WIDTH/2
     choose_to_play_destination_offscreen = int(SCREEN_WIDTH*1.5)
-    CHOOSE_BOARD_TO_PLAY = ChoosingBoardToPlay(position=(choose_to_play_destination_offscreen, SCREEN_HEIGHT/2), 
-                                               screen_width=SCREEN_WIDTH, screen_height=SCREEN_HEIGHT)
+    CHOOSE_BOARD_TO_PLAY = ChoosingBoardToPlay(position=(choose_to_play_destination_offscreen, SCREEN_HEIGHT/2),
+                                               screenWidth=SCREEN_WIDTH, screenHeight=SCREEN_HEIGHT)
     render_choose_to_play = False
 
     while is_running:
@@ -79,11 +79,11 @@ def mainMenu():
         MENU_BG.update(SCREEN)
         LOGO.update(SCREEN, time, MOUSE_POS)
 
-        if render_play_menu or PLAY_MENU.is_moving:
+        if render_play_menu or PLAY_MENU.isMoving:
             PLAY_MENU.update(SCREEN, time, TIME_DELTA, MOUSE_POS)
-        if render_main_menu or MAIN_BTNS.is_moving:
+        if render_main_menu or MAIN_BTNS.isMoving:
             MAIN_BTNS.update(SCREEN, time, TIME_DELTA, MOUSE_POS)
-        if render_choose_to_play or CHOOSE_BOARD_TO_PLAY.is_moving:
+        if render_choose_to_play or CHOOSE_BOARD_TO_PLAY.isMoving:
             CHOOSE_BOARD_TO_PLAY.update(SCREEN, time, TIME_DELTA, MOUSE_POS)
 
         for event in pygame.event.get():
@@ -91,11 +91,11 @@ def mainMenu():
                 is_running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if render_main_menu:
-                    menu_button = MAIN_BTNS.checkForInput(MOUSE_POS)
+                    menu_button = MAIN_BTNS.check_for_input(MOUSE_POS)
                     if menu_button:
                         if (menu_button == 1 
-                            and not MAIN_BTNS.is_moving 
-                            and not PLAY_MENU.is_moving):
+                            and not MAIN_BTNS.isMoving
+                            and not PLAY_MENU.isMoving):
                             MAIN_BTNS.move(buttons_dest_offscreen)
                             render_main_menu = False
                             render_play_menu = True
@@ -108,37 +108,37 @@ def mainMenu():
                             is_running = False
                 
                 if render_play_menu:
-                    play_menu_button = PLAY_MENU.checkForInput(MOUSE_POS)
+                    play_menu_button = PLAY_MENU.check_for_input(MOUSE_POS)
                     if play_menu_button:
                         if (play_menu_button == 5 
-                            and not MAIN_BTNS.is_moving 
-                            and not PLAY_MENU.is_moving):
+                            and not MAIN_BTNS.isMoving
+                            and not PLAY_MENU.isMoving):
                             PLAY_MENU.move(play_destination_offscreen)
                             render_play_menu = False
                             render_main_menu = True
                             MAIN_BTNS.move(buttons_pos)
                         if (play_menu_button == 6
-                            and not CHOOSE_BOARD_TO_PLAY.is_moving
-                            and not PLAY_MENU.is_moving):
+                            and not CHOOSE_BOARD_TO_PLAY.isMoving
+                            and not PLAY_MENU.isMoving):
                             PLAY_MENU.move(-play_destination_offscreen + SCREEN_WIDTH/2)
                             render_play_menu = False
                             render_choose_to_play = True
                             CHOOSE_BOARD_TO_PLAY.move(choose_to_play_pos)
 
                 if render_choose_to_play:
-                    choose_to_play_button = CHOOSE_BOARD_TO_PLAY.checkForInput(MOUSE_POS)
+                    choose_to_play_button = CHOOSE_BOARD_TO_PLAY.check_for_input(MOUSE_POS)
                     if choose_to_play_button:
                         if (choose_to_play_button == 1
-                            and not PLAY_MENU.is_moving
-                            and not CHOOSE_BOARD_TO_PLAY.is_moving):
+                            and not PLAY_MENU.isMoving
+                            and not CHOOSE_BOARD_TO_PLAY.isMoving):
                             CHOOSE_BOARD_TO_PLAY.move(choose_to_play_destination_offscreen)
                             render_choose_to_play = False
                             render_play_menu = True
                             PLAY_MENU.move(play_pos)
                         else:
-                            gameScreen(choose_to_play_button, 
-                                       PLAY_MENU.getCurrentPlayers(), 
-                                       PLAY_MENU.getColors(), time)
+                            gameScreen(choose_to_play_button,
+                                       PLAY_MENU.get_current_players(),
+                                       PLAY_MENU.get_colors(), time)
 
             if event.type == pygame.KEYDOWN:
                 PLAY_MENU.input(event)

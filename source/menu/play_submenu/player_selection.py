@@ -16,29 +16,29 @@ class PlayerSelection():
         self.r = r
         self.offset = offset
 
-        self.TEXT_FIELD = TextField(pos=(self.x_pos, 254), text="", 
-                           img_normal=pygame.image.load("assets/buttons/BTN_text_player.png").convert_alpha(),
-                           img_hover=pygame.image.load("assets/buttons/BTN_text_player_hover.png").convert_alpha(),
-                           r = r + 1)
+        self.TEXT_FIELD = TextField(pos=(self.x_pos, 254), text="",
+                                    img_normal=pygame.image.load("assets/buttons/BTN_text_player.png").convert_alpha(),
+                                    imgHover=pygame.image.load("assets/buttons/BTN_text_player_hover.png").convert_alpha(),
+                                    r = r + 1)
         
         self.BTN_UP = Button(pos=(self.x_pos - 21, 324), text="",
-                            img_normal=pygame.image.load("assets/buttons/BTN_arrow_up.png").convert_alpha(),
-                            img_hover=pygame.image.load("assets/buttons/BTN_arrow_up_hover.png").convert_alpha(),
-                            r = r + 2)
+                             imgNormal=pygame.image.load("assets/buttons/BTN_arrow_up.png").convert_alpha(),
+                             imgHover=pygame.image.load("assets/buttons/BTN_arrow_up_hover.png").convert_alpha(),
+                             r = r + 2)
         
         # Dummy button for better looking movement of BTN_DOWN, 
         # so it's not moved with the same speed as the player list
         self.BTN_EMPTY = Button(pos=(self.x_pos - 21, 464), text="",
-                            img_normal=pygame.image.load("assets/buttons/BTN_nametag.png").convert_alpha(),
-                            img_hover=pygame.image.load("assets/buttons/BTN_nametag_hover.png").convert_alpha(),
-                            r = 0)
+                                imgNormal=pygame.image.load("assets/buttons/BTN_nametag.png").convert_alpha(),
+                                imgHover=pygame.image.load("assets/buttons/BTN_nametag_hover.png").convert_alpha(),
+                                r = 0)
         self.BTN_EMPTY.alpha = 0
-        self.BTN_EMPTY.new_alpha = 0
+        self.BTN_EMPTY.newAlpha = 0
         
         self.BTN_DOWN = Button(pos=(self.x_pos - 21, 604), text="",
-                            img_normal=pygame.image.load("assets/buttons/BTN_arrow_down.png").convert_alpha(),
-                            img_hover=pygame.image.load("assets/buttons/BTN_arrow_down_hover.png").convert_alpha(),
-                            r = r + 3)
+                               imgNormal=pygame.image.load("assets/buttons/BTN_arrow_down.png").convert_alpha(),
+                               imgHover=pygame.image.load("assets/buttons/BTN_arrow_down_hover.png").convert_alpha(),
+                               r = r + 3)
         
         self.BTN_PLAYER_LIST = []
         self.temp_player_list = []
@@ -54,11 +54,11 @@ class PlayerSelection():
         for btn in [self.TEXT_FIELD, self.BTN_UP, self.BTN_EMPTY, self.BTN_DOWN]:
             # Logic for moving the buttons
             if self.is_moving:
-                if row == self.moving_row and not btn.is_moving:
+                if row == self.moving_row and not btn.isMoving:
                     if row >= 1:
-                        btn.move(position=(self.x_dest - 21, btn.y_pos))
+                        btn.move(position=(self.x_dest - 21, btn.yPos))
                     else:
-                        btn.move(position=(self.x_dest, btn.y_pos))
+                        btn.move(position=(self.x_dest, btn.yPos))
                 if self.row_delay >= 0.3:
                     self.moving_row += 1
                     self.row_delay = 0
@@ -70,22 +70,22 @@ class PlayerSelection():
         
         # Logic for moving the player list
         for btn in self.BTN_PLAYER_LIST:
-            if self.is_moving and not btn.is_moving and self.moving_row > 1:
-                btn.move(position=(self.x_dest - 21, btn.y_dest))
+            if self.is_moving and not btn.isMoving and self.moving_row > 1:
+                btn.move(position=(self.x_dest - 21, btn.yDest))
             
             btn.hover(position)
             btn.update(screen, time, time_delta)
 
-        if (self.is_moving and not self.TEXT_FIELD.is_moving
-                            and not self.BTN_UP.is_moving
-                            and not self.BTN_EMPTY.is_moving
-                            and not self.BTN_DOWN.is_moving):
+        if (self.is_moving and not self.TEXT_FIELD.isMoving
+                            and not self.BTN_UP.isMoving
+                            and not self.BTN_EMPTY.isMoving
+                            and not self.BTN_DOWN.isMoving):
             self.is_moving = False
         
     def checkForInput(self, position):
         i = 1
         for btn in [self.TEXT_FIELD, self.BTN_UP, self.BTN_DOWN]:
-            if btn.checkForInput(position):
+            if btn.check_for_input(position):
                 if i == 2:
                     self.moveTheList(-1)
                 elif i == 3:
@@ -94,7 +94,7 @@ class PlayerSelection():
             i += 1
         
         for btn in self.BTN_PLAYER_LIST:
-            if btn.checkForInput(position):
+            if btn.check_for_input(position):
                 if not self.contains_equal and i-3 == len(self.BTN_PLAYER_LIST):
                     # TODO: normalne dodawanie gracza, a nie tylko do listy
                     self.player_list.append(self.TEXT_FIELD.text.strip())
@@ -126,17 +126,17 @@ class PlayerSelection():
             self.current_list_pos = direction + self.current_list_pos
             i = 0
             for btn in self.BTN_PLAYER_LIST:
-                btn.move(position=(btn.x_dest, btn.y_dest + 70 * (-1 * direction)))
+                btn.move(position=(btn.xDest, btn.yDest + 70 * (-1 * direction)))
                 if i <= self.current_list_pos - 2 or i >= self.current_list_pos + 2:
-                    btn.new_alpha = 0
+                    btn.newAlpha = 0
                     if direction == 0:
                         btn.alpha = 0
                 elif i == self.current_list_pos - 1 or i >= self.current_list_pos + 1:
-                    btn.new_alpha = 127
+                    btn.newAlpha = 127
                     if direction == 0:
                         btn.alpha = 127
                 elif i == self.current_list_pos:
-                    btn.new_alpha = 255
+                    btn.newAlpha = 255
                     if direction == 0:
                         btn.alpha = 255
                 i += 1
@@ -147,18 +147,18 @@ class PlayerSelection():
         i = 0
         for player in self.temp_player_list:
             self.BTN_PLAYER_LIST.append(Button(pos=(self.x_pos - 21, 460 + len(self.BTN_PLAYER_LIST) * 70), text=player,
-                            img_normal=pygame.image.load("assets/buttons/BTN_nametag.png").convert_alpha(),
-                            img_hover=pygame.image.load("assets/buttons/BTN_nametag_hover.png").convert_alpha(),
-                            r = 4 + i))
+                                               imgNormal=pygame.image.load("assets/buttons/BTN_nametag.png").convert_alpha(),
+                                               imgHover=pygame.image.load("assets/buttons/BTN_nametag_hover.png").convert_alpha(),
+                                               r = 4 + i))
             i += 1
 
         if not self.contains_equal:
             i += 1
-            self.BTN_PLAYER_LIST.append(Button(pos=(self.x_pos - 21, 460 + len(self.BTN_PLAYER_LIST) * 70), 
-                                text=self.TEXT_FIELD.text.strip(),
-                                img_normal=pygame.image.load("assets/buttons/BTN_new_nametag.png").convert_alpha(),
-                                img_hover=pygame.image.load("assets/buttons/BTN_new_nametag_hover.png").convert_alpha(),
-                                r = 4 + i))
+            self.BTN_PLAYER_LIST.append(Button(pos=(self.x_pos - 21, 460 + len(self.BTN_PLAYER_LIST) * 70),
+                                               text=self.TEXT_FIELD.text.strip(),
+                                               imgNormal=pygame.image.load("assets/buttons/BTN_new_nametag.png").convert_alpha(),
+                                               imgHover=pygame.image.load("assets/buttons/BTN_new_nametag_hover.png").convert_alpha(),
+                                               r = 4 + i))
         
         self.current_list_pos = 0
         self.max_list_pos = i
