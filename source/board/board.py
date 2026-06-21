@@ -323,7 +323,7 @@ class Board:
                                 foundKing = True
                                 kingLocation = move
                                 finishedOnKing = True
-                            elif canGoFurther:
+                            if canGoFurther:
                                 plausibleMoves.append((move, partial(self.move_and_take, boardX, boardY, move[0], move[1]), moveInstance.can_take()))
 
                         canGoFurther = moveIter.jumps_over() or nextSquare.get_code() == "Grs"
@@ -469,7 +469,7 @@ class Board:
 
                         if otherPiece is None:
                             ownMoveMatrix[Y][X].append((currentKing.get_ID(), partial(self.move_piece, *k, *move), True))
-                        
+
                         elif otherPiece.is_black() != currentKing.is_black() and currentSquare.get_code() != "Hrt" and otherSquare.get_code() != "Shl":
 
                             ownMoveMatrix[Y][X].append((currentKing.get_ID(), partial(self.move_and_take, *k, *move), True))
