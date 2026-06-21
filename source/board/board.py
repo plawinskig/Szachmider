@@ -527,19 +527,18 @@ class Board:
     def king_in_check(self, black: bool):
         kingLoc = None
         for x, y, square, piece in self.iterate_board():
-            if piece.get_ID() == f"Kin_{"B" if black else "W"}":
+            if piece and piece.get_ID() == f"Kin_{"B" if black else "W"}":
                 kingLoc = (x, y)
-
+                
         if kingLoc is None:
             return False
 
         attacking = self.__whiteMoveMatrix if black else self.__blackMoveMatrix
-
+        
         result = False
         for at in attacking[kingLoc[1]][kingLoc[0]]:
             if at[2]:
-                resutlt = True
-
+                result = True
         return result
 
 

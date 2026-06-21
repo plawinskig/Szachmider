@@ -31,13 +31,14 @@ class BoardView:
         self.y_offset = (self.screen_height - board_y_size) / 2 
 
     def display(self, screen: Surface, time, perspective_dark: bool = False,
-                possible_moves = None, piece_pos = (-1, -1)):
+                possible_moves = None, piece_pos = (-1, -1), 
+                isBlackChecked: bool = False, isWhiteChecked: bool = False):
         self.displayBase(screen, perspective_dark)
         for y in range(self.height):
             true_y = y
             if perspective_dark:
                 true_y = self.height - 1 - y
-            for section in ["tile", "move", "back", "piece", "front"]:
+            for section in ["tile", "move", "back", "piece", "check", "front"]:
                 for x in range(self.width):
                     true_x = x
                     if perspective_dark:
@@ -71,6 +72,16 @@ class BoardView:
                         elif section == "piece":
                             if square.piece:
                                 img = square.piece._sprite
+                        elif section == "check":
+                            if square.piece:
+                                if ((square.piece.get_code() == "Kin" 
+                                    and square.piece.is_black() 
+                                    and isBlackChecked) 
+                                    or 
+                                    (square.piece.get_code() == "Kin" 
+                                    and not square.piece.is_black() 
+                                    and isWhiteChecked)):
+                                    img = "assets/squares/SQR_check_intigator.png"
                         elif section == "front":
                             if is_light:
                                 img = square.img_front_light
@@ -82,11 +93,13 @@ class BoardView:
                             img = pygame.image.load(img).convert_alpha()
                             img = pygame.transform.scale(img, (self.x_scale, self.y_scale))
                             vertical_offset = 0
-                            if section in ["back", "piece", "front"]:
+                            if section in ["back", "piece", "check", "front"]:
                                 direction = 1
                                 if section == "piece":
                                     direction = -1
                                     vertical_offset = 13 * self.scale
+                                if section == "check":
+                                    vertical_offset = 40 * self.scale
                                 angle = math.sin(time * 1.2 + x + y * 0.3 * direction)
                                 img = pygame.transform.rotate(img, angle)
                             screen.blit(img, (self.x_offset + x * self.x_tile_size, 

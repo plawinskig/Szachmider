@@ -35,8 +35,6 @@ BG.fill(pygame.Color('#f9e6cf'))
 
 CLOCK = pygame.time.Clock()
 
-DATABASE = DatabaseConnector()
-
 def mainMenu():
     pygame.display.set_caption("Szachmider - Menu")
     MENU_BG = MenuBackground(SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -57,7 +55,9 @@ def mainMenu():
     play_pos = int(SCREEN_WIDTH / 2)
     play_destination_offscreen = SCREEN_WIDTH * 1.5
 
+    DATABASE = DatabaseConnector()
     player_list = DATABASE.get_player_list()
+    del DATABASE
     PLAY_MENU = PlayersStartup((play_destination_offscreen, SCREEN_HEIGHT // 2), player_list, screenWidth=SCREEN_WIDTH)
     render_play_menu = False
 
@@ -152,17 +152,30 @@ def mainMenu():
     pygame.quit()
     sys.exit()
 
-def gameScreen(currentBoard: Board, players: tuple[str, str], colors: tuple[str, str], time: float):
+def gameScreen(currentBoard: Board, players: tuple[str, str], colors: tuple[int, int], time: float):
     pygame.display.set_caption("Szachmider - Gra")
     MENU_BG = MenuBackground(SCREEN_WIDTH, SCREEN_HEIGHT)
 
-    is_running = True
-    time = time
+    isRunning = True
+
+    # 1 - white, 2 - black, 3 - random
+    if colors[0] == 3:
+        if random.random() < 0.5:
+            colors = (1, 2)
+        else:
+            colors = (2, 1)
+
+    if colors[0] == 1:
+        whitePlayer = players[0]
+        blackPlayer = players[1]
+    else:
+        whitePlayer = players[1]
+        blackPlayer = players[0]
 
     BOARD_VIEW = BoardView(copy.deepcopy(currentBoard), SCREEN_WIDTH, SCREEN_HEIGHT)
-    GAME_LOGIC = GameControl(BOARD_VIEW)
+    GAME_LOGIC = GameControl(BOARD_VIEW, whitePlayer, blackPlayer)
 
-    while is_running:
+    while isRunning:
         SCREEN.blit(BG, (0, 0))
 
         MOUSE_POS = pygame.mouse.get_pos()
@@ -181,12 +194,9 @@ def gameScreen(currentBoard: Board, players: tuple[str, str], colors: tuple[str,
             if event.type == pygame.QUIT:   
                 is_running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
-                board_input = GAME_LOGIC.checkForInput(MOUSE_POS)
+                board_input = GAME_LOGIC.check_for_input(MOUSE_POS)
         
         pygame.display.update()
-
-    pygame.quit()
-    sys.exit()
 
 
 if __name__ == "__main__":
