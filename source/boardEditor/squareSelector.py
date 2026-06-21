@@ -12,12 +12,17 @@ class SquareSelector:
         rCounter = 1
         self.__buttons = []
         buttonOffset = 160
+        buttonScale = 3
         for sqType in ["default", "grass", "heart", "shield", "teleport", "none"]:
+            normSprite = pygame.image.load(f"assets/buttons/editor/BTN_{sqType}_square.png").convert_alpha()
+            normSprite = pygame.transform.scale(normSprite, (normSprite.get_width() * buttonScale,
+                                                             normSprite.get_height() * buttonScale))
+
+
+
             self.__buttons.append(Button(pos=(self.xPos+(rCounter-1)*buttonOffset, self.yPos), text="",
-                                      imgNormal=pygame.image.load(
-                                          f"assets/buttons/editor/BTN_{sqType}_square.png").convert_alpha(),
-                                      imgHover=pygame.image.load(
-                                          f"assets/buttons/editor/BTN_{sqType}_square.png").convert_alpha(),
+                                      imgNormal=normSprite,
+                                      imgHover=normSprite,
                                       r=r + rCounter))
             rCounter += 1
 

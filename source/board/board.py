@@ -172,7 +172,7 @@ class Board:
                     else:
                         row_squares.append(None)
                 
-                if square.piece:
+                if not square is None and square.piece:
                     piece_code = square.piece.get_code()
                     piece_state: dict[str, Any] = {
                         "type": piece_code,

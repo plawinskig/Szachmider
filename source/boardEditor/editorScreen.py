@@ -31,20 +31,20 @@ class EditorScreen:
                                imgHover=pygame.image.load("assets/buttons/BTN_text_player_hover.png").convert_alpha(),
                                r = 8)
 
-        self.saveButton = Button(pos=(screenWidth-100, screenHeight-100), text="", imgNormal=pygame.image.load("assets/buttons/BTN_play.png").convert_alpha(),
+        self.saveButton = Button(pos=(screenWidth-200, screenHeight-200), text="Zapisz i wyjdź", imgNormal=pygame.image.load("assets/buttons/BTN_play.png").convert_alpha(),
                                imgHover=pygame.image.load("assets/buttons/BTN_play_hover.png").convert_alpha(),
                                r = 7)
 
-        self.xSizeSel = SizeSelector(screenWidth//10, screenHeight//3, r=1)
-        self.ySizeSel = SizeSelector(screenWidth//10+80, screenHeight//3, r=1)
+        self.xSizeSel = SizeSelector(screenWidth//2-680, screenHeight//3, r=1, title="X:")
+        self.ySizeSel = SizeSelector(screenWidth//2-600, screenHeight//3, r=2, title="Y:")
 
-        self.squareSelector = SquareSelector(screenWidth//3, screenHeight-100, r=1)
+        self.squareSelector = SquareSelector(screenWidth//3, screenHeight-100, r=3)
         self.pieceSelector = PieceSelector(screenWidth//3, screenHeight-250)
 
         self.__board = Board(8, 8, "New board")
 
 
-        self.__boardViewStats = (screenWidth, screenHeight, screenHeight/360)
+        self.__boardViewStats = (screenWidth, screenHeight-100, screenHeight/360)
         self.__boardView = BoardView(self.__board, *self.__boardViewStats)
 
 
@@ -77,7 +77,7 @@ class EditorScreen:
             btn.hover(mousePos)
             btn.update(screen, time, timeDelta)
 
-        self.__boardView.display(screen, time)
+        self.__boardView.display(screen, time, displayGrid=True)
 
 
     def input(self, event: pygame.Event):

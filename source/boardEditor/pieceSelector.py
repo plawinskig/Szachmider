@@ -12,8 +12,8 @@ class PieceSelector:
 
         self.__blackButtons = []
         self.__whiteButtons = []
-        buttonOffset = 150
-        buttonScale = 5
+        buttonOffset = 130
+        buttonScale = 3
 
         self.changeColorButton = Button(pos=(self.xPos-buttonOffset, self.yPos), text="",
                                       imgNormal=pygame.image.load(

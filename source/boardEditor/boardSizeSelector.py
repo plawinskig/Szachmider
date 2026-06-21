@@ -3,11 +3,19 @@ import pygame
 
 
 class SizeSelector:
-    def __init__(self, xPos, yPos, r = 0, offset=0):
+    def __init__(self, xPos, yPos, r = 0, title=""):
         self.xPos = xPos
         self.yPos = yPos
 
 
+        self.titleDisplay = Button(pos=(self.xPos, self.yPos-60), text=title,
+                                       imgNormal=pygame.image.load("assets/buttons/BTN_gray_squished.png").convert_alpha(),
+                                       imgHover=pygame.image.load("assets/buttons/BTN_gray_squished.png").convert_alpha(),
+                                       r =r + 2)
+
+        if title == "":
+            self.titleDisplay.alpha = 0
+            self.titleDisplay.newAlpha = 0
 
         self.BTN_UP = Button(pos=(self.xPos, self.yPos), text="",
                              imgNormal=pygame.image.load("assets/buttons/BTN_small_arrow_up.png").convert_alpha(),
@@ -33,7 +41,7 @@ class SizeSelector:
 
     def update(self, screen, time, time_delta, position):
 
-        for btn in [self.BTN_UP, self.BTN_SIZE_DISPLAY, self.BTN_DOWN]:
+        for btn in [self.BTN_UP, self.BTN_SIZE_DISPLAY, self.BTN_DOWN, self.titleDisplay]:
             btn.hover(position)
             btn.update(screen, time, time_delta)
 
@@ -62,3 +70,5 @@ class SizeSelector:
         self.BTN_DOWN.newAlpha = al
         self.BTN_SIZE_DISPLAY.alpha = al
         self.BTN_SIZE_DISPLAY.newAlpha = al
+        if self.titleDisplay.text != "":
+            self.titleDisplay = al
