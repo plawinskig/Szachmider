@@ -117,6 +117,7 @@ def mainMenu():
                             statisticsScreen(time)
                         elif (menu_button == 3):
                             editScreen(time)
+                            CHOOSE_BOARD_TO_PLAY.setUp()
                         elif menu_button == 4:
                             is_running = False
                 

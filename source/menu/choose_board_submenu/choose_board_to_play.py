@@ -68,3 +68,6 @@ class ChoosingBoardToPlay():
         self.xDest = x_dest + 1
         self.movingRow = 0
 
+    def setUp(self):
+        self.boardMenu.setUp()
+
