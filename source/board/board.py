@@ -335,9 +335,6 @@ class Board:
                                 finishedOnKing = False
                             if canGoFurther: plausibleMoves.append((move, partial(self.move_piece, boardX, boardY, move[0], move[1]), moveInstance.can_take()))
 
-
-                if currentPiece.get_code() == "Roo": print(currentPiece.get_ID(), len(encounteredPieces))
-
                 if finishedOnKing and len(encounteredPieces) == 1:
                     try:
                         move = next(moveInstance)
@@ -412,10 +409,10 @@ class Board:
 
 
         kings, pieces, blackChecks, whiteChecks, additionalBlackChecks, additionalWhiteChecks = self.__get_piece_moves()
-        print(f"black checks: {blackChecks}")
-        print(f"white checks: {whiteChecks}")
-        print(f"black add checks: {additionalBlackChecks}")
-        print(f"white add checks: {additionalWhiteChecks}")
+        # print(f"black checks: {blackChecks}")
+        # print(f"white checks: {whiteChecks}")
+        # print(f"black add checks: {additionalBlackChecks}")
+        # print(f"white add checks: {additionalWhiteChecks}")
 
 
         for p in pieces:
