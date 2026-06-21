@@ -35,7 +35,7 @@ class RandomBot(BaseBot):
                     continue
 
                 piece = square.piece
-                if not isinstance(piece, _MovablePiece):
+                if not isinstance(piece, _MovablePiece): # type: ignore
                     continue
 
                 if piece.is_black() != self.is_black:
@@ -45,7 +45,7 @@ class RandomBot(BaseBot):
                 legal_moves = piece.get_actual_move_list()
 
                 for move in legal_moves:
-                    available_moves.append((typed_piece, move))
+                    available_moves.append((typed_piece, move)) # type: ignore
 
         if not available_moves:
             return None
