@@ -1,12 +1,15 @@
 
-from abc import ABC, abstractmethod
-from typing import Any, Callable
+from __future__ import annotations
 
-from source.board.board import Board
-from source.board.piece import Piece
+from abc import ABC, abstractmethod
+from typing import Any, Callable, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from source.board.board import Board
+    from source.board.piece import Piece
 
 Move = tuple[tuple[int, int], Callable[[], None], bool]
-BotMove = tuple[Piece, Move]
+BotMove = tuple["Piece", Move]
 
 
 class BaseBot(ABC):
@@ -16,7 +19,7 @@ class BaseBot(ABC):
     @abstractmethod
     def get_best_move(
         self,
-        board: Board,
+        board: "Board",
         move_history: Any | None = None,
         time_limit: float | None = None,
     ) -> BotMove | None:

@@ -1,11 +1,23 @@
 
+from __future__ import annotations
+
 import random
-from typing import Any, cast
+from typing import Any, Protocol, TYPE_CHECKING, cast, runtime_checkable
 
 from source.bot.base_bot import BaseBot, BotMove, Move
 
-from source.board.board import Board
-from source.board.piece import Piece
+if TYPE_CHECKING:
+    from source.board.board import Board
+    from source.board.piece import Piece
+
+
+@runtime_checkable
+class _MovablePiece(Protocol):
+    def is_black(self) -> bool:
+        ...
+
+    def get_actual_move_list(self) -> list[Move]:
+        ...
 
 
 class RandomBot(BaseBot):
@@ -23,14 +35,14 @@ class RandomBot(BaseBot):
                     continue
 
                 piece = square.piece
-                if not isinstance(piece, Piece):
+                if not isinstance(piece, _MovablePiece):
                     continue
 
                 if piece.is_black() != self.is_black:
                     continue
 
                 typed_piece = cast("Piece", piece)
-                legal_moves = cast(list[Move], piece.get_actual_move_list())
+                legal_moves = piece.get_actual_move_list()
 
                 for move in legal_moves:
                     available_moves.append((typed_piece, move))
