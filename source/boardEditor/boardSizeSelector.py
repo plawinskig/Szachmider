@@ -51,5 +51,6 @@ class SizeSelector:
                 self.BTN_SIZE_DISPLAY.text = f"{self.currentSizeChoice}"
                 return i
             i += 1
+        return 0
 
 

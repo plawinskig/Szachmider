@@ -2,6 +2,7 @@ import pygame
 
 from source.gui.button import Button
 from source.boardEditor.boardSizeSelector import SizeSelector
+from source.boardEditor.squareSelector import SquareSelector
 
 
 class EditorScreen:
@@ -20,11 +21,12 @@ class EditorScreen:
         self.xSizeSel = SizeSelector(screenWidth//10, screenHeight//3, r=1)
         self.ySizeSel = SizeSelector(screenWidth//10+80, screenHeight//3, r=1)
 
+        self.squareSelector = SquareSelector(screenWidth//3, screenHeight-100, r=1)
 
 
 
     def update(self, screen, time, timeDelta, mousePos):
-        selectors = [self.xSizeSel, self.ySizeSel]
+        selectors = [self.xSizeSel, self.ySizeSel, self.squareSelector]
         buttons = [self.BTN_BACK]
 
         for sl in selectors:
