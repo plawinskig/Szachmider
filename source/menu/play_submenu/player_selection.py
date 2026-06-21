@@ -17,7 +17,7 @@ class PlayerSelection():
         self.offset = offset
 
         self.TEXT_FIELD = TextField(pos=(self.xPos, 254), text="",
-                                    img_normal=pygame.image.load("assets/buttons/BTN_text_player.png").convert_alpha(),
+                                    imgNormal=pygame.image.load("assets/buttons/BTN_text_player.png").convert_alpha(),
                                     imgHover=pygame.image.load("assets/buttons/BTN_text_player_hover.png").convert_alpha(),
                                     r = r + 1)
         
@@ -96,7 +96,7 @@ class PlayerSelection():
         for btn in self.BTN_PLAYER_LIST:
             if btn.check_for_input(position):
                 if not self.containsEqual and i-3 == len(self.BTN_PLAYER_LIST):
-                    self.player_list.append(self.TEXT_FIELD.text.strip())
+                    self.playerList.append(self.TEXT_FIELD.text.strip())
                     dbConnector=DatabaseConnector()
                     dbConnector.add_player(self.TEXT_FIELD.text.strip())
                     del dbConnector

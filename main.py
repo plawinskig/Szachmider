@@ -3,7 +3,7 @@ import copy
 import random
 import sys
 
-from source.menu.play_submenu.player_selection import PlayerSelection
+from source.statistics.statistics_full import Statistics
 from source.menu.logo import Logo
 from source.menu.menu_background import MenuBackground
 from source.menu.main_buttons import MainButtons
@@ -18,6 +18,8 @@ from source.board.board_json import *
 from source.board.board_view import BoardView
 from source.menu.choose_board_submenu.choose_board_to_play import ChoosingBoardToPlay
 from source.board.square import *
+
+from source.boardEditor.editorScreen import EditorScreen
 
 from source.database.datbaseConnector import *
 
@@ -112,9 +114,9 @@ def mainMenu():
                             render_play_menu = True
                             PLAY_MENU.move(play_pos)
                         elif menu_button == 2:
-                            print("Statystyki")
-                        elif menu_button == 3:
-                            print("Edit")
+                            statisticsScreen(time)
+                        elif (menu_button == 3):
+                            editScreen(time)
                         elif menu_button == 4:
                             is_running = False
                 
@@ -215,6 +217,88 @@ def gameScreen(currentBoard: Board, players: tuple[str, str], colors: tuple[int,
                         isRunning = False
         
         pygame.display.update()
+
+def statisticsScreen(time: float):
+    pygame.display.set_caption("Szachmider - Gra")
+    MENU_BG = MenuBackground(SCREEN_WIDTH, SCREEN_HEIGHT)
+
+    isRunning = True
+
+    STATISTICS = Statistics(SCREEN_WIDTH, SCREEN_HEIGHT)
+
+    while isRunning:
+        SCREEN.blit(BG, (0, 0))
+
+        MOUSE_POS = pygame.mouse.get_pos()
+        TIME_DELTA = CLOCK.tick(60) / 1000.0
+        time = time + TIME_DELTA
+
+        if time < 0:
+            time = 0
+
+        MENU_BG.update(SCREEN)
+
+        STATISTICS.update(SCREEN, time, TIME_DELTA, MOUSE_POS)
+
+        apply_crt_effect(SCREEN)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:   
+                isRunning = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                statistics_button = STATISTICS.check_for_input(MOUSE_POS)
+                if statistics_button:
+                    if statistics_button == -1:
+                        isRunning = False
+        
+            if event.type == pygame.KEYDOWN:
+                STATISTICS.input(event)
+        
+        pygame.display.update()
+
+
+
+
+def editScreen(time: float):
+    pygame.display.set_caption("Szachmider - Edytor")
+    MENU_BG = MenuBackground(SCREEN_WIDTH, SCREEN_HEIGHT)
+
+    is_running = True
+
+    EDIT_MENU = EditorScreen((0, 0), SCREEN_WIDTH, SCREEN_HEIGHT)
+
+    while is_running:
+        SCREEN.blit(BG, (0, 0))
+
+        MOUSE_POS = pygame.mouse.get_pos()
+        TIME_DELTA = CLOCK.tick(60) / 1000.0
+        time = time + TIME_DELTA
+
+        if time < 0:
+            time = 0
+
+        MENU_BG.update(SCREEN)
+        EDIT_MENU.update(SCREEN, time, TIME_DELTA, MOUSE_POS)
+
+        apply_crt_effect(SCREEN)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                is_running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                screenInput = EDIT_MENU.check_for_input(MOUSE_POS)
+                match screenInput:
+                    case -1:
+                        is_running = False
+
+            if event.type == pygame.KEYDOWN:
+                EDIT_MENU.input(event)
+
+
+        pygame.display.update()
+
+    # pygame.quit()
+    # sys.exit()
 
 
 if __name__ == "__main__":

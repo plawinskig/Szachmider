@@ -56,7 +56,7 @@ class Board:
         square = self.get_square(x, y)
         return square.piece if square else None
         
-    def set_square(self, x: int, y: int, square: Square):
+    def set_square(self, x: int, y: int, square: Square | None):
         if self.is_valid_position(x, y):
             self._board[y][x] = square
         else:
@@ -566,6 +566,22 @@ class Board:
                 result = True
         return result
 
+    def change_name(self, newName: str):
+        self.__name = newName
+
+    def exchange_square(self, x: int, y: int, newSquare: Square):
+        if not newSquare is None:
+            newSquare.piece = self.get_piece(x, y)
+        self.set_square(x, y, newSquare)
+
+    def get_resized(self, newW: int, newH: int):
+        newBoard = Board(newW, newH, self.__name)
+
+        for x, y, _, _ in newBoard.iterate_board():
+            if x < self.width and y < self.height:
+                newBoard.set_square(x, y, self.get_square(x, y))
+
+        return newBoard
 
 
     def debug_print_movementMatrix(self):

@@ -2,10 +2,10 @@ from source.gui.button import Button
 import pygame
 
 class TextField(Button):
-    def __init__(self, pos, text: str, img_normal, imgHover, r: int,
+    def __init__(self, pos, text: str, imgNormal, imgHover, r: int,
                  textHoverColor = pygame.Color("#000000"), textBasicColor = pygame.Color("#000000"),
                  max_str_length = 20, rightDetectionOffset=45):
-        super().__init__(pos, text, img_normal, imgHover, r, textHoverColor,
+        super().__init__(pos, text, imgNormal, imgHover, r, textHoverColor,
                          textBasicColor, rightDetectionOffset=rightDetectionOffset)
         self.is_pressed = False
         self.max_str_length = max_str_length

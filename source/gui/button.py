@@ -62,6 +62,7 @@ class Button():
                                                     self.currentImage.get_height() * self.scale))
         self.imgRect = self.currentImage.get_rect(center=(self.xPos, newYPos))
 
+        self.fontText = self.font.render(text=self.text, antialias=False, color=self.textBasicColor)
 
         self.fontText = pygame.transform.rotate(self.fontText, angle)
         self.fontText = pygame.transform.scale(self.fontText,

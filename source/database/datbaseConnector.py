@@ -31,6 +31,7 @@ class DatabaseConnector:
 
         return success
 
+
     def delete_player(self,playerId: int):
         Games.update(PWhite=0).where(Games.PWhite == playerId).execute()
         Games.update(PBlack=0).where(Games.PBlack == playerId).execute()

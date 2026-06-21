@@ -1,0 +1,225 @@
+import pygame
+
+from source.board.board import Board
+from source.board.board_json import save_to_json
+from source.database.datbaseConnector import DatabaseConnector
+from source.gui.text_field import TextField
+from source.gui.button import Button
+from source.boardEditor.boardSizeSelector import SizeSelector
+from source.boardEditor.squareSelector import SquareSelector
+from source.board.square import *
+from source.board.piece import *
+
+from source.board.board import Board
+from source.board.board_view import BoardView
+from source.boardEditor.pieceSelector import PieceSelector
+
+class EditorScreen:
+    def __init__(self, position, screenWidth, screenHeight):
+        self.xPos = position[0]
+        self.yPos = position[1]
+
+        self.screenWidth = screenWidth
+
+
+        self.BTN_BACK = Button(pos=(self.xPos+80, self.yPos+80), text="",
+                               imgNormal=pygame.image.load("assets/buttons/BTN_back.png").convert_alpha(),
+                               imgHover=pygame.image.load("assets/buttons/BTN_back_hover.png").convert_alpha(),
+                               r = 9)
+
+        self.nameInput = TextField(pos=(screenWidth//2, 100), text="", imgNormal=pygame.image.load("assets/buttons/BTN_text_player.png").convert_alpha(),
+                               imgHover=pygame.image.load("assets/buttons/BTN_text_player_hover.png").convert_alpha(),
+                               r = 8)
+
+        self.saveButton = Button(pos=(screenWidth-100, screenHeight-100), text="", imgNormal=pygame.image.load("assets/buttons/BTN_play.png").convert_alpha(),
+                               imgHover=pygame.image.load("assets/buttons/BTN_play_hover.png").convert_alpha(),
+                               r = 7)
+
+        self.xSizeSel = SizeSelector(screenWidth//10, screenHeight//3, r=1)
+        self.ySizeSel = SizeSelector(screenWidth//10+80, screenHeight//3, r=1)
+
+        self.squareSelector = SquareSelector(screenWidth//3, screenHeight-100, r=1)
+        self.pieceSelector = PieceSelector(screenWidth//3, screenHeight-250)
+
+        self.__board = Board(8, 8, "New board")
+
+
+        self.__boardViewStats = (screenWidth, screenHeight, screenHeight/360)
+        self.__boardView = BoardView(self.__board, *self.__boardViewStats)
+
+
+        self.__currentSelection = ("S", 0)
+        self.__squareList = [BasicSquare, GrassSquare, HeartSquare, ShieldSquare, TeleportSquare, None]
+        self.__pieceList = [None, Pawn, Knight, Bishop, Rook, Queen, King]
+
+
+        self.__isPlacingTele = False
+        self.__lastTeleLocation = (0, 0)
+
+
+        self.__whiteKingExists = False
+        self.__blackKingExists = False
+
+
+
+
+
+
+    def update(self, screen, time, timeDelta, mousePos):
+        selectors = [self.xSizeSel, self.ySizeSel, self.squareSelector, self.pieceSelector]
+        buttons = [self.BTN_BACK, self.nameInput, self.saveButton]
+
+        for sl in selectors:
+            sl.update(screen, time, timeDelta, mousePos)
+
+
+        for btn in buttons:
+            btn.hover(mousePos)
+            btn.update(screen, time, timeDelta)
+
+        self.__boardView.display(screen, time)
+
+
+    def input(self, event: pygame.Event):
+        self.nameInput.input(event)
+
+
+    def check_for_input(self, position):
+        if self.BTN_BACK.check_for_input(position):
+            return -1
+        if self.xSizeSel.check_for_input(position):
+            self.__board = self.__board.get_resized(self.xSizeSel.get_current_choise(), self.__board.height)
+            self.__refresh_board_view()
+            return 1
+        if self.ySizeSel.check_for_input(position):
+            self.__board = self.__board.get_resized(self.__board.width, self.ySizeSel.get_current_choise())
+            self.__refresh_board_view()
+            return 2
+
+        if self.squareSelector.check_for_input(position):
+            self.__currentSelection = ("S", self.squareSelector.get_selection())
+            return 3
+
+        if self.pieceSelector.check_for_input(position):
+            self.__currentSelection = ("P", self.pieceSelector.get_selection())
+            return 4
+
+        if self.nameInput.check_for_input(position):
+            return 5
+
+
+        if self.saveButton.check_for_input(position):
+            success = self.save_board()
+            if success:
+                return -1
+
+            return 6
+
+
+
+        coords = self.__boardView.getBoardCoords(position)
+        if not coords is None:
+            if self.__currentSelection[0] == "S":
+                self.__set_new_square(*coords)
+            elif self.__currentSelection[0] == "P":
+                self.__set_new_piece(*coords)
+
+            self.__refresh_board_view()
+            return 10
+
+        return 0
+
+
+    def __refresh_board_view(self):
+        self.__boardView = BoardView(self.__board, *self.__boardViewStats)
+
+
+
+    def __set_new_square(self, x: int, y: int):
+        match self.__currentSelection[1]:
+            case 5:
+                self.__board.set_square(x, y, None)
+            case 4:
+                if not self.__isPlacingTele:
+                    self.__board.exchange_square(x, y, TeleportSquare((0, 0), None))
+
+                    self.__isPlacingTele = True
+                    self.__lastTeleLocation = (x, y)
+                    self.squareSelector.set_alpha(0)
+                    self.pieceSelector.hide()
+
+                    self.xSizeSel.set_alpha(0)
+                    self.ySizeSel.set_alpha(0)
+                elif (x, y) != self.__lastTeleLocation:
+                    self.__board.exchange_square(x, y, TeleportSquare(self.__lastTeleLocation, None))
+                    self.__board.get_square(*self.__lastTeleLocation).set_tele_location(x, y)
+
+                    self.__isPlacingTele = False
+                    self.squareSelector.set_alpha(255)
+                    self.pieceSelector.show()
+
+                    self.xSizeSel.set_alpha(255)
+                    self.ySizeSel.set_alpha(255)
+            case other:
+                self.__board.exchange_square(x, y, self.__squareList[other](None))
+
+
+    def __set_new_piece(self, x: int, y: int):
+        match self.__currentSelection[1]:
+            case 0:
+                square = self.__board.get_square(x, y)
+                if not square is None:
+                    currentlyThere = self.__board.get_piece(x, y)
+
+                    if isinstance(currentlyThere, King):
+                        kingColor = currentlyThere.is_black()
+                        if kingColor: self.__blackKingExists = False
+                        else: self.__whiteKingExists = False
+                    self.__board.set_piece(x, y, None)
+
+            case 6:
+                square = self.__board.get_square(x, y)
+                if not square is None:
+                    currentlyThere = self.__board.get_piece(x, y)
+
+
+                    kingColor = self.pieceSelector.get_color()
+                    canPlace = not (self.__blackKingExists if kingColor else self.__whiteKingExists)
+
+                    if canPlace:
+                        self.__board.set_piece(x, y, King(kingColor))
+                        if kingColor:
+                            self.__blackKingExists = True
+                        else:
+                            self.__whiteKingExists = True
+                        # if it encountered another king, then that king must be opposite color
+                        if isinstance(currentlyThere, King):
+                            if not kingColor:
+                                self.__blackKingExists = False
+                            else:
+                                self.__whiteKingExists = False
+            case other:
+                square = self.__board.get_square(x, y)
+                color = self.pieceSelector.get_color()
+                if not square is None:
+                    currentlyThere = self.__board.get_piece(x, y)
+
+                    if isinstance(currentlyThere, King):
+                        kingColor = currentlyThere.is_black()
+                        if kingColor:
+                            self.__blackKingExists = False
+                        else:
+                            self.__whiteKingExists = False
+                    self.__board.set_piece(x, y, self.__pieceList[other](color))
+
+
+    def save_board(self):
+        boardName = self.nameInput.text
+        self.__board.change_name(boardName)
+        db = DatabaseConnector()
+        success = db.add_board(f"{boardName}.json")
+
+        if success:
+            save_to_json(self.__board.export_to_json(), f"boards/{boardName}.json")
+
+        return success
