@@ -4,6 +4,7 @@ from pygame import Surface
 from source.board.board_view import BoardView
 from source.board.board import Board
 from source.board.piece import *
+from source.bot.base_bot import BaseBot
 from source.gui.button import Button
 
 from source.database.datbaseConnector import DatabaseConnector
@@ -11,7 +12,8 @@ from source.database.datbaseConnector import DatabaseConnector
 
 class GameControl():
     def __init__(self, boardView: BoardView, whitePlayer: str, blackPlayer: str, 
-                 screenWidth: int, screenHeight: int, botPlays: bool = False):
+                 screenWidth: int, screenHeight: int, botPlays: bool = False,
+                 whiteBot: BaseBot | None = None, blackBot: BaseBot | None = None):
         self.boardView = boardView
         self.board: Board = boardView.board
 
@@ -19,6 +21,8 @@ class GameControl():
         self.isWhiteTurn = True
 
         self.botPlays = botPlays
+        self._whiteBot = whiteBot
+        self._blackBot = blackBot
 
         self.screenWidth = screenWidth
         self.screenHeight = screenHeight
@@ -80,6 +84,8 @@ class GameControl():
             self.BTN_END.hover(mouse_pos)
             self.BTN_END.update(screen, time, timeDelta)
 
+        self._play_bot_turn()
+
     def check_for_input(self, mouse_pos):
         if self.BTN_EXIT.check_for_input(mouse_pos):
             if not self.gameEnded:
@@ -103,6 +109,9 @@ class GameControl():
                 self.BTN_PLAYER_BLACK.yPos = 50
                 self.BTN_PLAYER_BLACK.yDest = 50
             return -2
+
+        if self._get_current_bot() is not None:
+            return 0
         
         boardPos = None
         if not self.gameEnded:
@@ -122,6 +131,8 @@ class GameControl():
                 self._currentTurn += 1
                 self.isWhiteTurn = not self.isWhiteTurn
                 self._currentPiece = None
+                self._currentPiecePos = None
+                self._CurrentLegalMoves = None
                 self.board.make_movement_matrix()    
 
                 self._whiteCheck = self.isWhiteTurn and self._is_in_check()
@@ -129,12 +140,7 @@ class GameControl():
 
                 if not self._has_legal_moves() or self._movesToDraw == 0:
                     self.gameEnded = True
-                    DATABASE = DatabaseConnector()
-                    games_list = DATABASE.get_games(DATABASE.get_player_id(self.whitePlayer),
-                                            DATABASE.get_player_id(self.blackPlayer),
-                                            DATABASE.get_board_id(self.boardView.board.getFileName()))
-                    DATABASE.define_winner(games_list[-1], self._who_won())
-                    del DATABASE
+                    self._save_game_result()
             else:
                 currentPiece = self.board.get_piece(*boardPos)
                 if currentPiece:
@@ -159,6 +165,45 @@ class GameControl():
         
         return 0
 
+    def _get_current_bot(self) -> BaseBot | None:
+        if self.gameEnded:
+            return None
+        return self._whiteBot if self.isWhiteTurn else self._blackBot
+
+    def _play_bot_turn(self) -> None:
+        bot = self._get_current_bot()
+        if bot is None:
+            return
+
+        chosenMove = bot.get_best_move(self.board)
+        if chosenMove is None:
+            self.gameEnded = True
+            self._save_game_result()
+            return
+
+        piece, move = chosenMove
+
+        if move[2] or piece.get_code() == "Paw":
+            self._movesToDraw = 50
+        else:
+            self._movesToDraw -= 1
+
+        move[1]()
+        self._currentTurn += 1
+        self.isWhiteTurn = not self.isWhiteTurn
+        self._currentPiece = None
+        self._currentPiecePos = None
+        self._CurrentLegalMoves = None
+
+        self.board.make_movement_matrix()
+
+        self._whiteCheck = self.isWhiteTurn and self._is_in_check()
+        self._blackCheck = not self.isWhiteTurn and self._is_in_check()
+
+        if not self._has_legal_moves() or self._movesToDraw == 0:
+            self.gameEnded = True
+            self._save_game_result()
+
     def _has_legal_moves(self):
         return self.board.does_color_have_any_moves(not self.isWhiteTurn)
     
@@ -167,6 +212,15 @@ class GameControl():
     
     def _is_take(self, position: tuple[int, int]) -> bool:
         return True if self.board.get_piece(*position) else False
+
+    def _save_game_result(self) -> None:
+        DATABASE = DatabaseConnector()
+        games_list = DATABASE.get_games(DATABASE.get_player_id(self.whitePlayer),
+                                DATABASE.get_player_id(self.blackPlayer),
+                                DATABASE.get_board_id(self.boardView.board.getFileName()))
+        if games_list:
+            DATABASE.define_winner(games_list[-1], self._who_won())
+        del DATABASE
     
     def _who_won(self):
         if self.gameEnded:

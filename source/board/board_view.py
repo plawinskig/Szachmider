@@ -35,12 +35,12 @@ class BoardView:
                 isBlackChecked: bool = False, isWhiteChecked: bool = False,
                 isWhiteTurn: bool = True, isBlackTurn: bool = True,
                 displayGrid: bool = False):
-        self.displayBase(screen, perspective_dark)
+        self.displayBase(screen, perspective_dark, displayGrid)
         for y in range(self.height):
             true_y = y
             if perspective_dark:
                 true_y = self.height - 1 - y
-            for section in ["grid", "tile", "move", "back", "piece", "check", "front"]:
+            for section in ["tile", "move", "back", "piece", "check", "front"]:
                 for x in range(self.width):
                     true_x = x
                     if perspective_dark:
@@ -51,9 +51,7 @@ class BoardView:
                         is_light = True
                         if (true_x + true_y) % 2 == 1:
                             is_light = False
-                        if section == "grid" and displayGrid:
-                            img = "assets/squares/SQR_grid.png"
-                        elif section == "tile":
+                        if section == "tile":
                             if is_light:
                                 img = square.img_tile_light
                             else:
@@ -116,11 +114,16 @@ class BoardView:
 
                 
 
-    def displayBase(self, screen: Surface, perspective_dark: bool = False):
+    def displayBase(self, screen: Surface, perspective_dark: bool = False, displayGrid: bool = False):
         img_base = ["assets/squares/SQR_base_01.png",
                     "assets/squares/SQR_base_02.png",
                     "assets/squares/SQR_base_03.png",
                     "assets/squares/SQR_base_04.png"]
+
+        grid = pygame.image.load("assets/squares/SQR_grid.png").convert_alpha()
+        grid = pygame.transform.scale(grid, (self.x_scale, self.y_scale))
+        
+        i = 0
         for base in img_base:
             img = pygame.image.load(base).convert_alpha()
             img = pygame.transform.scale(img, (self.x_scale, self.y_scale))
@@ -136,6 +139,12 @@ class BoardView:
                     if square:
                         screen.blit(img, (self.x_offset + x * self.x_tile_size, 
                                             self.y_offset + y * self.y_tile_size))
+                    elif i == 0 and displayGrid:
+                        screen.blit(grid, (self.x_offset + x * self.x_tile_size, 
+                                            self.y_offset + y * self.y_tile_size))
+                        
+                        
+        i += 1
 
     
     def getBoardCoords(self, mouse_pos):
