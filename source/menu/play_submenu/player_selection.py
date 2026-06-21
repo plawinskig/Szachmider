@@ -95,12 +95,12 @@ class PlayerSelection():
         
         for btn in self.BTN_PLAYER_LIST:
             if btn.check_for_input(position):
-                if not self.contains_equal and i-3 == len(self.BTN_PLAYER_LIST):
+                if not self.containsEqual and i-3 == len(self.BTN_PLAYER_LIST):
                     self.player_list.append(self.TEXT_FIELD.text.strip())
                     dbConnector=DatabaseConnector()
                     dbConnector.add_player(self.TEXT_FIELD.text.strip())
                     del dbConnector
-                    self.contains_equal = True
+                    self.containsEqual = True
                 else:
                     self.TEXT_FIELD.text = btn.text
                     self.TEXT_FIELD.updateText()
