@@ -77,7 +77,7 @@ class EditorScreen:
             btn.hover(mousePos)
             btn.update(screen, time, timeDelta)
 
-        self.__boardView.display(screen, time)
+        self.__boardView.display(screen, time, displayGrid=True)
 
 
     def input(self, event: pygame.Event):
