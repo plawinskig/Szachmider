@@ -140,4 +140,6 @@ class EditorScreen:
                 self.__board.exchange_square(x, y, self.__squareList[other](None))
 
 
-    def __set_new_square
+    def __set_new_square(self, x: int, y: int):
+        # match self.__currentSelection[1]:
+        pass
