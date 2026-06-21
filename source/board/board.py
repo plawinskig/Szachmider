@@ -431,6 +431,7 @@ class Board:
 
         # evaluating kings moves
         otherKing = ""
+        otherKingsTheoriticalMoves = []
         for k in kings:
             currentKing = self.get_piece(*k)
             assert isinstance(currentKing, King)
@@ -442,13 +443,17 @@ class Board:
 
             for move in kingIter:
                 X, Y = move
+
+                if otherKing == "": otherKingsTheoriticalMoves.append(move)
+
                 if X < 0 or X >= self.width or Y < 0 or Y >= self.height or self.get_square(X, Y) is None:
                     continue
 
                 otherPiece = self.get_piece(*move)
 
                 attacking = [x for x in attackingMatrix[Y][X] if x[2]]
-                if attacking == [] and move not in attackingAdditionalChecks:
+                # if attacking != []: print(list(map(lambda x: x[0], attacking)))
+                if attacking == [] and move not in attackingAdditionalChecks and (otherKing == "" or not move in otherKingsTheoriticalMoves):
 
                     if otherPiece == None:
                         ownMoveMatrix[Y][X].append((currentKing.get_ID(), partial(self.move_piece, *k, *move), True))
@@ -457,12 +462,14 @@ class Board:
 
 
                 elif otherKing != "" and otherKing in map(lambda x: x[0], attacking):
-                    attacking.pop(self.__find_specific_in_list(otherKing, lambda x: x[0], attacking))
+                    kingIndex = self.__find_specific_in_list(otherKing, lambda x: x[0], attackingMatrix[Y][X])
+
+                    attackingMatrix[Y][X].pop(kingIndex)
 
             for move in currentKing.check_castling(self, k, attackingMatrix):
                 ownMoveMatrix[move[0][1]][move[0][0]].append((currentKing.get_ID(), move[1], move[2]))
 
-            otherKing = (currentKing.get_ID(), k)
+            otherKing = currentKing.get_ID()
 
 
         # checking moves with existing checks to block them
