@@ -107,7 +107,7 @@ def mainMenu():
                             render_play_menu = True
                             PLAY_MENU.move(play_pos)
                         elif menu_button == 2:
-                            print("Statystyki")
+                            statisticsScreen(time)
                         elif (menu_button == 3):
                             editScreen(time)
                         elif menu_button == 4:
