@@ -7,13 +7,16 @@ from source.gui.button import Button
 class PieceSelector:
 
     def __init__(self, xPos, yPos, r=0):
-        self.xPos = xPos
+
         self.yPos = yPos
 
         self.__blackButtons = []
         self.__whiteButtons = []
         buttonOffset = 130
         buttonScale = 3
+        self.totalLength = 130*16
+        self.xPos = xPos - self.totalLength/6
+
 
         self.changeColorButton = Button(pos=(self.xPos-buttonOffset, self.yPos), text="",
                                       imgNormal=pygame.image.load(
@@ -21,6 +24,7 @@ class PieceSelector:
                                       imgHover=pygame.image.load(
                                           f"assets/buttons/editor/BTN_switch_piece_hover.png").convert_alpha(),
                                       r=r+10)
+
 
         rCounter = 1
         for pcType in ["None", "Pawn", "Knight", "Bishop", "Rook", "Queen", "King"]:
@@ -35,6 +39,7 @@ class PieceSelector:
                                       imgHover=hoverSprite,
                                       r=r + rCounter))
             rCounter += 1
+
 
 
         rCounter = 1

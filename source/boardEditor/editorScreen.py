@@ -31,15 +31,15 @@ class EditorScreen:
                                imgHover=pygame.image.load("assets/buttons/BTN_text_player_hover.png").convert_alpha(),
                                r = 8)
 
-        self.saveButton = Button(pos=(screenWidth-200, screenHeight-200), text="Zapisz i wyjdź", imgNormal=pygame.image.load("assets/buttons/BTN_play.png").convert_alpha(),
+        self.saveButton = Button(pos=(screenWidth-200, 200), text="Zapisz i wyjdź", imgNormal=pygame.image.load("assets/buttons/BTN_play.png").convert_alpha(),
                                imgHover=pygame.image.load("assets/buttons/BTN_play_hover.png").convert_alpha(),
                                r = 7)
 
         self.xSizeSel = SizeSelector(screenWidth//2-680, screenHeight//3, r=1, title="X:")
         self.ySizeSel = SizeSelector(screenWidth//2-600, screenHeight//3, r=2, title="Y:")
 
-        self.squareSelector = SquareSelector(screenWidth//3, screenHeight-100, r=3)
-        self.pieceSelector = PieceSelector(screenWidth//3, screenHeight-250)
+        self.squareSelector = SquareSelector(screenWidth//2, screenHeight-100, r=3)
+        self.pieceSelector = PieceSelector(screenWidth//2, screenHeight-250)
 
         self.__board = Board(8, 8, "New board")
 

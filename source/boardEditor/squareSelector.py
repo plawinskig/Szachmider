@@ -7,12 +7,16 @@ from source.gui.button import Button
 class SquareSelector:
 
     def __init__(self, xPos, yPos, r=0):
-        self.xPos = xPos
+
         self.yPos = yPos
         rCounter = 1
         self.__buttons = []
         buttonOffset = 160
         buttonScale = 3
+
+        totalLength = buttonOffset * 10
+        self.xPos = xPos - totalLength/4
+
         for sqType in ["default", "grass", "heart", "shield", "teleport", "none"]:
             normSprite = pygame.image.load(f"assets/buttons/editor/BTN_{sqType}_square.png").convert_alpha()
             normSprite = pygame.transform.scale(normSprite, (normSprite.get_width() * buttonScale,

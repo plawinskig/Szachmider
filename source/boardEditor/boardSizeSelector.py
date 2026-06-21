@@ -13,7 +13,8 @@ class SizeSelector:
                                        imgHover=pygame.image.load("assets/buttons/BTN_gray_squished.png").convert_alpha(),
                                        r =r + 2)
 
-        if title == "":
+
+        if self.titleDisplay.text == "":
             self.titleDisplay.alpha = 0
             self.titleDisplay.newAlpha = 0
 
@@ -71,4 +72,6 @@ class SizeSelector:
         self.BTN_SIZE_DISPLAY.alpha = al
         self.BTN_SIZE_DISPLAY.newAlpha = al
         if self.titleDisplay.text != "":
-            self.titleDisplay = al
+            self.titleDisplay.alpha = al
+            self.titleDisplay.newAlpha = al
+
