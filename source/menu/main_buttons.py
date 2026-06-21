@@ -22,7 +22,7 @@ class MainButtons():
                                      imgHover=pygame.image.load("assets/buttons/BTN_statistics_hover.png").convert_alpha(), r=2,
                                      textHoverColor=pygame.Color("#0098dc"))
 
-        self.BTN_EDIT = Button(pos=(self.xPos, 392), text="Plansze",
+        self.BTN_EDIT = Button(pos=(self.xPos, 392), text="Edytor",
                                imgNormal=pygame.image.load("assets/buttons/BTN_edit.png").convert_alpha(),
                                imgHover=pygame.image.load("assets/buttons/BTN_edit_hover.png").convert_alpha(), r=3,
                                textHoverColor=pygame.Color("#0098dc"))

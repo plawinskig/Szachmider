@@ -148,7 +148,7 @@ def mainMenu():
                             render_choose_to_play = False
                             render_play_menu = True
                             PLAY_MENU.move(play_pos)
-                        else:
+                        elif choose_to_play_button != 1:
                             gameScreen(choose_to_play_button,
                                        PLAY_MENU.get_current_players(),
                                        PLAY_MENU.get_colors(), time)
@@ -219,7 +219,7 @@ def gameScreen(currentBoard: Board, players: tuple[str, str], colors: tuple[int,
         pygame.display.update()
 
 def statisticsScreen(time: float):
-    pygame.display.set_caption("Szachmider - Gra")
+    pygame.display.set_caption("Szachmider - Statystyki")
     MENU_BG = MenuBackground(SCREEN_WIDTH, SCREEN_HEIGHT)
 
     isRunning = True

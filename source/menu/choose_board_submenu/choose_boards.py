@@ -1,6 +1,7 @@
 import pygame
 import os
 
+from source.database.datbaseConnector import DatabaseConnector
 from source.board.board_view import BoardView
 from source.gui.button import Button
 from source.board.board import Board
@@ -30,13 +31,13 @@ class ChooseBoard():
         self.boardList: list[Board]
         self.boardList = []
 
-        path = "boards"
-        for file in os.scandir(path):
-            if file.is_file():
-                boardData = load_from_json(file.path)
-                board = Board(5, 5, "template")
-                board.import_from_json(boardData)
-                self.boardList.append(board)
+        DATABASE = DatabaseConnector()
+        boardNames = DATABASE.get_boards()
+        for name in boardNames:
+            boardData = load_from_json("boards/" + name)
+            board = Board(5, 5, "template")
+            board.import_from_json(boardData)
+            self.boardList.append(board)
 
         self.BTN_BOARD_LIST = []
         i = 0
@@ -49,9 +50,9 @@ class ChooseBoard():
             boardView.display(imgNormal, 0)
             boardView.display(imgHover, 0)
 
-            button = Button(pos=(self.xPos + 300 * i, screenHeight / 2), text="",
-                            imgNormal=imgNormal,
-                            imgHover=imgHover,
+            button = Button(pos=(self.xPos + 300 * i, screenHeight / 2), text=board.getName(),
+                            imgNormal=imgNormal, fontOffset=(1, 100), textBasicColor=(pygame.Color("#8a4836")),
+                            imgHover=imgHover, textHoverColor=(pygame.Color("#e69c69")),
                             r = i + 1)
             
             self.BTN_BOARD_LIST.append(button)

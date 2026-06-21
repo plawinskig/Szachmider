@@ -31,7 +31,6 @@ class DatabaseConnector:
 
         return success
 
-
     def delete_player(self,playerId: int):
         Games.update(PWhite=0).where(Games.PWhite == playerId).execute()
         Games.update(PBlack=0).where(Games.PBlack == playerId).execute()
@@ -134,9 +133,11 @@ class DatabaseConnector:
         ]
 
         defeatedPlayersW.extend(defeatedPlayersB)
-        mostDeafeated = Counter(defeatedPlayersW).most_common(1)[0][0]
-
-        return Players.get(Players.PId == mostDeafeated).PName
+        
+        mostDeafeated = Counter(defeatedPlayersW).most_common(1)
+        if mostDeafeated:
+            return Players.get(Players.PId == mostDeafeated[0][0]).PName
+        return ""
 
     def get_player_most_lost_against(self, playerID: int) -> str: #returns username
         winnerPlayersW: list[int] = [g.PWhite for g in
@@ -151,6 +152,11 @@ class DatabaseConnector:
         ]
 
         winnerPlayersW.extend(winnnerPlayersB)
-        bestWinner = Counter(winnerPlayersW).most_common(1)[0][0]
+        bestWinner = Counter(winnerPlayersW).most_common(1)
 
-        return Players.get(Players.PId == bestWinner).PName
+        if bestWinner:
+            return Players.get(Players.PId == bestWinner[0][0]).PName
+        return ""
+    
+    def get_boards(self):
+        return [b.fileName for b in Boards.select(Boards.BId, Boards.fileName)]
