@@ -19,6 +19,8 @@ from source.board.square import *
 
 from source.database.datbaseConnector import *
 
+from source.shaders.crt_effect import *
+
 pygame.init()
 SCREEN = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 
@@ -85,6 +87,8 @@ def mainMenu():
             MAIN_BTNS.update(SCREEN, time, TIME_DELTA, MOUSE_POS)
         if render_choose_to_play or CHOOSE_BOARD_TO_PLAY.isMoving:
             CHOOSE_BOARD_TO_PLAY.update(SCREEN, time, TIME_DELTA, MOUSE_POS)
+        
+        apply_crt_effect(SCREEN)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -170,6 +174,8 @@ def gameScreen(currentBoard: Board, players: tuple[str, str], colors: tuple[str,
 
         MENU_BG.update(SCREEN)
         GAME_LOGIC.display(SCREEN, time)
+
+        apply_crt_effect(SCREEN)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:   
