@@ -1,0 +1,249 @@
+{
+    "width": 8,
+    "height": 8,
+    "name": "Dziura",
+    "squares": [
+        [
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc"
+        ],
+        [
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc"
+        ],
+        [
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc"
+        ],
+        [
+            null,
+            null,
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            null,
+            null
+        ],
+        [
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc"
+        ],
+        [
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc"
+        ],
+        [
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc"
+        ]
+    ],
+    "pieces": [
+        [
+            null,
+            {
+                "type": "Kni",
+                "isBlack": true,
+                "id": "Kni_0_B"
+            },
+            {
+                "type": "Bis",
+                "isBlack": true,
+                "id": "Bis_0_B"
+            },
+            {
+                "type": "Que",
+                "isBlack": true,
+                "id": "Que_0_B"
+            },
+            {
+                "type": "Kin",
+                "isBlack": true,
+                "id": "Kin_B"
+            },
+            {
+                "type": "Bis",
+                "isBlack": true,
+                "id": "Bis_1_B"
+            },
+            {
+                "type": "Kni",
+                "isBlack": true,
+                "id": "Kni_1_B"
+            },
+            null
+        ],
+        [
+            null,
+            null,
+            {
+                "type": "Paw",
+                "isBlack": true,
+                "id": "Paw_0_B"
+            },
+            {
+                "type": "Paw",
+                "isBlack": true,
+                "id": "Paw_1_B"
+            },
+            {
+                "type": "Paw",
+                "isBlack": true,
+                "id": "Paw_2_B"
+            },
+            {
+                "type": "Paw",
+                "isBlack": true,
+                "id": "Paw_3_B"
+            },
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_4_W"
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_5_W"
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_6_W"
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_7_W"
+            },
+            null,
+            null
+        ],
+        [
+            null,
+            {
+                "type": "Kni",
+                "isBlack": false,
+                "id": "Kni_2_W"
+            },
+            {
+                "type": "Bis",
+                "isBlack": false,
+                "id": "Bis_2_W"
+            },
+            {
+                "type": "Que",
+                "isBlack": false,
+                "id": "Que_1_W"
+            },
+            {
+                "type": "Kin",
+                "isBlack": false,
+                "id": "Kin_W"
+            },
+            {
+                "type": "Bis",
+                "isBlack": false,
+                "id": "Bis_3_W"
+            },
+            {
+                "type": "Kni",
+                "isBlack": false,
+                "id": "Kni_3_W"
+            },
+            null
+        ]
+    ]
+}

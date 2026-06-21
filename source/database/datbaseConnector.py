@@ -49,6 +49,13 @@ class DatabaseConnector:
     def define_winner(self, gameID:int, winner: str): # winner is a char: W, B, D or N
         Games.update(winner=winner).where(Games.GId==gameID).execute()
 
+    def get_games(self, whiteID: int, blackID: int, boardID: int, winner: str = 'N', date: str = str(datetime.date.today())):
+        return [g.GId for g in Games.select(Games.GId).where(Games.PWhite == whiteID, 
+                                                             Games.PBlack == blackID,
+                                                             Games.playedBoard == boardID,
+                                                             Games.winner == winner,
+                                                             Games.date == date)]
+
     def get_games_move_history(self, gameID: int):
         history = MoveHistory.select(MoveHistory.turn,MoveHistory.pieceId,MoveHistory.moveX,MoveHistory.moveY).where(MoveHistory.game==gameID).tuples()
         return [(turn, piece, (x, y)) for turn, piece, x, y in history]
@@ -61,10 +68,10 @@ class DatabaseConnector:
         Games.delete().where(Games.GId == gameID).execute()
 
     # checks for unique filename - returns False if board with given filename already exists
-    def add_board(self, filename: str) -> bool:
+    def add_board(self, file: str) -> bool:
         success = True
         try:
-            Boards.create(filename=filename)
+            Boards.create(fileName=file)
         except sqlite3.IntegrityError:
             success = False
 

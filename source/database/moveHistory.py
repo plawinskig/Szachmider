@@ -4,7 +4,7 @@ from peewee import *
 from source.database.games import Games
 
 class MoveHistory(Model):
-    game=ForeignKeyField(Games,null=False)
+    game=ForeignKeyField(Games,column_name="game",null=False)
     turn=IntegerField()
     pieceId=CharField(null=False)
     moveX=IntegerField(null=False)

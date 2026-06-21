@@ -31,14 +31,12 @@ class ChooseBoard():
         self.boardList = []
 
         path = "boards"
-        for folder in os.scandir(path):
-            if folder.is_dir():
-                for file in os.scandir(folder):
-                    if file.is_file():
-                        boardData = load_from_json(file.path)
-                        board = Board(5, 5, "template")
-                        board.import_from_json(boardData)
-                        self.boardList.append(board)
+        for file in os.scandir(path):
+            if file.is_file():
+                boardData = load_from_json(file.path)
+                board = Board(5, 5, "template")
+                board.import_from_json(boardData)
+                self.boardList.append(board)
 
         self.BTN_BOARD_LIST = []
         i = 0
@@ -145,7 +143,7 @@ class ChooseBoard():
                     self.move_the_list(-1)
                 elif i == 2:
                     self.move_the_list(1)
-                return i
+                return 0
             i += 1
         
         for btn in self.BTN_BOARD_LIST:

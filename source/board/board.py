@@ -167,7 +167,10 @@ class Board:
                         "teleportLocation": square.get_tele_location()
                     })
                 else:
-                    row_squares.append(square.get_code())
+                    if square:
+                        row_squares.append(square.get_code())
+                    else:
+                        row_squares.append(None)
                 
                 if square.piece:
                     piece_code = square.piece.get_code()
@@ -203,23 +206,24 @@ class Board:
         for y in range(self._height):
             for x in range(self._width):
                 square_data = data["squares"][y][x]
-
-                if isinstance(square_data, dict):
-                    square_code = square_data["type"]
+                if square_data is not None:
+                    if isinstance(square_data, dict):
+                        square_code = square_data["type"]
                     
-                    if square_code == "Tel":
-                        tele_loc: tuple[int, int] = tuple(square_data["teleportLocation"])
-                        new_square = TeleportSquare(teleportLocation=tele_loc)
+                        if square_code == "Tel":
+                            tele_loc: tuple[int, int] = tuple(square_data["teleportLocation"])
+                            new_square = TeleportSquare(teleportLocation=tele_loc)
+                        else:
+                            raise ValueError(f"Unrecognised field type in the JSON dictionary: {square_code}")
                     else:
-                        raise ValueError(f"Unrecognised field type in the JSON dictionary: {square_code}")
-
+                        square_code = square_data
+                        square_class = SQUARE_MAP.get(square_code, BasicSquare) 
+                        new_square = square_class()
                 else:
-                    square_code = square_data
-                    square_class = SQUARE_MAP.get(square_code, BasicSquare) 
-                    new_square = square_class()
+                    new_square = None
                 
                 piece_data = data["pieces"][y][x]
-                if piece_data is not None:
+                if piece_data is not None and new_square is not None:
                     piece_type = piece_data["type"]
                     piece_class = PIECE_MAP.get(piece_type)
                     if piece_class:
@@ -516,11 +520,11 @@ class Board:
     def does_color_have_any_moves(self, isBlack: bool):
         moveMatrix = self.__blackMoveMatrix if isBlack else self.__whiteMoveMatrix
 
-        result = True
+        result = False
         for Y in moveMatrix:
             for X in Y:
-                if not X:
-                    result = False
+                if X:
+                    result = True
 
         return result
 
@@ -553,8 +557,11 @@ class Board:
             print([list(map(lambda b: b[0], a)) for a in self.__whiteMoveMatrix[x]])
 
 
-
-
+    def getName(self):
+        return self.__name
+    
+    def getFileName(self):
+        return self.__name + ".json"
         
 
 if __name__ == "__main__":

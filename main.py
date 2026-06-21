@@ -173,7 +173,12 @@ def gameScreen(currentBoard: Board, players: tuple[str, str], colors: tuple[int,
         blackPlayer = players[0]
 
     BOARD_VIEW = BoardView(copy.deepcopy(currentBoard), SCREEN_WIDTH, SCREEN_HEIGHT)
-    GAME_LOGIC = GameControl(BOARD_VIEW, whitePlayer, blackPlayer)
+    GAME_LOGIC = GameControl(BOARD_VIEW, whitePlayer, blackPlayer, SCREEN_WIDTH, SCREEN_HEIGHT)
+
+    DATABASE = DatabaseConnector()
+    DATABASE.add_game(DATABASE.get_player_id(whitePlayer),
+                    DATABASE.get_player_id(blackPlayer),
+                    DATABASE.get_board_id(BOARD_VIEW.board.getFileName()))
 
     while isRunning:
         SCREEN.blit(BG, (0, 0))
@@ -186,15 +191,18 @@ def gameScreen(currentBoard: Board, players: tuple[str, str], colors: tuple[int,
             time = 0
 
         MENU_BG.update(SCREEN)
-        GAME_LOGIC.display(SCREEN, time)
+        GAME_LOGIC.update(SCREEN, time, TIME_DELTA, MOUSE_POS)
 
         apply_crt_effect(SCREEN)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:   
-                is_running = False
+                isRunning = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 board_input = GAME_LOGIC.check_for_input(MOUSE_POS)
+                if board_input:
+                    if board_input == -1:
+                        isRunning = False
         
         pygame.display.update()
 

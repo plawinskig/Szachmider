@@ -8,7 +8,7 @@ from source.board.square import *
 
 class BoardView:
     def __init__(self, board: Board, screen_width, screen_height, scale: int = 3):
-        self.board = board
+        self.board: Board = board
 
         self.width = board.width
         self.height = board.height
@@ -24,15 +24,16 @@ class BoardView:
         self.x_scale = 32 * scale
         self.y_scale = 37 * scale
 
-        board_x_size = self.width * self.x_tile_size + 10 * scale
-        board_y_size = self.height * self.y_tile_size + 20 * scale
+        self.board_x_size = self.width * self.x_tile_size + 10 * scale
+        self.board_y_size = self.height * self.y_tile_size + 20 * scale
 
-        self.x_offset = (self.screen_width - board_x_size) / 2
-        self.y_offset = (self.screen_height - board_y_size) / 2 
+        self.x_offset = (self.screen_width - self.board_x_size) / 2
+        self.y_offset = (self.screen_height - self.board_y_size) / 2 
 
     def display(self, screen: Surface, time, perspective_dark: bool = False,
                 possible_moves = None, piece_pos = (-1, -1), 
-                isBlackChecked: bool = False, isWhiteChecked: bool = False):
+                isBlackChecked: bool = False, isWhiteChecked: bool = False,
+                isWhiteTurn: bool = True, isBlackTurn: bool = True):
         self.displayBase(screen, perspective_dark)
         for y in range(self.height):
             true_y = y
@@ -98,6 +99,10 @@ class BoardView:
                                 if section == "piece":
                                     direction = -1
                                     vertical_offset = 13 * self.scale
+                                    if square.piece.is_black() and not isBlackTurn:
+                                        img.set_alpha(175)
+                                    if not square.piece.is_black() and not isWhiteTurn:
+                                        img.set_alpha(175)
                                 if section == "check":
                                     vertical_offset = 40 * self.scale
                                 angle = math.sin(time * 1.2 + x + y * 0.3 * direction)
@@ -146,7 +151,6 @@ class BoardView:
         if offset_pos[0] < self.width and offset_pos[1] < self.height:
             return offset_pos
         return None
-
 
 
 

@@ -26,7 +26,8 @@ class PlayersStartup:
         self.BTN_CHOOSE_BOARD = Button(pos=(self.xPos, 700), text="Wybierz planszę",
                                        imgNormal=pygame.image.load("assets/buttons/BTN_play.png").convert_alpha(),
                                        imgHover=pygame.image.load("assets/buttons/BTN_play_hover.png").convert_alpha(),
-                                       r = -1, textHoverColor=pygame.Color("#5ac54f"))
+                                       r = -1, textHoverColor=pygame.Color("#5ac54f"),
+                                       fontOffset=(15, -4))
         self.BTN_CHOOSE_BOARD.alpha = 0
         self.BTN_CHOOSE_BOARD.newAlpha = 0
 

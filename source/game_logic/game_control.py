@@ -4,15 +4,24 @@ from pygame import Surface
 from source.board.board_view import BoardView
 from source.board.board import Board
 from source.board.piece import *
+from source.gui.button import Button
+
+from source.database.datbaseConnector import DatabaseConnector
 
 
 class GameControl():
-    def __init__(self, boardView: BoardView, whitePlayer: str, blackPlayer: str):
+    def __init__(self, boardView: BoardView, whitePlayer: str, blackPlayer: str, 
+                 screenWidth: int, screenHeight: int, botPlays: bool = False):
         self.boardView = boardView
         self.board: Board = boardView.board
 
         self._currentTurn = 0
         self.isWhiteTurn = True
+
+        self.botPlays = botPlays
+
+        self.screenWidth = screenWidth
+        self.screenHeight = screenHeight
 
         self._currentPiece: Piece = None
         self._currentPiecePos: tuple[int, int] = None
@@ -25,17 +34,61 @@ class GameControl():
 
         self._whiteCheck: bool = False
         self._blackCheck: bool = False
+        
+        self._blackPerspective = False
+
+        self.whitePlayer = whitePlayer
+        self.BTN_PLAYER_WHITE = Button(pos=(screenWidth/2, screenHeight-50), text=whitePlayer,
+                                        imgNormal=pygame.image.load("assets/buttons/BTN_nametag.png").convert_alpha(),
+                                        imgHover=pygame.image.load("assets/buttons/BTN_nametag.png").convert_alpha(),
+                                        r = 1)
+        
+        self.blackPlayer = blackPlayer
+        self.BTN_PLAYER_BLACK = Button(pos=(screenWidth/2, 50), text=blackPlayer,
+                                        imgNormal=pygame.image.load("assets/buttons/BTN_nametag.png").convert_alpha(),
+                                        imgHover=pygame.image.load("assets/buttons/BTN_nametag.png").convert_alpha(),
+                                        r = 2)
+        
+        self.BTN_EXIT = Button(pos=(50, 50), text="",
+                                        imgNormal=pygame.image.load("assets/buttons/BTN_back.png").convert_alpha(),
+                                        imgHover=pygame.image.load("assets/buttons/BTN_back_hover.png").convert_alpha(),
+                                        r = 2)
+        
+        self.BTN_END = Button(pos=(screenWidth/2, screenHeight/2), text="Koniec gry",
+                                        imgNormal=pygame.image.load("assets/buttons/BTN_nametag.png").convert_alpha(),
+                                        imgHover=pygame.image.load("assets/buttons/BTN_nametag.png").convert_alpha(),
+                                        r = 10)
 
         
     
 
-    def display(self, screen: Surface, time):
-        self.boardView.display(screen, time, 
+    def update(self, screen: Surface, time, timeDelta, mouse_pos):
+        self.boardView.display(screen, time, perspective_dark=self._blackPerspective,
                                 possible_moves=self._CurrentLegalMoves, piece_pos=self._currentPiecePos,
-                                isBlackChecked=self._blackCheck, isWhiteChecked=self._whiteCheck)
+                                isBlackChecked=self._blackCheck, isWhiteChecked=self._whiteCheck,
+                                isWhiteTurn=self.isWhiteTurn, isBlackTurn=not self.isWhiteTurn)
+        for btn in [self.BTN_PLAYER_WHITE, self.BTN_PLAYER_BLACK, self.BTN_EXIT]:
+            btn.hover(mouse_pos)
+            btn.update(screen, time, timeDelta)
+
+        if self.gameEnded:
+            self.BTN_END.hover(mouse_pos)
+            self.BTN_END.update(screen, time, timeDelta)
 
     def check_for_input(self, mouse_pos):
-        boardPos = self.boardView.getBoardCoords(mouse_pos)
+        if self.BTN_EXIT.check_for_input(mouse_pos):
+            if not self.gameEnded:
+                DATABASE = DatabaseConnector()
+                games_list = DATABASE.get_games(DATABASE.get_player_id(self.whitePlayer),
+                                                DATABASE.get_player_id(self.blackPlayer),
+                                                DATABASE.get_board_id(self.boardView.board.getFileName()))
+                DATABASE.define_winner(games_list[-1], "D")
+                del DATABASE
+            return -1
+        
+        boardPos = None
+        if not self.gameEnded:
+            boardPos = self.boardView.getBoardCoords(mouse_pos)
 
         if boardPos:
             if self._currentPiece and boardPos in self._CurrentLegalMoves:
@@ -53,10 +106,15 @@ class GameControl():
 
                 self._whiteCheck = self.isWhiteTurn and self._is_in_check()
                 self._blackCheck = not self.isWhiteTurn and self._is_in_check()
-                print((self._whiteCheck, self._blackCheck))
 
-                if not self._has_legal_moves() or not self._movesToDraw:
+                if not self._has_legal_moves() or self._movesToDraw == 0:
                     self.gameEnded = True
+                    DATABASE = DatabaseConnector()
+                    games_list = DATABASE.get_games(DATABASE.get_player_id(self.whitePlayer),
+                                            DATABASE.get_player_id(self.blackPlayer),
+                                            DATABASE.get_board_id(self.boardView.board.getFileName()))
+                    DATABASE.define_winner(games_list[-1], self._who_won())
+                    del DATABASE
             else:
                 currentPiece = self.board.get_piece(*boardPos)
                 if currentPiece:
@@ -101,6 +159,6 @@ class GameControl():
                 return "B"
             if not whiteWon and not blackWon:
                 return "D"
-        return None
+        return "N"
             
     
