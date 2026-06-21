@@ -1,5 +1,6 @@
 import pygame
 import copy
+import random
 import sys
 
 from source.statistics.statistics_full import Statistics
@@ -9,6 +10,7 @@ from source.menu.main_buttons import MainButtons
 from source.menu.play_submenu.players_startup import PlayersStartup
 
 from source.game_logic.game_control import GameControl
+from source.bot.random_bot import RandomBot
 
 from source.board.board import Board
 from source.board.piece import *
@@ -25,6 +27,8 @@ from source.shaders.crt_effect import *
 
 pygame.init()
 SCREEN = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+
+BOT_PLAYER_NAME = "Random Bot"
 
 GAME_ICON = pygame.image.load("assets/logo/Game_icon.png")
 pygame.display.set_icon(GAME_ICON)
@@ -59,6 +63,9 @@ def mainMenu():
 
     DATABASE = DatabaseConnector()
     player_list = DATABASE.get_player_list()
+    if BOT_PLAYER_NAME not in player_list:
+        DATABASE.add_player(BOT_PLAYER_NAME)
+        player_list = DATABASE.get_player_list()
     del DATABASE
     PLAY_MENU = PlayersStartup((play_destination_offscreen, SCREEN_HEIGHT // 2), player_list, screenWidth=SCREEN_WIDTH)
     render_play_menu = False
@@ -175,7 +182,10 @@ def gameScreen(currentBoard: Board, players: tuple[str, str], colors: tuple[int,
         blackPlayer = players[0]
 
     BOARD_VIEW = BoardView(copy.deepcopy(currentBoard), SCREEN_WIDTH, SCREEN_HEIGHT)
-    GAME_LOGIC = GameControl(BOARD_VIEW, whitePlayer, blackPlayer, SCREEN_WIDTH, SCREEN_HEIGHT)
+    whiteBot = RandomBot(is_black=False) if whitePlayer == BOT_PLAYER_NAME else None
+    blackBot = RandomBot(is_black=True) if blackPlayer == BOT_PLAYER_NAME else None
+    GAME_LOGIC = GameControl(BOARD_VIEW, whitePlayer, blackPlayer, SCREEN_WIDTH, SCREEN_HEIGHT,
+                             whiteBot=whiteBot, blackBot=blackBot)
 
     DATABASE = DatabaseConnector()
     DATABASE.add_game(DATABASE.get_player_id(whitePlayer),

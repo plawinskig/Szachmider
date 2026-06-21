@@ -1,7 +1,7 @@
 import copy
 import os
 import types
-from typing import Optional
+from typing import Callable, Optional
 
 from functools import partial
 
@@ -317,13 +317,14 @@ class Board:
                         if not foundKing: encounteredPieces.append(nextPiece)
                         if moveIter.can_take() and nextSquare.get_code() != "Shl" and currentSquare.get_code() != "Hrt" and nextPiece.is_black() != currentPiece.is_black():
                             theoriticalMoves.append(move)
-                            if canGoFurther: plausibleMoves.append((move, partial(self.move_and_take, boardX, boardY, move[0], move[1]), moveInstance.can_take()))
 
                             if isinstance(nextPiece, King):
 
                                 foundKing = True
                                 kingLocation = move
                                 finishedOnKing = True
+                            elif canGoFurther:
+                                plausibleMoves.append((move, partial(self.move_and_take, boardX, boardY, move[0], move[1]), moveInstance.can_take()))
 
                         canGoFurther = moveIter.jumps_over() or nextSquare.get_code() == "Grs"
                     else:
@@ -501,6 +502,19 @@ class Board:
                 if self.__find_move_in_moves_list(pieceID, moveMatrix[y][x]):
                     result.append((x, y))
 
+
+        return result
+
+    def get_available_move_packages(self, pieceID: str) -> list[tuple[tuple[int, int], Callable[[], None], bool]]:
+        black = pieceID.split("_")[-1] == "B"
+        moveMatrix = self.__blackMoveMatrix if black else self.__whiteMoveMatrix
+        result: list[tuple[tuple[int, int], Callable[[], None], bool]] = []
+
+        for y in range(self.height):
+            for x in range(self.width):
+                matrixMove = self.__find_move_in_moves_list(pieceID, moveMatrix[y][x])
+                if matrixMove:
+                    result.append(((x, y), matrixMove[1], matrixMove[2]))
 
         return result
 

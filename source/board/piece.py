@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Callable, Any
 from functools import partial
 
-import source.board.board as board
+#import source.board.board as board
 import source.board.pieceMovement as pieceMovement 
 
 class Piece(ABC):
@@ -55,7 +55,7 @@ class Piece(ABC):
 
     # treat it like a specialized, conditional part of Boarc.__get_piece_moves()
     # make sure it handles move restrictions, bcs the main function won't do it
-    def check_special_moves(self, theEntireBoard: board.Board, location: tuple[int, int]) -> tuple[
+    def check_special_moves(self, theEntireBoard, location: tuple[int, int]) -> tuple[
         list[tuple[tuple[int, int], Callable[[] ,None], bool]], #plausible moves
         list[tuple[int, int]], # checks
         list[tuple[int, int]] # additional checks
@@ -195,12 +195,12 @@ class King(Piece):
 
 
 
-    def __do_castle(self, board: board.Board, location: tuple[int, int], rookLocation: tuple[int, int], direction: int):
+    def __do_castle(self, board, location: tuple[int, int], rookLocation: tuple[int, int], direction: int):
         board.move_piece(*location, location[0] + 2*direction, location[1])
         board.move_piece(*rookLocation, location[0] + direction, location[1])
 
 
-    def check_castling(self, theEntireBoard: board.Board, location: tuple[int, int], otherColorMoveMatrix: list[list[list[tuple[str, Callable[[], None], bool]]]]):
+    def check_castling(self, theEntireBoard, location: tuple[int, int], otherColorMoveMatrix: list[list[list[tuple[str, Callable[[], None], bool]]]]):
         castles = []
         if self._moveCounter > 0 or otherColorMoveMatrix[location[1]][location[0]] != []:
             return castles
@@ -273,17 +273,17 @@ class Pawn(Piece):
         ]
 
     #
-    # def __do_en_passant(self, board: board.Board, location: tuple[int, int], moveToLocation: tuple[int, int], target: tuple[int, int]):
+    # def __do_en_passant(self, board, location: tuple[int, int], moveToLocation: tuple[int, int], target: tuple[int, int]):
     #     board.move_piece(*location, *moveToLocation)
     #     board.take_piece(*target)
     #
 
 
-    def __do_double_move(self, board: board.Board, from_x: int, from_y: int, to_x: int, to_y: int):
+    def __do_double_move(self, board, from_x: int, from_y: int, to_x: int, to_y: int):
         board.move_piece(from_x, from_y, to_x, to_y)
         self.__movedTwo = True
 
-    def check_special_moves(self, theEntireBoard: board.Board, location: tuple[int, int]):
+    def check_special_moves(self, theEntireBoard, location: tuple[int, int]):
         validMoves = []
 
         x, y = location
