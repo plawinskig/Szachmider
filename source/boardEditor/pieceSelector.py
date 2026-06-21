@@ -22,10 +22,8 @@ class PieceSelector:
                                           f"assets/buttons/editor/BTN_switch_piece_hover.png").convert_alpha(),
                                       r=r+10)
 
-
-
         rCounter = 1
-        for pcType in ["Pawn", "Knight", "Bishop", "Rook", "Queen", "King"]:
+        for pcType in ["None", "Pawn", "Knight", "Bishop", "Rook", "Queen", "King"]:
             normSprite = pygame.image.load(f"assets/buttons/editor/pieces/{pcType}_dark.png").convert_alpha()
             normSprite = pygame.transform.scale(normSprite, (normSprite.get_width()*buttonScale, normSprite.get_height()*buttonScale))
 
@@ -40,7 +38,7 @@ class PieceSelector:
 
 
         rCounter = 1
-        for pcType in ["Pawn", "Knight", "Bishop", "Rook", "Queen", "King"]:
+        for pcType in ["None", "Pawn", "Knight", "Bishop", "Rook", "Queen", "King"]:
             normSprite = pygame.image.load(f"assets/buttons/editor/pieces/{pcType}_light.png").convert_alpha()
             normSprite = pygame.transform.scale(normSprite, (normSprite.get_width() * buttonScale, normSprite.get_height() * buttonScale))
 
@@ -63,7 +61,8 @@ class PieceSelector:
 
 
 
-
+    def get_color(self):
+        return self.__selectedBlack
 
 
     def update(self, screen, time, time_delta, position):

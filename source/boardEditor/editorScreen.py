@@ -39,7 +39,7 @@ class EditorScreen:
 
         self.__currentSelection = ("S", 0)
         self.__squareList = [BasicSquare, GrassSquare, HeartSquare, ShieldSquare, TeleportSquare, None]
-        self.__pieceList = [Pawn, Knight, Bishop, Rook, Queen, King]
+        self.__pieceList = [None, Pawn, Knight, Bishop, Rook, Queen, King]
 
 
         self.__isPlacingTele = False
@@ -122,7 +122,7 @@ class EditorScreen:
                     self.__isPlacingTele = True
                     self.__lastTeleLocation = (x, y)
                     self.squareSelector.set_alpha(0)
-                    # self.pieceSelector.hide()
+                    self.pieceSelector.hide()
 
                     self.xSizeSel.set_alpha(0)
                     self.ySizeSel.set_alpha(0)
@@ -132,7 +132,7 @@ class EditorScreen:
 
                     self.__isPlacingTele = False
                     self.squareSelector.set_alpha(255)
-                    # self.pieceSelector.show()
+                    self.pieceSelector.show()
 
                     self.xSizeSel.set_alpha(255)
                     self.ySizeSel.set_alpha(255)
@@ -140,6 +140,50 @@ class EditorScreen:
                 self.__board.exchange_square(x, y, self.__squareList[other](None))
 
 
-    def __set_new_square(self, x: int, y: int):
-        # match self.__currentSelection[1]:
-        pass
+    def __set_new_piece(self, x: int, y: int):
+        match self.__currentSelection[1]:
+            case 0:
+                square = self.__board.get_square(x, y)
+                if not square is None:
+                    currentlyThere = self.__board.get_piece(x, y)
+
+                    if isinstance(currentlyThere, King):
+                        kingColor = currentlyThere.is_black()
+                        if kingColor: self.__blackKingExists = False
+                        else: self.__whiteKingExists = False
+                    self.__board.set_piece(x, y, None)
+
+            case 6:
+                square = self.__board.get_square(x, y)
+                if not square is None:
+                    currentlyThere = self.__board.get_piece(x, y)
+
+
+                    kingColor = self.pieceSelector.get_color()
+                    canPlace = not (self.__blackKingExists if kingColor else self.__whiteKingExists)
+
+                    if canPlace:
+                        self.__board.set_piece(x, y, King(kingColor))
+                        if kingColor:
+                            self.__blackKingExists = True
+                        else:
+                            self.__whiteKingExists = True
+                        # if it encountered another king, then that king must be opposite color
+                        if isinstance(currentlyThere, King):
+                            if not kingColor:
+                                self.__blackKingExists = False
+                            else:
+                                self.__whiteKingExists = False
+            case other:
+                square = self.__board.get_square(x, y)
+                color = self.pieceSelector.get_color()
+                if not square is None:
+                    currentlyThere = self.__board.get_piece(x, y)
+
+                    if isinstance(currentlyThere, King):
+                        kingColor = currentlyThere.is_black()
+                        if kingColor:
+                            self.__blackKingExists = False
+                        else:
+                            self.__whiteKingExists = False
+                    self.__board.set_piece(x, y, self.__pieceList[other](color))
