@@ -35,7 +35,7 @@ class GameControl():
         self._whiteCheck: bool = False
         self._blackCheck: bool = False
         
-        self._blackPerspective = False
+        
 
         self.whitePlayer = whitePlayer
         self.BTN_PLAYER_WHITE = Button(pos=(screenWidth/2, screenHeight-50), text=whitePlayer,
@@ -47,7 +47,7 @@ class GameControl():
         self.BTN_PLAYER_BLACK = Button(pos=(screenWidth/2, 50), text=blackPlayer,
                                         imgNormal=pygame.image.load("assets/buttons/BTN_nametag.png").convert_alpha(),
                                         imgHover=pygame.image.load("assets/buttons/BTN_nametag.png").convert_alpha(),
-                                        r = 2)
+                                        r = 1)
         
         self.BTN_EXIT = Button(pos=(50, 50), text="",
                                         imgNormal=pygame.image.load("assets/buttons/BTN_back.png").convert_alpha(),
@@ -58,7 +58,12 @@ class GameControl():
                                         imgNormal=pygame.image.load("assets/buttons/BTN_nametag.png").convert_alpha(),
                                         imgHover=pygame.image.load("assets/buttons/BTN_nametag.png").convert_alpha(),
                                         r = 10)
-
+        
+        self._blackPerspective = False
+        self.BTN_ROTATE = Button(pos=(screenWidth/2 + self.boardView.board_x_size/2 + 50, screenHeight/2), text="",
+                                        imgNormal=pygame.image.load("assets/buttons/BTN_rotate.png").convert_alpha(),
+                                        imgHover=pygame.image.load("assets/buttons/BTN_rotate_hover.png").convert_alpha(),
+                                        r = 3)
         
     
 
@@ -67,7 +72,7 @@ class GameControl():
                                 possible_moves=self._CurrentLegalMoves, piece_pos=self._currentPiecePos,
                                 isBlackChecked=self._blackCheck, isWhiteChecked=self._whiteCheck,
                                 isWhiteTurn=self.isWhiteTurn, isBlackTurn=not self.isWhiteTurn)
-        for btn in [self.BTN_PLAYER_WHITE, self.BTN_PLAYER_BLACK, self.BTN_EXIT]:
+        for btn in [self.BTN_PLAYER_WHITE, self.BTN_PLAYER_BLACK, self.BTN_EXIT, self.BTN_ROTATE]:
             btn.hover(mouse_pos)
             btn.update(screen, time, timeDelta)
 
@@ -85,12 +90,27 @@ class GameControl():
                 DATABASE.define_winner(games_list[-1], "D")
                 del DATABASE
             return -1
+        elif self.BTN_ROTATE.check_for_input(mouse_pos):
+            self._blackPerspective = not self._blackPerspective
+            if self._blackPerspective:
+                self.BTN_PLAYER_WHITE.yPos = 50
+                self.BTN_PLAYER_WHITE.yDest = 50
+                self.BTN_PLAYER_BLACK.yPos = self.screenHeight-50
+                self.BTN_PLAYER_BLACK.yDest = self.screenHeight-50
+            else:
+                self.BTN_PLAYER_WHITE.yPos = self.screenHeight-50
+                self.BTN_PLAYER_WHITE.yDest = self.screenHeight-50
+                self.BTN_PLAYER_BLACK.yPos = 50
+                self.BTN_PLAYER_BLACK.yDest = 50
+            return -2
         
         boardPos = None
         if not self.gameEnded:
             boardPos = self.boardView.getBoardCoords(mouse_pos)
-
+        
         if boardPos:
+            if self._blackPerspective:
+                boardPos = (self.board.width - 1 - boardPos[0], self.board.height - 1 - boardPos[1])
             if self._currentPiece and boardPos in self._CurrentLegalMoves:
                 # If no piece is taken or no pawn is moved for 50 rounds the game ends in a draw
                 if self._is_take(boardPos) or self._currentPiece.get_code() == "Paw":
@@ -136,6 +156,8 @@ class GameControl():
         else:
             self._currentPiecePos = None
             self._CurrentLegalMoves = None
+        
+        return 0
 
     def _has_legal_moves(self):
         return self.board.does_color_have_any_moves(not self.isWhiteTurn)

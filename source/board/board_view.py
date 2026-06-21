@@ -48,7 +48,7 @@ class BoardView:
                     if square:
                         img = None
                         is_light = True
-                        if (x + y) % 2 == 1:
+                        if (true_x + true_y) % 2 == 1:
                             is_light = False
                         
                         if section == "tile":
@@ -58,9 +58,9 @@ class BoardView:
                                 img = square.img_tile_dark
                         elif section == "move":
                             if square.piece and piece_pos:
-                                if x == piece_pos[0] and y == piece_pos[1]:
+                                if true_x == piece_pos[0] and true_y == piece_pos[1]:
                                     img = "assets/squares/SQR_show_selected.png"
-                            if possible_moves and (x, y) in possible_moves:
+                            if possible_moves and (true_x, true_y) in possible_moves:
                                 if square.piece:
                                     img = "assets/squares/SQR_show_take.png"
                                 else:
