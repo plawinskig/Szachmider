@@ -192,7 +192,7 @@ def gameScreen(currentBoard: Board, players: tuple[str, str], colors: tuple[str,
 
 
 def editScreen(time: float):
-    pygame.display.set_caption("Szachmider - Gra")
+    pygame.display.set_caption("Szachmider - Edytor")
     MENU_BG = MenuBackground(SCREEN_WIDTH, SCREEN_HEIGHT)
 
     is_running = True
@@ -222,6 +222,9 @@ def editScreen(time: float):
                 match screenInput:
                     case -1:
                         is_running = False
+
+            if event.type == pygame.KEYDOWN:
+                EDIT_MENU.input(event)
 
 
         pygame.display.update()

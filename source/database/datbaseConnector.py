@@ -7,6 +7,7 @@ from peewee import *
 from source.database.moveHistory import MoveHistory
 from source.database.players import Players
 from source.database.games import Games
+from source.database.boards import Boards
 
 class DatabaseConnector:
 
@@ -28,6 +29,16 @@ class DatabaseConnector:
             # self.__cursor.execute(f"INSERT INTO Players(PId, PName) VALUES (NULL, '{playerName}')")
             # self.__database.commit()
             Players.create(PName=playerName)
+        except sqlite3.IntegrityError:
+            success = False
+
+        return success
+
+
+    def add_board(self, file: str) -> bool:
+        success = True
+        try:
+            Boards.create(fileName=file)
         except sqlite3.IntegrityError:
             success = False
 

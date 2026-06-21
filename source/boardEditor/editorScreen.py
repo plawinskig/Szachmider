@@ -1,6 +1,9 @@
 import pygame
 
 from board.board import Board
+from board.board_json import save_to_json
+from database.datbaseConnector import DatabaseConnector
+from gui.text_field import TextField
 from source.gui.button import Button
 from source.boardEditor.boardSizeSelector import SizeSelector
 from source.boardEditor.squareSelector import SquareSelector
@@ -23,6 +26,14 @@ class EditorScreen:
                                imgNormal=pygame.image.load("assets/buttons/BTN_back.png").convert_alpha(),
                                imgHover=pygame.image.load("assets/buttons/BTN_back_hover.png").convert_alpha(),
                                r = 9)
+
+        self.nameInput = TextField(pos=(screenWidth//2, 100), text="", imgNormal=pygame.image.load("assets/buttons/BTN_text_player.png").convert_alpha(),
+                               imgHover=pygame.image.load("assets/buttons/BTN_text_player_hover.png").convert_alpha(),
+                               r = 8)
+
+        self.saveButton = Button(pos=(screenWidth-100, screenHeight-100), text="", imgNormal=pygame.image.load("assets/buttons/BTN_play.png").convert_alpha(),
+                               imgHover=pygame.image.load("assets/buttons/BTN_play_hover.png").convert_alpha(),
+                               r = 7)
 
         self.xSizeSel = SizeSelector(screenWidth//10, screenHeight//3, r=1)
         self.ySizeSel = SizeSelector(screenWidth//10+80, screenHeight//3, r=1)
@@ -56,7 +67,7 @@ class EditorScreen:
 
     def update(self, screen, time, timeDelta, mousePos):
         selectors = [self.xSizeSel, self.ySizeSel, self.squareSelector, self.pieceSelector]
-        buttons = [self.BTN_BACK]
+        buttons = [self.BTN_BACK, self.nameInput, self.saveButton]
 
         for sl in selectors:
             sl.update(screen, time, timeDelta, mousePos)
@@ -69,11 +80,11 @@ class EditorScreen:
         self.__boardView.display(screen, time)
 
 
-
+    def input(self, event: pygame.Event):
+        self.nameInput.input(event)
 
 
     def check_for_input(self, position):
-
         if self.BTN_BACK.check_for_input(position):
             return -1
         if self.xSizeSel.check_for_input(position):
@@ -92,6 +103,19 @@ class EditorScreen:
         if self.pieceSelector.check_for_input(position):
             self.__currentSelection = ("P", self.pieceSelector.get_selection())
             return 4
+
+        if self.nameInput.check_for_input(position):
+            return 5
+
+
+        if self.saveButton.check_for_input(position):
+            success = self.save_board()
+            if success:
+                return -1
+
+            return 6
+
+
 
         coords = self.__boardView.getBoardCoords(position)
         if not coords is None:
@@ -187,3 +211,15 @@ class EditorScreen:
                         else:
                             self.__whiteKingExists = False
                     self.__board.set_piece(x, y, self.__pieceList[other](color))
+
+
+    def save_board(self):
+        boardName = self.nameInput.text
+        self.__board.change_name(boardName)
+        db = DatabaseConnector()
+        success = db.add_board(f"{boardName}.json")
+
+        if success:
+            save_to_json(self.__board.export_to_json(), f"boards/{boardName}.json")
+
+        return success

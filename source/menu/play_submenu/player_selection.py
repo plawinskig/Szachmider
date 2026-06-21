@@ -17,7 +17,7 @@ class PlayerSelection():
         self.offset = offset
 
         self.TEXT_FIELD = TextField(pos=(self.xPos, 254), text="",
-                                    img_normal=pygame.image.load("assets/buttons/BTN_text_player.png").convert_alpha(),
+                                    imgNormal=pygame.image.load("assets/buttons/BTN_text_player.png").convert_alpha(),
                                     imgHover=pygame.image.load("assets/buttons/BTN_text_player_hover.png").convert_alpha(),
                                     r = r + 1)
         
