@@ -2,7 +2,7 @@ import pygame
 import copy
 import sys
 
-from source.menu.play_submenu.player_selection import PlayerSelection
+from source.statistics.statistics_full import Statistics
 from source.menu.logo import Logo
 from source.menu.menu_background import MenuBackground
 from source.menu.main_buttons import MainButtons
@@ -105,7 +105,7 @@ def mainMenu():
                             render_play_menu = True
                             PLAY_MENU.move(play_pos)
                         elif menu_button == 2:
-                            print("Statystyki")
+                            statisticsScreen(time)
                         elif menu_button == 3:
                             print("Edit")
                         elif menu_button == 4:
@@ -205,6 +205,46 @@ def gameScreen(currentBoard: Board, players: tuple[str, str], colors: tuple[int,
                         isRunning = False
         
         pygame.display.update()
+
+def statisticsScreen(time: float):
+    pygame.display.set_caption("Szachmider - Gra")
+    MENU_BG = MenuBackground(SCREEN_WIDTH, SCREEN_HEIGHT)
+
+    isRunning = True
+
+    STATISTICS = Statistics(SCREEN_WIDTH, SCREEN_HEIGHT)
+
+    while isRunning:
+        SCREEN.blit(BG, (0, 0))
+
+        MOUSE_POS = pygame.mouse.get_pos()
+        TIME_DELTA = CLOCK.tick(60) / 1000.0
+        time = time + TIME_DELTA
+
+        if time < 0:
+            time = 0
+
+        MENU_BG.update(SCREEN)
+
+        STATISTICS.update(SCREEN, time, TIME_DELTA, MOUSE_POS)
+
+        apply_crt_effect(SCREEN)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:   
+                isRunning = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                statistics_button = STATISTICS.check_for_input(MOUSE_POS)
+                if statistics_button:
+                    if statistics_button == -1:
+                        isRunning = False
+        
+            if event.type == pygame.KEYDOWN:
+                STATISTICS.input(event)
+        
+        pygame.display.update()
+
+
 
 
 if __name__ == "__main__":

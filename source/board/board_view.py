@@ -33,13 +33,14 @@ class BoardView:
     def display(self, screen: Surface, time, perspective_dark: bool = False,
                 possible_moves = None, piece_pos = (-1, -1), 
                 isBlackChecked: bool = False, isWhiteChecked: bool = False,
-                isWhiteTurn: bool = True, isBlackTurn: bool = True):
+                isWhiteTurn: bool = True, isBlackTurn: bool = True,
+                displayGrid: bool = False):
         self.displayBase(screen, perspective_dark)
         for y in range(self.height):
             true_y = y
             if perspective_dark:
                 true_y = self.height - 1 - y
-            for section in ["tile", "move", "back", "piece", "check", "front"]:
+            for section in ["grid", "tile", "move", "back", "piece", "check", "front"]:
                 for x in range(self.width):
                     true_x = x
                     if perspective_dark:
@@ -50,8 +51,9 @@ class BoardView:
                         is_light = True
                         if (true_x + true_y) % 2 == 1:
                             is_light = False
-                        
-                        if section == "tile":
+                        if section == "grid" and displayGrid:
+                            img = "assets/squares/SQR_grid.png"
+                        elif section == "tile":
                             if is_light:
                                 img = square.img_tile_light
                             else:
