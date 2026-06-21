@@ -1,4 +1,5 @@
 import unittest
+from typing import Any, cast
 from unittest.mock import patch
 
 from source.bot.base_bot import Move
@@ -27,6 +28,10 @@ class FakeBoard:
         self._board = rows
 
 
+def make_board(rows: list[list[FakeSquare | None]]) -> Any:
+    return cast(Any, FakeBoard(rows))
+
+
 def make_move(target_x: int, target_y: int) -> Move:
     def execute_move() -> None:
         raise AssertionError("Bot must not execute the selected move lambda.")
@@ -36,7 +41,7 @@ def make_move(target_x: int, target_y: int) -> Move:
 
 class RandomBotTests(unittest.TestCase):
     def test_returns_none_when_board_has_no_pieces(self) -> None:
-        board = FakeBoard(
+        board = make_board(
             [
                 [FakeSquare(), FakeSquare()],
                 [FakeSquare(), None],
@@ -50,7 +55,7 @@ class RandomBotTests(unittest.TestCase):
     def test_returns_none_when_own_pieces_have_no_legal_moves(self) -> None:
         white_piece = FakePiece(is_black=False, moves=[])
         black_piece = FakePiece(is_black=True, moves=[make_move(1, 1)])
-        board = FakeBoard([[FakeSquare(white_piece), FakeSquare(black_piece)]])
+        board = make_board([[FakeSquare(white_piece), FakeSquare(black_piece)]])
 
         result = RandomBot(is_black=False).get_best_move(board)
 
@@ -61,7 +66,7 @@ class RandomBotTests(unittest.TestCase):
         black_move = make_move(1, 1)
         white_piece = FakePiece(is_black=False, moves=[white_move])
         black_piece = FakePiece(is_black=True, moves=[black_move])
-        board = FakeBoard([[FakeSquare(white_piece), FakeSquare(black_piece)]])
+        board = make_board([[FakeSquare(white_piece), FakeSquare(black_piece)]])
 
         with patch("source.bot.random_bot.random.choice", side_effect=lambda moves: moves[0]):
             selected_piece, selected_move = RandomBot(is_black=False).get_best_move(board)
@@ -75,7 +80,7 @@ class RandomBotTests(unittest.TestCase):
         third_move = make_move(2, 1)
         first_piece = FakePiece(is_black=True, moves=[first_move, second_move])
         second_piece = FakePiece(is_black=True, moves=[third_move])
-        board = FakeBoard([[FakeSquare(first_piece), FakeSquare(second_piece)]])
+        board = make_board([[FakeSquare(first_piece), FakeSquare(second_piece)]])
         captured_pool: list[tuple[FakePiece, Move]] = []
 
         def choose_last_move(moves: list[tuple[FakePiece, Move]]) -> tuple[FakePiece, Move]:
@@ -105,7 +110,7 @@ class RandomBotTests(unittest.TestCase):
 
         move: Move = ((3, 4), execute_move, True)
         piece = FakePiece(is_black=False, moves=[move])
-        board = FakeBoard([[FakeSquare(piece)]])
+        board = make_board([[FakeSquare(piece)]])
 
         result = RandomBot(is_black=False).get_best_move(board)
 
