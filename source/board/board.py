@@ -538,10 +538,26 @@ class Board:
         result = False
         for at in attacking[kingLoc[1]][kingLoc[0]]:
             if at[2]:
-                resutlt = True
+                result = True
 
         return result
 
+    def change_name(self, newName: str):
+        self.__name = newName
+
+    def exchange(self,x: int, y: int, newSquare: Square):
+
+        newSquare.piece = self.get_piece(x, y)
+        self.set_square(newSquare)
+
+    def get_resized(self, newW: int, newH: int):
+        newBoard = Board(newW, newH, self.__name)
+
+        for x, y, _, _ in newBoard.iterate_board():
+            if x < self.width and y < self.height:
+                newBoard.set_square(x, y, self.get_square(x, y))
+
+        return newBoard
 
 
     def debug_print_movementMatrix(self):

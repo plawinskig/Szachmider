@@ -1,7 +1,11 @@
 import pygame
+from pip._internal.index import sources
+
 from source.gui.button import Button
 
+
 class SquareSelector:
+
     def __init__(self, xPos, yPos, r=0):
         self.xPos = xPos
         self.yPos = yPos
@@ -20,6 +24,8 @@ class SquareSelector:
         self.__currentSelection = 0
 
 
+
+
     def update(self, screen, time, time_delta, position):
 
         for btn in self.__buttons:
@@ -28,8 +34,6 @@ class SquareSelector:
 
 
     def check_for_input(self, position):
-
-
         for btnIndex in range(len(self.__buttons)):
             if self.__buttons[btnIndex].check_for_input(position):
                 self.__currentSelection = btnIndex

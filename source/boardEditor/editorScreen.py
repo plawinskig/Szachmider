@@ -3,7 +3,9 @@ import pygame
 from source.gui.button import Button
 from source.boardEditor.boardSizeSelector import SizeSelector
 from source.boardEditor.squareSelector import SquareSelector
-
+from source.board.square import *
+from source.board.board import Board
+from source.board.board_view import BoardView
 
 class EditorScreen:
     def __init__(self, position, screenWidth, screenHeight):
@@ -23,6 +25,16 @@ class EditorScreen:
 
         self.squareSelector = SquareSelector(screenWidth//3, screenHeight-100, r=1)
 
+        self.__board = Board(8, 8, "New board")
+
+        self.__boardView = BoardView(self.__board, screenWidth, screenHeight, screenHeight/360)
+
+
+        self.__currentSelection = ("S", 0)
+        self.__squareList = [BasicSquare, GrassSquare, HeartSquare, ShieldSquare, TeleportSquare, None]
+
+
+
 
 
     def update(self, screen, time, timeDelta, mousePos):
@@ -37,16 +49,23 @@ class EditorScreen:
             btn.hover(mousePos)
             btn.update(screen, time, timeDelta)
 
+        self.__boardView.display(screen, time)
+
 
 
 
     def check_for_input(self, position):
+
+        if self.BTN_BACK.check_for_input(position):
+            return -1
         if self.xSizeSel.check_for_input(position):
             return 1
-        elif self.ySizeSel.check_for_input(position):
+        if self.ySizeSel.check_for_input(position):
             return 2
-        elif self.BTN_BACK.check_for_input(position):
-            return -1
+        sel = self.squareSelector.check_for_input(position)
+        if sel:
+            self.__currentSelection = ("S", sel)
+            return 3
 
         return 0
 

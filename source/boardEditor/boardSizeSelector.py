@@ -37,7 +37,8 @@ class SizeSelector:
             btn.hover(position)
             btn.update(screen, time, time_delta)
 
-
+    def get_current_choise(self):
+        return self.currentSizeChoice
 
     def check_for_input(self, position):
         i = 0
