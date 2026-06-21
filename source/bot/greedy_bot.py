@@ -51,7 +51,7 @@ class GreedyBot(BaseBot):
         move_history: Any | None = None,
         time_limit: float | None = None,
     ) -> BotMove | None:
-        if not isinstance(board, _BotBoard):
+        if not isinstance(board, _BotBoard): # type: ignore
             return None
 
         scored_moves: list[tuple[float, BotMove]] = []
