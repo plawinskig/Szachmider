@@ -59,8 +59,8 @@ class GameControl():
                                         r = 2)
         
         self.BTN_END = Button(pos=(screenWidth/2, screenHeight/2), text="Koniec gry",
-                                        imgNormal=pygame.image.load("assets/buttons/BTN_nametag.png").convert_alpha(),
-                                        imgHover=pygame.image.load("assets/buttons/BTN_nametag.png").convert_alpha(),
+                                        imgNormal=pygame.image.load("assets/buttons/BTN_end_game.png").convert_alpha(),
+                                        imgHover=pygame.image.load("assets/buttons/BTN_end_game.png").convert_alpha(),
                                         r = 10)
         
         self._blackPerspective = False
@@ -141,6 +141,7 @@ class GameControl():
                 if not self._has_legal_moves() or self._movesToDraw == 0:
                     self.gameEnded = True
                     self._save_game_result()
+                    self.BTN_END.text = self._who_won_text()
             else:
                 currentPiece = self.board.get_piece(*boardPos)
                 if currentPiece:
@@ -203,6 +204,7 @@ class GameControl():
         if not self._has_legal_moves() or self._movesToDraw == 0:
             self.gameEnded = True
             self._save_game_result()
+            self.BTN_END.text = self._who_won_text()
 
     def _has_legal_moves(self):
         return self.board.does_color_have_any_moves(not self.isWhiteTurn)
@@ -236,5 +238,20 @@ class GameControl():
             if not whiteWon and not blackWon:
                 return "D"
         return "N"
+    
+    def _who_won_text(self) -> str:
+        who = self._who_won()
+
+        match who:
+            case "W":
+                return "Wygrał " + self.whitePlayer + "!"
+            case "B":
+                return "Wygrał " + self.blackPlayer + "!"
+            case "D":
+                return "Remis!"
+            case _:
+                return "Brak wyniku!"
+        
+
             
     
