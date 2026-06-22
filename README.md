@@ -1,70 +1,70 @@
 # Szachmider
 
-Szachmider to polska gra szachowa z interfejsem opartym na `pygame`, zapisem wyników do lokalnej bazy SQLite oraz edytorem plansz.
+Szachmider is a Polish chess game with a `pygame`-based interface, local SQLite score tracking, and a board editor.
 
-## Funkcje
+## Features
 
-- menu główne z animowanymi elementami i podmenu
-- wybór planszy z gotowych szablonów
-- gra z dwoma botami: `Random Bot` i `Greedy Bot`
-- zapis wyników graczy i rozgrywek w SQLite
-- ekran statystyk i rankingów graczy
-- edytor własnych plansz z zapisem do plików JSON
-- retro efekt CRT
+- Main menu with animated elements and submenus
+- Board selection from pre-defined templates
+- Play against two bots: `Random Bot` and `Greedy Bot`
+- Player results and game history stored in SQLite
+- Statistics screen with player rankings
+- Custom board editor with JSON save support
+- Retro CRT visual effect
 
-## Wymagania
+## Requirements
 
-- Python 3.11 lub nowszy
+- Python 3.11 or newer
 - `pygame-ce`
 - `peewee`
 
-## Instalacja
+## Installation
 
-1. Otwórz terminal w katalogu projektu.
-2. (Opcjonalnie) utwórz i aktywuj środowisko wirtualne:
+1. Open a terminal in the project folder.
+2. (Optional) Create and activate a virtual environment:
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 ```
 
-3. Zainstaluj wymagane pakiety:
+3. Install required packages:
 
 ```powershell
 python -m pip install -r requirements.txt
 ```
 
-## Uruchamianie
+## Running the game
 
 ```powershell
 python main.py
 ```
 
-## Struktura projektu
+## Project structure
 
-- `main.py` - główny plik uruchamiający grę
-- `source/board` - logika planszy, figur, widok planszy i zapis JSON
-- `source/game_logic` - kontroler gry i reguły rozgrywki
-- `source/menu` - menu główne i podmenu wyboru graczy oraz planszy
-- `source/boardEditor` - edytor plansz i narzędzia wyboru elementów
-- `source/bot` - implementacje botów
-- `source/database` - obsługa bazy danych SQLite i modele Peewee
-- `source/statistics` - ekran statystyk i rankingów
-- `assets/` - obrazy, ikony, tła oraz elementy GUI
-- `boards/` - przykładowe pliki plansz JSON
+- `main.py` - main launcher for the game
+- `source/board` - board logic, pieces, board view, and JSON save/load
+- `source/game_logic` - game controller and gameplay rules
+- `source/menu` - main menu and player/board selection menus
+- `source/boardEditor` - board editor and selection tools
+- `source/bot` - bot implementations
+- `source/database` - SQLite database handling and Peewee models
+- `source/statistics` - statistics screen and rankings
+- `assets/` - images, icons, backgrounds, and GUI assets
+- `boards/` - sample board JSON files
 
-## Użytkowanie
+## Usage
 
-- Wybierz `Graj`, by ustawić graczy i kolor figur.
-- Wybierz `Statystyki`, by zobaczyć wyniki i ranking.
-- Wybierz `Edytor`, by stworzyć lub zmodyfikować planszę.
+- Select `Play` to configure players and piece colors.
+- Select `Statistics` to view results and leaderboard.
+- Select `Editor` to create or modify a board.
 
-## Baza danych
+## Database
 
-Aplikacja korzysta z SQLite w pliku `source/database/szachmider.db`.
-Plik `source/database/dbSetup.txt` zawiera polecenia tworzące schemat bazy.
+The game uses SQLite in the file `source/database/szachmider.db`.
+The file `source/database/dbSetup.txt` contains the database schema setup commands.
 
-## Uwagi
+## Notes
 
-- Gra uruchamia się w trybie pełnoekranowym.
-- Upewnij się, że katalog `assets/` zachowuje oryginalną strukturę.
+- The game runs in fullscreen mode.
+- Make sure the `assets/` folder keeps its original structure.
