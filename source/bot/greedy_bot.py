@@ -108,9 +108,7 @@ class GreedyBot(BaseBot):
         return self._piece_values.get(piece.get_code(), 100)
 
     def _get_pawn_progress_score(self, board: _BotBoard, piece: _BotPiece, target_y: int) -> float:
-        if piece.is_black():
-            return float(target_y) * 2.0
-        return float(board.height - 1 - target_y) * 2.0
+        pass
 
     def _get_center_score(self, board: _BotBoard, target_x: int, target_y: int) -> float:
         center_x = (board.width - 1) / 2
