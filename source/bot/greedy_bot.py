@@ -87,21 +87,6 @@ class GreedyBot(BaseBot):
         moving_value = self._get_piece_value(piece)
         score = 0.0
 
-        if captured_piece is not None and captured_piece.get_code() == "Kin":
-            return -1_000_000.0
-
-        if move[2] and captured_piece is not None:
-            score += self._get_piece_value(captured_piece) * 10.0
-            score -= moving_value * 0.1
-
-        if piece.get_code() == "Paw":
-            score += self._get_pawn_progress_score(board, piece, target_y)
-
-        score += self._get_center_score(board, target_x, target_y)
-
-        if piece.get_code() == "Kin" and captured_piece is None:
-            score -= 8.0
-
         return score
 
     def _get_piece_value(self, piece: _BotPiece) -> int:
