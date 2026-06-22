@@ -56,24 +56,6 @@ class GreedyBot(BaseBot):
 
         scored_moves: list[tuple[float, BotMove]] = []
 
-        for row in board._board:
-            for square in row:
-                if square is None:
-                    continue
-
-                piece = getattr(square, "piece", None)
-                if not isinstance(piece, _BotPiece):
-                    continue
-
-                if piece.is_black() != self.is_black:
-                    continue
-
-                typed_piece = cast("Piece", piece)
-                legal_moves = board.get_available_move_packages(piece.get_ID())
-                for move in legal_moves:
-                    score = self._score_move(board, piece, move)
-                    scored_moves.append((score, (typed_piece, move)))
-
         if not scored_moves:
             return None
 
