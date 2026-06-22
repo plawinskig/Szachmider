@@ -36,6 +36,14 @@ class _BotBoard(Protocol):
 
 
 class GreedyBot(BaseBot):
+    _piece_values: dict[str, int] = {
+        "Paw": 100,
+        "Kni": 300,
+        "Bis": 320,
+        "Roo": 500,
+        "Que": 900,
+        "Kin": 20_000,
+    }
 
     def get_best_move(
         self,
