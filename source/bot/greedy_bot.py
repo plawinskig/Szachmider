@@ -113,4 +113,7 @@ class GreedyBot(BaseBot):
         return float(board.height - 1 - target_y) * 2.0
 
     def _get_center_score(self, board: _BotBoard, target_x: int, target_y: int) -> float:
-        pass
+        center_x = (board.width - 1) / 2
+        center_y = (board.height - 1) / 2
+        distance = abs(target_x - center_x) + abs(target_y - center_y)
+        return max(0.0, 6.0 - distance)
