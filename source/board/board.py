@@ -326,7 +326,7 @@ class Board:
                             if canGoFurther:
                                 plausibleMoves.append((move, partial(self.move_and_take, boardX, boardY, move[0], move[1]), moveInstance.can_take()))
 
-                        canGoFurther = moveIter.jumps_over() or nextSquare.get_code() == "Grs"
+                        canGoFurther = canGoFurther and (moveIter.jumps_over() or nextSquare.get_code() == "Grs")
                     else:
                         if moveIter.can_take() and not moveIter.can_move():
                             currentAdditionalChecks.append(move)
