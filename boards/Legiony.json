@@ -1,0 +1,259 @@
+{
+    "name": "Legiony",
+    "width": 8,
+    "height": 8,
+    "squares": [
+        [
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc"
+        ],
+        [
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc"
+        ],
+        [
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc"
+        ],
+        [
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc"
+        ],
+        [
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc"
+        ],
+        [
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc"
+        ],
+        [
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc"
+        ],
+        [
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc"
+        ]
+    ],
+    "pieces": [
+        [
+            null,
+            null,
+            null,
+            null,
+            {
+                "type": "Kin",
+                "isBlack": true,
+                "id": "Kin_B",
+                "moveCounter": 0
+            },
+            null,
+            null,
+            null
+        ],
+        [
+            {
+                "type": "Paw",
+                "isBlack": true,
+                "id": "Paw_64_B",
+                "moveCounter": 0
+            },
+            {
+                "type": "Paw",
+                "isBlack": true,
+                "id": "Paw_65_B",
+                "moveCounter": 0
+            },
+            {
+                "type": "Paw",
+                "isBlack": true,
+                "id": "Paw_66_B",
+                "moveCounter": 0
+            },
+            {
+                "type": "Paw",
+                "isBlack": true,
+                "id": "Paw_67_B",
+                "moveCounter": 0
+            },
+            {
+                "type": "Paw",
+                "isBlack": true,
+                "id": "Paw_68_B",
+                "moveCounter": 0
+            },
+            {
+                "type": "Paw",
+                "isBlack": true,
+                "id": "Paw_69_B",
+                "moveCounter": 0
+            },
+            {
+                "type": "Paw",
+                "isBlack": true,
+                "id": "Paw_70_B",
+                "moveCounter": 0
+            },
+            {
+                "type": "Paw",
+                "isBlack": true,
+                "id": "Paw_71_B",
+                "moveCounter": 0
+            }
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_56_W",
+                "moveCounter": 0
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_57_W",
+                "moveCounter": 0
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_58_W",
+                "moveCounter": 0
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_59_W",
+                "moveCounter": 0
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_60_W",
+                "moveCounter": 0
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_61_W",
+                "moveCounter": 0
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_62_W",
+                "moveCounter": 0
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_63_W",
+                "moveCounter": 0
+            }
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            {
+                "type": "Kin",
+                "isBlack": false,
+                "id": "Kin_W",
+                "moveCounter": 0
+            },
+            null,
+            null,
+            null
+        ]
+    ]
+}

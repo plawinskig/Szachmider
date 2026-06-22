@@ -1,0 +1,411 @@
+{
+    "name": "Pokazowa plansza",
+    "width": 10,
+    "height": 10,
+    "squares": [
+        [
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc"
+        ],
+        [
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Shl",
+            "Shl",
+            "Shl",
+            "Bsc"
+        ],
+        [
+            null,
+            null,
+            "Bsc",
+            {
+                "type": "Tel",
+                "teleportLocation": [
+                    2,
+                    7
+                ]
+            },
+            "Bsc",
+            "Bsc",
+            "Shl",
+            "Shl",
+            "Shl",
+            "Bsc"
+        ],
+        [
+            null,
+            null,
+            "Grs",
+            "Grs",
+            "Grs",
+            "Grs",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc"
+        ],
+        [
+            null,
+            null,
+            "Grs",
+            "Grs",
+            "Grs",
+            "Grs",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc"
+        ],
+        [
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            null,
+            null
+        ],
+        [
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Hrt",
+            "Hrt",
+            "Hrt",
+            null,
+            null
+        ],
+        [
+            "Bsc",
+            "Bsc",
+            {
+                "type": "Tel",
+                "teleportLocation": [
+                    3,
+                    2
+                ]
+            },
+            "Bsc",
+            "Bsc",
+            "Hrt",
+            "Hrt",
+            "Hrt",
+            null,
+            null
+        ],
+        [
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            null,
+            null
+        ],
+        [
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc",
+            "Bsc"
+        ]
+    ],
+    "pieces": [
+        [
+            null,
+            null,
+            {
+                "type": "Kni",
+                "isBlack": true,
+                "id": "Kni_11_B",
+                "moveCounter": 0
+            },
+            null,
+            {
+                "type": "Kin",
+                "isBlack": true,
+                "id": "Kin_B",
+                "moveCounter": 0
+            },
+            {
+                "type": "Que",
+                "isBlack": true,
+                "id": "Que_6_B",
+                "moveCounter": 0
+            },
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            {
+                "type": "Paw",
+                "isBlack": true,
+                "id": "Paw_89_B",
+                "moveCounter": 0
+            },
+            {
+                "type": "Paw",
+                "isBlack": true,
+                "id": "Paw_85_B",
+                "moveCounter": 0
+            },
+            {
+                "type": "Paw",
+                "isBlack": true,
+                "id": "Paw_84_B",
+                "moveCounter": 0
+            },
+            {
+                "type": "Paw",
+                "isBlack": true,
+                "id": "Paw_79_B",
+                "moveCounter": 0
+            },
+            {
+                "type": "Paw",
+                "isBlack": true,
+                "id": "Paw_80_B",
+                "moveCounter": 0
+            },
+            {
+                "type": "Paw",
+                "isBlack": true,
+                "id": "Paw_81_B",
+                "moveCounter": 0
+            },
+            {
+                "type": "Paw",
+                "isBlack": true,
+                "id": "Paw_82_B",
+                "moveCounter": 0
+            },
+            {
+                "type": "Paw",
+                "isBlack": true,
+                "id": "Paw_86_B",
+                "moveCounter": 0
+            },
+            {
+                "type": "Paw",
+                "isBlack": true,
+                "id": "Paw_87_B",
+                "moveCounter": 0
+            },
+            {
+                "type": "Paw",
+                "isBlack": true,
+                "id": "Paw_88_B",
+                "moveCounter": 0
+            }
+        ],
+        [
+            null,
+            null,
+            null,
+            {
+                "type": "Roo",
+                "isBlack": true,
+                "id": "Roo_9_B",
+                "moveCounter": 0
+            },
+            null,
+            {
+                "type": "Bis",
+                "isBlack": true,
+                "id": "Bis_10_B",
+                "moveCounter": 0
+            },
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            {
+                "type": "Que",
+                "isBlack": true,
+                "id": "Que_7_B",
+                "moveCounter": 0
+            },
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            {
+                "type": "Roo",
+                "isBlack": true,
+                "id": "Roo_10_B",
+                "moveCounter": 0
+            },
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_72_W",
+                "moveCounter": 0
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_73_W",
+                "moveCounter": 0
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_75_W",
+                "moveCounter": 0
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_74_W",
+                "moveCounter": 0
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_76_W",
+                "moveCounter": 0
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_77_W",
+                "moveCounter": 0
+            },
+            {
+                "type": "Paw",
+                "isBlack": false,
+                "id": "Paw_78_W",
+                "moveCounter": 0
+            },
+            {
+                "type": "Kni",
+                "isBlack": false,
+                "id": "Kni_10_W",
+                "moveCounter": 0
+            },
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            {
+                "type": "Que",
+                "isBlack": false,
+                "id": "Que_5_W",
+                "moveCounter": 0
+            },
+            {
+                "type": "Kin",
+                "isBlack": false,
+                "id": "Kin_W",
+                "moveCounter": 0
+            },
+            {
+                "type": "Roo",
+                "isBlack": false,
+                "id": "Roo_8_W",
+                "moveCounter": 0
+            },
+            {
+                "type": "Roo",
+                "isBlack": false,
+                "id": "Roo_7_W",
+                "moveCounter": 0
+            },
+            {
+                "type": "Roo",
+                "isBlack": false,
+                "id": "Roo_6_W",
+                "moveCounter": 0
+            },
+            null,
+            null,
+            null
+        ]
+    ]
+}

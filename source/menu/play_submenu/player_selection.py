@@ -6,7 +6,7 @@ import pygame
 class PlayerSelection():
     def __init__(self, xPos, player_list, r = 0, offset=0):
         self.xPos = xPos
-        self.player_list = player_list
+        self.playerList = player_list
 
         self.xDest = self.xPos
         self.isMoving = False
@@ -44,7 +44,7 @@ class PlayerSelection():
         self.tempplayer_list = []
 
         self.containsEqual = True
-        self.set_player_list(self.player_list)
+        self.set_player_list(self.playerList)
         
     def update(self, screen, time, time_delta, position):
         if self.isMoving:
@@ -166,11 +166,11 @@ class PlayerSelection():
     def filtrate_player_list(self, text):
         if text.strip() == "":
             self.containsEqual = True
-            self.set_player_list(self.player_list)
+            self.set_player_list(self.playerList)
             return
         filteredPlayers = []
         isEqual = False
-        for player in self.player_list:
+        for player in self.playerList:
             if text.strip().lower() in player.lower():
                 filteredPlayers.append(player)
             if text.strip().lower() == player.lower():
